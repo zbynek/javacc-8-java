@@ -8,7 +8,7 @@
 	</parent>
 	<groupId>org.javacc.generator</groupId>
 	<artifactId>java</artifactId>
-	<version>8.0.1-SNAPSHOT</version>
+	<version>8.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>JavaCC default C++ code generator</name>
 	<description>JavaCC default C++ code generator</description>
