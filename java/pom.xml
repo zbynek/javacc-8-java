@@ -11,8 +11,8 @@
 	<groupId>org.javacc.generator.java</groupId>
 	<artifactId>java</artifactId>
 
-	<name>JavaCC default java code generator</name>
-	<description>JavaCC default java code generator</description>
+	<name>JavaCC default java code generator: java</name>
+	<description>JavaCC default java code generator: java</description>
 	<properties>
 		<root>${basedir}/../..</root>
 	</properties>

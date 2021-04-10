@@ -482,4 +482,6 @@
       </build>
     </profile>
   </profiles>
+  <name>JavaCC default Java code generator: it</name>
+  <description>JavaCC default Java code generator: it</description>
 </project>
