@@ -4,13 +4,13 @@
 
 	<parent>
 		<groupId>org.javacc.generator.java</groupId>
-		<version>8.0.0-SNAPSHOT</version>
+		<version>8.0.1-SNAPSHOT</version>
 		<relativePath>../../it</relativePath>
 		<artifactId>it</artifactId>
 	</parent>
 
-	<name>JavaCC C# examples</name>
-	<description>JavaCC C# examples</description>
+	<name>JavaCC Java examples</name>
+	<description>JavaCC Java examples</description>
 	<groupId>org.javacc.generator.java</groupId>
 	<artifactId>bugs</artifactId>
 	<packaging>pom</packaging>
