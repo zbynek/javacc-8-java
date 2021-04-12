@@ -54,7 +54,7 @@
 							<ignoreFailures>false</ignoreFailures>
 							<postBuildHookScript>verify.bsh</postBuildHookScript>
 							<localRepositoryPath>local-repo</localRepositoryPath>
-							<debug>false</debug>
+							<debug>true</debug>
 							<streamLogs>false</streamLogs>
 						</configuration>
 						<executions>
@@ -81,7 +81,6 @@
 									<settingsFile>examples/settings.xml</settingsFile>
 									<pomExcludes>
 										<pomExclude>GUIParsing/pom.xml</pomExclude>
-										<pomExclude>Lookahead/pom.xml</pomExclude>
 									</pomExcludes>
 								</configuration>
 							</execution>

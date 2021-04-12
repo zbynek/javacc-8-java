@@ -22,9 +22,7 @@
 							<goal>javacc</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${project.basedir}/target/generated-sources/java</outputDirectory>
-							<sourceDirectory>${project.basedir}/src/main/javacc</sourceDirectory>
-							<codeGenerator>java</codeGenerator>
+							<skip>true</skip>
 						</configuration>
 					</execution>
 				</executions>
