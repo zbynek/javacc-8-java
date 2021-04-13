@@ -4,7 +4,7 @@
 
 	<parent>
 		<groupId>org.javacc.generator.java</groupId>
-		<version>8.0.1-SNAPSHOT</version>
+		<version>1.0.0</version>
 		<relativePath>../../it</relativePath>
 		<artifactId>it</artifactId>
 	</parent>

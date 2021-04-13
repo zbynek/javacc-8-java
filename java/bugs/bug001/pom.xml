@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.javacc.generator.java</groupId>
 		<artifactId>bugs</artifactId>
-		<version>8.0.1-SNAPSHOT</version>
+		<version>1.0.0</version>
 	</parent>
 	<groupId>org.javacc.generator.java.bugs</groupId>
 	<artifactId>bug001</artifactId>
