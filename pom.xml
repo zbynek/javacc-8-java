@@ -44,7 +44,6 @@
 	</dependencies>
 
 	<modules>
-		<module>it</module>
 		<module>java</module>
 	</modules>
 
