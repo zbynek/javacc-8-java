@@ -158,20 +158,27 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
   }
 
   private void dumpNfaTables(JavaCodeBuilder codeGenerator, TokenizerData tokenizerData) {
+    codeGenerator.println("private static final long[] EMPTY_CHAR_DATA = new long[] {};");
+
+    Map<String, String> charDataVars = new HashMap<String, String>();
+    String charDataVarPrefix = "CHAR_DATA";
     // WE do the following for java so that the generated code is reasonable
     // size and can be compiled. May not be needed for other languages.
     codeGenerator.println("private static final long[][] jjCharData = {");
     Map<Integer, TokenizerData.NfaState> nfa = tokenizerData.nfa;
     for (int i = 0; i < nfa.size(); i++) {
+      // We have a lot of similar states. So factor them out so we don't get code too big errors.
       TokenizerData.NfaState tmp = nfa.get(i);
       if (i > 0) {
         codeGenerator.println(",");
       }
+
+      StringBuilder charDataBuilder = new StringBuilder();
       if (tmp == null) {
-        codeGenerator.print("new long[] {}");
+        codeGenerator.println("EMPTY_CHAR_DATA");
         continue;
       }
-      codeGenerator.print("new long[] {");
+      charDataBuilder.append("new long[] {");
       BitSet bits = new BitSet();
       for (char c : tmp.characters) {
         bits.set(c);
@@ -183,24 +190,41 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
           rep++;
         }
         if (k > 0) {
-          codeGenerator.print(", ");
+          charDataBuilder.append(", ");
         }
-        codeGenerator.print(rep + ", ");
-        codeGenerator.print("" + Long.toString(longs[k]) + "L");
+
+        charDataBuilder.append(rep + ", ");
+        charDataBuilder.append("" + Long.toString(longs[k]) + "L");
         k += rep - 1;
       }
-      codeGenerator.print("}");
+      charDataBuilder.append("}");
+
+      String var = charDataVars.get(charDataBuilder.toString());
+      if (var == null) {
+        var = charDataVarPrefix + (charDataVars.size() + 1);
+        charDataVars.put(charDataBuilder.toString(), var);
+      }
+
+      codeGenerator.println("CharDataConsts." + var);
     }
     codeGenerator.println("};");
 
+    // Now dump the chardata vars.
+    codeGenerator.println("private static final class CharDataConsts { ");
+    for (Map.Entry<String, String> charDataEntry: charDataVars.entrySet()) {
+      codeGenerator.println("private static final long[] " + charDataEntry.getValue() + " = " + charDataEntry.getKey() + ";");
+    }
+    codeGenerator.println("}");
+
+    codeGenerator.println("private static final int[] EMPTY_STATE_SET = new int[] {};");
     codeGenerator.println("private static final int[][] jjcompositeState = {");
     for (int i = 0; i < nfa.size(); i++) {
       TokenizerData.NfaState tmp = nfa.get(i);
       if (i > 0) {
         codeGenerator.println(", ");
       }
-      if (tmp == null) {
-        codeGenerator.print("new int[]{}");
+      if (tmp == null || tmp.compositeStates.isEmpty()) {
+        codeGenerator.print("EMPTY_STATE_SET");
         continue;
       }
       codeGenerator.print("new int[]{");
@@ -236,8 +260,8 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
       if (i > 0) {
         codeGenerator.println(", ");
       }
-      if (tmp == null) {
-        codeGenerator.print("new int[]{}");
+      if (tmp == null || tmp.nextStates.isEmpty()) {
+        codeGenerator.print("EMPTY_STATE_SET");
         continue;
       }
       int k = 0;
