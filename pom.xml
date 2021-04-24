@@ -18,6 +18,7 @@
 		<root>${basedir}/../..</root>
 		<javacc.core>8.0.1</javacc.core>
 		<javacc.java>${project.version}</javacc.java>
+		<javacc-maven-plugin>3.0.3</javacc-maven-plugin>
 	</properties>
 
 	<scm>
@@ -83,8 +84,14 @@
 							<ignoreFailures>false</ignoreFailures>
 							<postBuildHookScript>verify.bsh</postBuildHookScript>
 							<localRepositoryPath>../it/local-repo</localRepositoryPath>
-							<debug>true</debug>
+							<debug>false</debug>
 							<streamLogs>false</streamLogs>
+							<properties>
+								<javacc.core>${javacc.core}</javacc.core>
+								<javacc.java>${javacc.java}</javacc.java>
+								<exec-maven-plugin>1.6.0</exec-maven-plugin>
+								<javacc-maven-plugin>${javacc-maven-plugin}</javacc-maven-plugin>
+							</properties>
 						</configuration>
 						<executions>
 							<execution>

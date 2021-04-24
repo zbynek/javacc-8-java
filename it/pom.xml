@@ -1,12 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-<!-- 	<parent>
-		<groupId>org.javacc.generator</groupId>
-		<artifactId>java</artifactId>
-		<version>8.0.1-SNAPSHOT</version>
-	</parent>
- -->	<parent>
+	<parent>
 		<groupId>org</groupId>
 		<artifactId>javacc</artifactId>
 		<version>8.0.4</version>
@@ -18,12 +13,6 @@
 	<artifactId>it</artifactId>
 	<version>1.0.0</version>
 	<packaging>pom</packaging>
-	<properties>
-		<javacc.core>8.0.0</javacc.core>
-		<javacc.java>8.0.1-SNAPSHOT</javacc.java>
-		<exec-maven-plugin>1.6.0</exec-maven-plugin>
-		<javacc-maven-plugin>3.0.3</javacc-maven-plugin>
-	</properties>
 
 	<profiles>
 		<profile>
