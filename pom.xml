@@ -12,7 +12,7 @@
 	<description>JavaCC default java code generator: java</description>
 	<groupId>org.javacc.generator</groupId>
 	<artifactId>java</artifactId>
-	<version>8.0.2-SNAPSHOT</version>
+	<version>8.0.1-SNAPSHOT</version>
 
 	<properties>
 		<root>${basedir}/../..</root>
