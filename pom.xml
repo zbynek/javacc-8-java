@@ -83,7 +83,7 @@
 							<failIfNoProjects>true</failIfNoProjects>
 							<ignoreFailures>false</ignoreFailures>
 							<postBuildHookScript>verify.bsh</postBuildHookScript>
-							<localRepositoryPath>../it/local-repo</localRepositoryPath>
+							<localRepositoryPath>it/local-repo</localRepositoryPath>
 							<debug>false</debug>
 							<streamLogs>false</streamLogs>
 							<properties>
