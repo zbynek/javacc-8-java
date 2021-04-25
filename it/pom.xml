@@ -31,12 +31,6 @@
 							<version>${javacc-maven-plugin}</version>
 							<dependencies>
 								<dependency>
-									<groupId>org.javacc</groupId>
-									<artifactId>core</artifactId>
-									<version>${javacc.core}</version>
-									<scope>runtime</scope>
-								</dependency>
-								<dependency>
 									<groupId>org.javacc.generator</groupId>
 									<artifactId>java</artifactId>
 									<version>${javacc.java}</version>
@@ -88,12 +82,6 @@
 							<artifactId>javacc-maven-plugin</artifactId>
 							<dependencies>
 								<dependency>
-									<groupId>org.javacc</groupId>
-									<artifactId>core</artifactId>
-									<version>${javacc.core}</version>
-									<scope>runtime</scope>
-								</dependency>
-								<dependency>
 									<groupId>org.javacc.generator</groupId>
 									<artifactId>java</artifactId>
 									<version>${javacc.java}</version>
@@ -140,12 +128,6 @@
 							<groupId>org.javacc.plugin</groupId>
 							<artifactId>javacc-maven-plugin</artifactId>
 							<dependencies>
-								<dependency>
-									<groupId>org.javacc</groupId>
-									<artifactId>core</artifactId>
-									<version>${javacc.core}</version>
-									<scope>runtime</scope>
-								</dependency>
 								<dependency>
 									<groupId>org.javacc.generator</groupId>
 									<artifactId>java</artifactId>

@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org</groupId>
 		<artifactId>javacc</artifactId>
-		<version>8.0.5</version>
+		<version>8.0.6</version>
 		<relativePath />
 	</parent>
 
@@ -64,7 +64,6 @@
 						<plugin>
 							<groupId>org.apache.maven.plugins</groupId>
 							<artifactId>maven-invoker-plugin</artifactId>
-							<version>3.2.1</version>
 						</plugin>
 					</plugins>
 				</pluginManagement>
@@ -87,7 +86,6 @@
 							<debug>false</debug>
 							<streamLogs>false</streamLogs>
 							<properties>
-								<javacc.core>${javacc.core}</javacc.core>
 								<javacc.java>${javacc.java}</javacc.java>
 								<exec-maven-plugin>1.6.0</exec-maven-plugin>
 								<javacc-maven-plugin>${javacc-maven-plugin}</javacc-maven-plugin>
