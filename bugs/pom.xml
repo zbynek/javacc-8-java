@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.javacc.generator</groupId>
+		<groupId>org.javacc.generator.java</groupId>
 		<version>1.0.0</version>
 		<relativePath>../it</relativePath>
 		<artifactId>it</artifactId>
@@ -11,7 +11,7 @@
 
 	<name>JavaCC Java examples</name>
 	<description>JavaCC Java examples</description>
-	<groupId>org.javacc.generator</groupId>
+	<groupId>org.javacc.generator.java</groupId>
 	<artifactId>bugs</artifactId>
 	<packaging>pom</packaging>
 	<modules>

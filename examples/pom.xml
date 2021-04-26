@@ -3,13 +3,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.javacc.generator</groupId>
+		<groupId>org.javacc.generator.java</groupId>
 		<version>1.0.0</version>
 		<relativePath>../it</relativePath>
 		<artifactId>it</artifactId>
 	</parent>
 	<name>JavaCC examples Java</name>
-	<groupId>org.javacc.generator</groupId>
+	<groupId>org.javacc.generator.java</groupId>
 	<artifactId>examples</artifactId>
 	<packaging>pom</packaging>
 	<modules>
