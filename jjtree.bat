@@ -6,7 +6,7 @@ set CORE_VERSION=8.0.1
 set CORE=%M2%\org\javacc\core\%CORE_VERSION%\core-%CORE_VERSION%.jar
 
 set VERSION=-SNAPSHOT
-set JAVA_NUMBER=8.0.1
+set JAVA_NUMBER=8.0.2
 set JAVA=java-%JAVA_NUMBER%%VERSION%
 
 set TARGET=target\%JAVA%.jar
