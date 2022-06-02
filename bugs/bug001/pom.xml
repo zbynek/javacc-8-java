@@ -64,7 +64,7 @@
 								<available file="${project.basedir}/test/clc1.ref" property="isExpectedAvailable" />
 								<fail unless="isExpectedAvailable" message="${project.basedir}/test/clc1.ref does not exist!" />
 								<condition property="files.match">
-									<filesmatch file1="${project.basedir}/test/clc1.out" file2="${project.basedir}/test/clc1.ref" />
+									<filesmatch file1="${project.basedir}/test/clc1.out" file2="${project.basedir}/test/clc1.ref" textfile="true" />
 								</condition>
 								<fail unless="files.match" message="${project.basedir}/test/clc1.out does not match ${project.basedir}/test/clc1.ref!" />
 							</target>
@@ -83,7 +83,7 @@
 								<available file="${project.basedir}/test/clc2.ref" property="isExpectedAvailable" />
 								<fail unless="isExpectedAvailable" message="${project.basedir}/test/clc2.ref does not exist!" />
 								<condition property="files.match">
-									<filesmatch file1="${project.basedir}/test/clc2.out" file2="${project.basedir}/test/clc2.ref" />
+									<filesmatch file1="${project.basedir}/test/clc2.out" file2="${project.basedir}/test/clc2.ref" textfile="true" />
 								</condition>
 								<fail unless="files.match" message="${project.basedir}/test/clc2.out does not match ${project.basedir}/test/clc2.ref!" />
 							</target>

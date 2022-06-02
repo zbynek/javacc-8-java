@@ -1,9 +1,9 @@
 /* Copyright (c) 2006, Sun Microsystems, Inc.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of the Sun Microsystems, Inc. nor the names of its
  *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -36,7 +36,7 @@ options {
   DEBUG_LOOKAHEAD = false;
   DEBUG_TOKEN_MANAGER = false;
   ERROR_REPORTING = true;
-  JAVA_UNICODE_ESCAPE = false;
+  JAVA_UNICODE_ESCAPE = true;
   UNICODE_INPUT = false;
   IGNORE_CASE = false;
   USER_TOKEN_MANAGER = false;
@@ -45,47 +45,37 @@ options {
   BUILD_TOKEN_MANAGER = true;
   SANITY_CHECK = true;
   FORCE_LA_CHECK = false;
+  JAVA_TEMPLATE_TYPE = "modern";
 }
 
-PARSER_BEGIN(Simple1)
-package simple1;
+PARSER_BEGIN(GwtUnicodeParser)
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 
-
 /** Simple brace matcher. */
-public class Simple1 {
+public class GwtUnicodeParser {
 
   /** Main entry point. */
-  public static void main(String args[]) throws ParseException, FileNotFoundException {
-    InputStream input = System.in;
+  public static void main(String args[]) throws ParseException, IOException {
     PrintStream output = System.out;
     PrintStream error = System.err;
-    InputStream prevInput = null;
     PrintStream prevOutput = null;
     PrintStream prevError = null;
-    if (args.length == 3) {
-      prevInput = input;
-      input = new FileInputStream(args[0]);
+    if (args.length == 2) {
       prevOutput = output;
-      output = new PrintStream(args[1]);
+      output = new PrintStream(args[0]);
       prevError = error;
-      error = new PrintStream(args[2]);
-      System.setIn(input);
+      error = new PrintStream(args[1]);
       System.setOut(output);
       System.setErr(error);
     }
     try {
-      Simple1 parser = new Simple1(input);
+      GwtUnicodeParser parser = new GwtUnicodeParser(new StringProvider("A"));
       parser.Input();
-      output.println("matched");
     } catch (Exception e) {
       error.println(e.getMessage());
     } finally {
-      if (prevInput != null)  System.setIn(prevInput);
       if (prevOutput != null) System.setOut(prevOutput);
       if (prevError != null)  System.setErr(prevError);
     }
@@ -93,18 +83,14 @@ public class Simple1 {
 
 }
 
-PARSER_END(Simple1)
+PARSER_END(GwtUnicodeParser)
 
 /** Root production. */
 void Input() :
 {}
 {
-  MatchedBraces() ("\n"|"\r")* <EOF>
-}
 
-/** Brace matching production. */
-void MatchedBraces() :
-{}
-{
-  "{" [ MatchedBraces() ] "}"
+  "A"  {
+     System.out.println("hello");
+  } <EOF>
 }

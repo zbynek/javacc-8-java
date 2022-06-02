@@ -47,7 +47,7 @@
 								<available file="${project.basedir}/test/bug.ref" property="isExpectedAvailable" />
 								<fail unless="isExpectedAvailable" message="${project.basedir}/test/bug.ref does not exist!" />
 								<condition property="files.match">
-									<filesmatch file1="${project.basedir}/test/bug.out" file2="${project.basedir}/test/bug.ref" />
+									<filesmatch file1="${project.basedir}/test/bug.out" file2="${project.basedir}/test/bug.ref" textfile="true" />
 								</condition>
 								<fail unless="files.match" message="${project.basedir}/test/bug.out does not match ${project.basedir}/test/bug.ref!" />
 							</target>
