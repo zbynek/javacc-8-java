@@ -94,7 +94,7 @@
 								<available file="${project.basedir}/eg1/eg1.ref" property="isExpectedAvailable" />
 								<fail unless="isExpectedAvailable" message="${project.basedir}/eg1/eg1.ref does not exist!" />
 								<condition property="files.match">
-									<filesmatch file1="${project.basedir}/eg1/eg1.out" file2="${project.basedir}/eg1/eg1.ref" />
+									<filesmatch file1="${project.basedir}/eg1/eg1.out" file2="${project.basedir}/eg1/eg1.ref" textfile="true" />
 								</condition>
 								<fail unless="files.match" message="${project.basedir}/eg1/eg1.out does not match ${project.basedir}/eg1/eg1.ref!" />
 							</target>
@@ -113,7 +113,7 @@
 								<available file="${project.basedir}/eg2/eg2.ref" property="isExpectedAvailable" />
 								<fail unless="isExpectedAvailable" message="${project.basedir}/eg2/eg2.ref does not exist!" />
 								<condition property="files.match">
-									<filesmatch file1="${project.basedir}/eg2/eg2.out" file2="${project.basedir}/eg2/eg2.ref" />
+									<filesmatch file1="${project.basedir}/eg2/eg2.out" file2="${project.basedir}/eg2/eg2.ref" textfile="true" />
 								</condition>
 								<fail unless="files.match" message="${project.basedir}/eg2/eg2.out does not match ${project.basedir}/eg2/eg2.ref!" />
 							</target>
@@ -132,7 +132,7 @@
 								<available file="${project.basedir}/eg3/eg3.ref" property="isExpectedAvailable" />
 								<fail unless="isExpectedAvailable" message="${project.basedir}/eg3/eg3.ref does not exist!" />
 								<condition property="files.match">
-									<filesmatch file1="${project.basedir}/eg3/eg3.out" file2="${project.basedir}/eg3/eg3.ref" />
+									<filesmatch file1="${project.basedir}/eg3/eg3.out" file2="${project.basedir}/eg3/eg3.ref" textfile="true" />
 								</condition>
 								<fail unless="files.match" message="${project.basedir}/eg3/eg3.out does not match ${project.basedir}/eg3/eg3.ref!" />
 							</target>
@@ -151,7 +151,7 @@
 								<available file="${project.basedir}/eg4/eg4.ref" property="isExpectedAvailable" />
 								<fail unless="isExpectedAvailable" message="${project.basedir}/eg4/eg4.ref does not exist!" />
 								<condition property="files.match">
-									<filesmatch file1="${project.basedir}/eg4/eg4.out" file2="${project.basedir}/eg4/eg4.ref" />
+									<filesmatch file1="${project.basedir}/eg4/eg4.out" file2="${project.basedir}/eg4/eg4.ref" textfile="true" />
 								</condition>
 								<fail unless="files.match" message="${project.basedir}/eg4/eg4.out does not match ${project.basedir}/eg4/eg4.ref!" />
 							</target>

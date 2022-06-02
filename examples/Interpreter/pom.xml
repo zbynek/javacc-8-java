@@ -82,7 +82,7 @@
 								<available file="${project.basedir}/spl/fact/fact.ref" property="isExpectedAvailable" />
 								<fail unless="isExpectedAvailable" message="${project.basedir}/spl/fact/fact.ref does not exist!" />
 								<condition property="files.match">
-									<filesmatch file1="${project.basedir}/spl/fact/fact.out" file2="${project.basedir}/spl/fact/fact.ref" />
+									<filesmatch file1="${project.basedir}/spl/fact/fact.out" file2="${project.basedir}/spl/fact/fact.ref" textfile="true" />
 								</condition>
 								<fail unless="files.match" message="${project.basedir}/spl/fact/fact.out does not match ${project.basedir}/spl/fact/fact.ref!" />
 							</target>
@@ -101,7 +101,7 @@
 								<available file="${project.basedir}/spl/odd/odd.ref" property="isExpectedAvailable" />
 								<fail unless="isExpectedAvailable" message="${project.basedir}/spl/odd/odd.ref does not exist!" />
 								<condition property="files.match">
-									<filesmatch file1="${project.basedir}/spl/odd/odd.out" file2="${project.basedir}/spl/odd/odd.ref" />
+									<filesmatch file1="${project.basedir}/spl/odd/odd.out" file2="${project.basedir}/spl/odd/odd.ref" textfile="true" />
 								</condition>
 								<fail unless="files.match" message="${project.basedir}/spl/odd/odd.out does not match ${project.basedir}/spl/odd/odd.ref!" />
 							</target>
@@ -120,7 +120,7 @@
 								<available file="${project.basedir}/spl/sqrt/sqrt.ref" property="isExpectedAvailable" />
 								<fail unless="isExpectedAvailable" message="${project.basedir}/spl/sqrt/sqrt.ref does not exist!" />
 								<condition property="files.match">
-									<filesmatch file1="${project.basedir}/spl/sqrt/sqrt.out" file2="${project.basedir}/spl/sqrt/sqrt.ref" />
+									<filesmatch file1="${project.basedir}/spl/sqrt/sqrt.out" file2="${project.basedir}/spl/sqrt/sqrt.ref" textfile="true" />
 								</condition>
 								<fail unless="files.match" message="${project.basedir}/spl/sqrt/sqrt.out does not match ${project.basedir}/spl/sqrt/sqrt.ref!" />
 							</target>

@@ -26,6 +26,7 @@
 		<module>VTransformer</module>
 		<module>Obfuscator</module>
 		<module>Simple</module>
+        <module>Gwt</module>
 	</modules>
 	<build>
 		<pluginManagement>

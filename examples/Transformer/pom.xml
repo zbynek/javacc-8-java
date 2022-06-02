@@ -48,7 +48,7 @@
 								<available file="${project.basedir}/divide.ref" property="isExpectedAvailable" />
 								<fail unless="isExpectedAvailable" message="${project.basedir}/divide.ref does not exist!" />
 								<condition property="files.match">
-									<filesmatch file1="${project.basedir}/divide.out" file2="${project.basedir}/divide.ref" />
+									<filesmatch file1="${project.basedir}/divide.out" file2="${project.basedir}/divide.ref" textfile="true" />
 								</condition>
 								<fail unless="files.match" message="${project.basedir}/divide.out does not match ${project.basedir}/divide.ref!" />
 							</target>

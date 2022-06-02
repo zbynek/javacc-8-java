@@ -5,6 +5,7 @@ target/
 .classpath
 .project
 .settings/
+.idea
 bin/
 
 local-repo/

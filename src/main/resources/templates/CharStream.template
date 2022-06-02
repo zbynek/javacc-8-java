@@ -25,47 +25,47 @@ interface CharStream {
    */
   char readChar() throws java.io.IOException;
 
-#if GENERATE_ANNOTATIONS
-  @Deprecated
-#fi
   /**
    * Returns the column position of the character last read.
    * @deprecated
    * @see #getEndColumn
    */
-  int getColumn();
-
 #if GENERATE_ANNOTATIONS
   @Deprecated
 #fi
+  int getColumn();
+
   /**
    * Returns the line number of the character last read.
    * @deprecated
    * @see #getEndLine
    */
+#if GENERATE_ANNOTATIONS
+  @Deprecated
+#fi
   int getLine();
 
   /**
    * Returns the column number of the last character for current token (being
-   * matched after the last call to BeginTOken).
+   * matched after the last call to BeginToken).
    */
   int getEndColumn();
 
   /**
    * Returns the line number of the last character for current token (being
-   * matched after the last call to BeginTOken).
+   * matched after the last call to BeginToken).
    */
   int getEndLine();
 
   /**
    * Returns the column number of the first character for current token (being
-   * matched after the last call to BeginTOken).
+   * matched after the last call to BeginToken).
    */
   int getBeginColumn();
 
   /**
    * Returns the line number of the first character for current token (being
-   * matched after the last call to BeginTOken).
+   * matched after the last call to BeginToken).
    */
   int getBeginLine();
 

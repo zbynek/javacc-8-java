@@ -108,7 +108,7 @@
 								<available file="${project.basedir}/simple1/ref" property="isExpectedAvailable" />
 								<fail unless="isExpectedAvailable" message="${project.basedir}/simple1/ref does not exist!" />
 								<condition property="files.match">
-									<filesmatch file1="${project.basedir}/simple1/out" file2="${project.basedir}/simple1/ref" />
+									<filesmatch file1="${project.basedir}/simple1/out" file2="${project.basedir}/simple1/ref" textfile="true" />
 								</condition>
 								<fail unless="files.match" message="${project.basedir}/simple1/out does not match ${project.basedir}/simple1/ref!" />
 							</target>
@@ -148,7 +148,7 @@
 								<available file="${project.basedir}/simple3/ref" property="isExpectedAvailable" />
 								<fail unless="isExpectedAvailable" message="${project.basedir}/simple3/ref does not exist!" />
 								<condition property="files.match">
-									<filesmatch file1="${project.basedir}/simple3/out" file2="${project.basedir}/simple3/ref" />
+									<filesmatch file1="${project.basedir}/simple3/out" file2="${project.basedir}/simple3/ref" textfile="true" />
 								</condition>
 								<fail unless="files.match" message="${project.basedir}/simple3/out does not match ${project.basedir}/simple3/ref!" />
 							</target>
@@ -167,7 +167,7 @@
 								<available file="${project.basedir}/xlator/ref" property="isExpectedAvailable" />
 								<fail unless="isExpectedAvailable" message="${project.basedir}/xlator/ref does not exist!" />
 								<condition property="files.match">
-									<filesmatch file1="${project.basedir}/xlator/out" file2="${project.basedir}/xlator/ref" />
+									<filesmatch file1="${project.basedir}/xlator/out" file2="${project.basedir}/xlator/ref" textfile="true" />
 								</condition>
 								<fail unless="files.match" message="${project.basedir}/xlator/out does not match ${project.basedir}/xlator/ref!" />
 							</target>
@@ -186,7 +186,7 @@
 								<available file="${project.basedir}/idlist/ref" property="isExpectedAvailable" />
 								<fail unless="isExpectedAvailable" message="${project.basedir}/idlist/ref does not exist!" />
 								<condition property="files.match">
-									<filesmatch file1="${project.basedir}/idlist/out" file2="${project.basedir}/idlist/ref" />
+									<filesmatch file1="${project.basedir}/idlist/out" file2="${project.basedir}/idlist/ref" textfile="true" />
 								</condition>
 								<fail unless="files.match" message="${project.basedir}/idlist/out does not match ${project.basedir}/idlist/ref!" />
 							</target>
