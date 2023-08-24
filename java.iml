@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="4">
+  <component name="AdditionalModuleElements">
+    <content url="file://$MODULE_DIR$" dumb="true">
+      <sourceFolder url="file://$MODULE_DIR$/bugs/bug001/target/generated-sources/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/bugs/bug002/target/generated-sources/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/Gwt/target/generated-sources/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/JavaCC/target/generated-sources/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/Lookahead/target/generated-sources/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/Transformer/target/generated-sources/java" isTestSource="false" />
+    </content>
+  </component>
+</module>

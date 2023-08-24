@@ -33,9 +33,12 @@ options {
 
 PARSER_BEGIN(JavaCCParser)
 
+/**
+ * Parser for JavaCC grammar.
+ */
 public class JavaCCParser {
 
-  public static void main(String args[]) {
+  public static void main(String[] args) {
     JavaCCParser parser;
     if (args.length == 0) {
       System.out.println("JavaCC Parser:  Reading from standard input . . .");
@@ -69,11 +72,11 @@ public class JavaCCParser {
    * Returns true if the next token is not in the FOLLOW list of "expansion".
    * It is used to decide when the end of an "expansion" has been reached.
    */
-  static private boolean notTailOfExpansionUnit() {
+  private static boolean notTailOfExpansionUnit() {
     Token t;
     t = getToken(1);
-    if (t.kind == BIT_OR || t.kind == COMMA || t.kind == RPAREN || t.kind == RBRACE || t.kind == RBRACKET) return false;
-    return true;
+    return  !(t.kind == BIT_OR || t.kind == COMMA || t.kind == RPAREN
+        || t.kind == RBRACE || t.kind == RBRACKET);
   }
 
 }
@@ -81,9 +84,9 @@ public class JavaCCParser {
 PARSER_END(JavaCCParser)
 
 
-/**********************************************
- * THE JAVACC TOKEN SPECIFICATION STARTS HERE *
- **********************************************/
+/*--------------------------------------------
+ * THE JAVACC TOKEN SPECIFICATION STARTS HERE
+ *-------------------------------------------*/
 
 /* JAVACC RESERVED WORDS: These are the only tokens in JavaCC but not in Java */
 
@@ -350,9 +353,9 @@ TOKEN :
 | < BIT_OR: "|" >
 | < XOR: "^" >
 | < REM: "%" >
-//	| < LSHIFT: "<<" >
-//	| < RSIGNEDSHIFT: ">>" >
-//	| < RUNSIGNEDSHIFT: ">>>" >
+//  | < LSHIFT: "<<" >
+//  | < RSIGNEDSHIFT: ">>" >
+//  | < RUNSIGNEDSHIFT: ">>>" >
 | < PLUSASSIGN: "+=" >
 | < MINUSASSIGN: "-=" >
 | < STARASSIGN: "*=" >
@@ -361,15 +364,15 @@ TOKEN :
 | < ORASSIGN: "|=" >
 | < XORASSIGN: "^=" >
 | < REMASSIGN: "%=" >
-//	| < LSHIFTASSIGN: "<<=" >
-//	| < RSIGNEDSHIFTASSIGN: ">>=" >
-//	| < RUNSIGNEDSHIFTASSIGN: ">>>=" >
+//  | < LSHIFTASSIGN: "<<=" >
+//  | < RSIGNEDSHIFTASSIGN: ">>=" >
+//  | < RUNSIGNEDSHIFTASSIGN: ">>>=" >
 }
 
 
-/************************************************
- * THE JAVACC GRAMMAR SPECIFICATION STARTS HERE *
- ************************************************/
+/*-----------------------------------------------
+ * THE JAVACC GRAMMAR SPECIFICATION STARTS HERE
+ *----------------------------------------------*/
 
 void javacc_input() :
 {}
@@ -503,9 +506,9 @@ void expansion() :
 }
 
 void local_lookahead() :
-	{
-	  boolean commaAtEnd = false, emptyLA = true;
-	}
+  {
+    boolean commaAtEnd = false, emptyLA = true;
+  }
 {
   [
     /*
@@ -516,27 +519,28 @@ void local_lookahead() :
      */
     LOOKAHEAD(1)
     IntegerLiteral()
-	{
-	  emptyLA = false;
-	}
+  {
+    emptyLA = false;
+  }
   ]
   [ LOOKAHEAD(0, { !emptyLA && (getToken(1).kind != RPAREN) } )
     ","
-	{
-	  commaAtEnd = true;
-	}
+  {
+    commaAtEnd = true;
+  }
   ]
   [ LOOKAHEAD(0, { getToken(1).kind != RPAREN && getToken(1).kind != LBRACE } )
     expansion_choices()
-	{
-	  emptyLA = false; commaAtEnd = false;
-	}
+  {
+    emptyLA = false;
+    commaAtEnd = false;
+  }
   ]
   [ LOOKAHEAD(0, { !emptyLA && !commaAtEnd && (getToken(1).kind != RPAREN) } )
     ","
-	{
-	  commaAtEnd = true;
-	}
+  {
+    commaAtEnd = true;
+  }
   ]
   [ LOOKAHEAD(0, { emptyLA || commaAtEnd } )
     "{" Expression() "}"
@@ -628,9 +632,9 @@ void identifier() :
 }
 
 
-/**********************************************
- * THE JJTREE PRODUCTIONS START HERE          *
- **********************************************/
+/*-----------------------------------
+ * THE JJTREE PRODUCTIONS START HERE
+ *-----------------------------------*/
 
 void node_descriptor() :
 {}
@@ -653,19 +657,22 @@ void node_descriptor_expression()
     if (tok.kind == 0) {
       throw new ParseException();
     }
-    if (tok.kind == LPAREN) nesting++;
-    if (tok.kind == RPAREN) {
+    if (tok.kind == LPAREN) {
+      nesting++;
+    } else if (tok.kind == RPAREN) {
       nesting--;
-      if (nesting == 0) break;
+      if (nesting == 0) {
+        break;
+      }
     }
     tok = getNextToken();
   }
 }
 
 
-/**********************************************
- * THE JAVA GRAMMAR SPECIFICATION STARTS HERE *
- **********************************************/
+/*--------------------------------------------
+ * THE JAVA GRAMMAR SPECIFICATION STARTS HERE
+ *--------------------------------------------*/
 
 /*
  * The Java grammar is modified to use sequences of tokens

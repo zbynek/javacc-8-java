@@ -59,7 +59,7 @@ class JavaCodeBuilder extends CodeBuilder<JavaCodeBuilder> {
 
   @Override
   protected final void build() {
-    StringBuffer buffer = new StringBuffer();
+    StringBuffer buffer = new StringBuffer("\n");
 
     if (packageName.length() > 0) {
       buffer.append("package ").append(packageName).append(";\n\n");
