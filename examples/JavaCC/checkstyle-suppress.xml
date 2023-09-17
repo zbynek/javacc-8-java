@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+        "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+        "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+<suppressions>
+    <suppress checks="MultipleVariableDeclarations" files="." />
+    <suppress checks="AbbreviationAsWordInName" files="." />
+    <suppress checks="MemberName" files="." />
+    <suppress checks="MethodName" files="." />
+
+    <suppress checks="Indentation|LineLength" files=".*JavaCC.*TokenManager.java"/>
+    <suppress checks="Indentation|MissingJavadocMethod|LineLength" files=".*JavaCC.*Parser.java"/>
+</suppressions>

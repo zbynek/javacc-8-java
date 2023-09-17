@@ -81,7 +81,7 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
       dumpNfaTables(codeGenerator, tokenizerData);
       dumpMatchInfo(codeGenerator, tokenizerData);
 
-      codeGenerator.print("static {\n  InitStringLiteralData();\n  InitNfaData(); } ");
+      codeGenerator.print("\n  static {\n    InitStringLiteralData();\n    InitNfaData();\n  }");
     } catch (IOException ioe) {
       assert (false);
     }
@@ -106,7 +106,7 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
   private void dumpDfaTables(JavaCodeBuilder codeGenerator, TokenizerData tokenizerData) {
     Map<Integer, int[]> startAndSize = new HashMap<>();
     int i = 0;
-
+    codeGenerator.println();
     codeGenerator.println("private static final int[] stringLiterals = {");
     for (int key : tokenizerData.literalSequence.keySet()) {
       int[] arr = new int[2];
@@ -149,6 +149,7 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
     codeGenerator.println("};");
 
     // Static block to actually initialize the map from the int array above.
+    codeGenerator.println();
     codeGenerator.println("static void InitStringLiteralData() {");
     for (int key : tokenizerData.literalSequence.keySet()) {
       int[] arr = startAndSize.get(key);
@@ -158,6 +159,7 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
   }
 
   private void dumpNfaTables(JavaCodeBuilder codeGenerator, TokenizerData tokenizerData) {
+    codeGenerator.println();
     codeGenerator.println("private static final long[] EMPTY_CHAR_DATA = new long[] {};");
 
     Map<String, String> charDataVars = new HashMap<String, String>();
@@ -205,17 +207,19 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
         charDataVars.put(charDataBuilder.toString(), var);
       }
 
-      codeGenerator.println("CharDataConsts." + var);
+      codeGenerator.print("CharDataConsts." + var);
     }
     codeGenerator.println("};");
 
     // Now dump the chardata vars.
+    codeGenerator.println();
     codeGenerator.println("private static final class CharDataConsts { ");
     for (Map.Entry<String, String> charDataEntry: charDataVars.entrySet()) {
       codeGenerator.println("private static final long[] " + charDataEntry.getValue() + " = " + charDataEntry.getKey() + ";");
     }
     codeGenerator.println("}");
 
+    codeGenerator.println();
     codeGenerator.println("private static final int[] EMPTY_STATE_SET = new int[] {};");
     codeGenerator.println("private static final int[][] jjcompositeState = {");
     for (int i = 0; i < nfa.size(); i++) {
@@ -351,7 +355,7 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
         }
         codeGenerator.print("\"");
       } else {
-        codeGenerator.println("null");
+        codeGenerator.print("null");
       }
     }
     codeGenerator.println("};");
@@ -368,7 +372,7 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
         codeGenerator.print(", ");
       }
       // codeGenerator.genCode("0x" + Integer.toHexString(newStates[i]));
-      codeGenerator.print("" + Integer.toString(newStates[i]));
+      codeGenerator.print(Integer.toString(newStates[i]));
     }
     codeGenerator.println("};");
 
@@ -376,19 +380,21 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
 
     final String staticString = Options.getStatic() ? "static " : "";
     // Token actions.
+    codeGenerator.println();
     codeGenerator.println(staticString + "void TokenLexicalActions(Token matchedToken) {");
     dumpLexicalActions(allMatches, TokenizerData.MatchType.TOKEN, "matchedToken.kind", codeGenerator);
     codeGenerator.println("}");
 
     // Skip actions.
     // TODO(sreeni) : Streamline this mess.
-
+    codeGenerator.println();
     codeGenerator.println(staticString + "void SkipLexicalActions(Token matchedToken) {");
     dumpLexicalActions(allMatches, TokenizerData.MatchType.SKIP, "jjmatchedKind", codeGenerator);
     dumpLexicalActions(allMatches, TokenizerData.MatchType.SPECIAL_TOKEN, "jjmatchedKind", codeGenerator);
     codeGenerator.println("}");
 
     // More actions.
+    codeGenerator.println();
     codeGenerator.println(staticString + "void MoreLexicalActions() {");
     codeGenerator.println("jjimageLen += (lengthOfMatch = jjmatchedPos + 1);");
     dumpLexicalActions(allMatches, TokenizerData.MatchType.MORE, "jjmatchedKind", codeGenerator);
@@ -397,7 +403,7 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
 
   private void dumpLexicalActions(Map<Integer, TokenizerData.MatchInfo> allMatches, TokenizerData.MatchType matchType,
       String kindString, JavaCodeBuilder codeGenerator) {
-    codeGenerator.println("  switch(" + kindString + ") {");
+    codeGenerator.println("  switch (" + kindString + ") {");
     for (int i : allMatches.keySet()) {
       TokenizerData.MatchInfo matchInfo = allMatches.get(i);
       if ((matchInfo.action == null) || (matchInfo.matchType != matchType)) {
@@ -413,6 +419,7 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
   }
 
   private static void generateBitVector(String name, BitSet bits, JavaCodeBuilder codeGenerator) {
+    codeGenerator.println();
     codeGenerator.println("private static final long[] " + name + " = {");
     long[] longs = bits.toLongArray();
     for (int i = 0; i < longs.length; i++) {
@@ -426,12 +433,13 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
   }
 
   private void generateConstantsClass(TokenizerData tokenizerData) {
+    codeGenerator.println();
     codeGenerator.println("public static String[] lexStateNames = {");
     for (int i = 0; i < tokenizerData.lexStateNames.length; i++) {
       if (i > 0) {
         codeGenerator.println(", ");
       }
-      codeGenerator.println("\"" + tokenizerData.lexStateNames[i] + "\"");
+      codeGenerator.print("\"" + tokenizerData.lexStateNames[i] + "\"");
     }
     codeGenerator.println("};");
   }

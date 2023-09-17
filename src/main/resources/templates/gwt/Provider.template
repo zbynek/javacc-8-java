@@ -1,22 +1,26 @@
 
 import java.io.IOException;
 
+/**
+ * Input provider for the parser, can be string based or stream based.
+ */
 public interface Provider {
-    /**
-     * Reads characters into an array
-     * @param buffer  Destination buffer
-     * @param offset   Offset at which to start storing characters
-     * @param length   The maximum possible number of characters to read
-     * @return The number of characters read, or -1 if all read
-     * @exception  IOException
-     */
-    public int read(char buffer[], int offset, int len) throws IOException;
-    
-    /**
-     * Closes the stream and releases any system resources associated with
-     * it.
-     * @exception IOException
-     */
-     public void close() throws IOException;
-    
+  /**
+   * Reads characters into an array.
+   *
+   * @param buffer  Destination buffer
+   * @param offset   Offset at which to start storing characters
+   * @param length   The maximum possible number of characters to read
+   * @return The number of characters read, or -1 if all read
+   * @exception  IOException when reading fails or end of input is reached
+   */
+  public int read(char[] buffer, int offset, int length) throws IOException;
+  
+  /**
+   * Closes the stream and releases any system resources associated with it.
+   *
+   * @exception IOException when closing stream fails
+   */
+  public void close() throws IOException;
+  
 }

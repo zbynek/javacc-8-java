@@ -57,7 +57,7 @@ import java.io.PrintStream;
 public class GwtSimpleParser {
 
   /** Main entry point. */
-  public static void main(String args[]) throws ParseException, IOException {
+  public static void main(String[] args) throws ParseException, IOException {
     PrintStream output = System.out;
     PrintStream error = System.err;
     PrintStream prevOutput = null;
@@ -76,8 +76,12 @@ public class GwtSimpleParser {
     } catch (Exception e) {
       error.println(e.getMessage());
     } finally {
-      if (prevOutput != null) System.setOut(prevOutput);
-      if (prevError != null)  System.setErr(prevError);
+      if (prevOutput != null) {
+        System.setOut(prevOutput);
+      }
+      if (prevError != null) {
+        System.setErr(prevError);
+      }
     }
   }
 
