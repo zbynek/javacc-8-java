@@ -543,7 +543,7 @@ class JavaCharStream {
    * @param encoding the character encoding of the data stream.
    * @param startline line number of the first character of the stream, mostly for error messages.
    * @param startcolumn column number of the first character of the stream.
-   * @throws UnsupportedEncodingException encoding is invalid or unsupported.
+   * @throws java.io.UnsupportedEncodingException encoding is invalid or unsupported.
    */
   public JavaCharStream(java.io.InputStream dstream, String encoding, int startline,
                         int startcolumn) throws java.io.UnsupportedEncodingException {
@@ -565,7 +565,7 @@ class JavaCharStream {
    *
    * @param dstream the underlying data source.
    * @param encoding the character encoding of the data stream.
-   * @throws UnsupportedEncodingException encoding is invalid or unsupported.
+   * @throws java.io.UnsupportedEncodingException encoding is invalid or unsupported.
    */
   public JavaCharStream(java.io.InputStream dstream, String encoding)
       throws java.io.UnsupportedEncodingException {
@@ -612,7 +612,7 @@ class JavaCharStream {
    * @param encoding the character encoding of the data stream.
    * @param startline line number of the first character of the stream, mostly for error messages.
    * @param startcolumn column number of the first character of the stream.
-   * @throws UnsupportedEncodingException encoding is invalid or unsupported.
+   * @throws java.io.UnsupportedEncodingException encoding is invalid or unsupported.
    */
   public void ReInit(java.io.InputStream dstream, String encoding, int startline,
                      int startcolumn) throws java.io.UnsupportedEncodingException {
@@ -634,7 +634,7 @@ class JavaCharStream {
    *
    * @param dstream the underlying data source.
    * @param encoding the character encoding of the data stream.
-   * @throws UnsupportedEncodingException encoding is invalid or unsupported.
+   * @throws java.io.UnsupportedEncodingException encoding is invalid or unsupported.
    */
   public void ReInit(java.io.InputStream dstream, String encoding)
       throws java.io.UnsupportedEncodingException {
