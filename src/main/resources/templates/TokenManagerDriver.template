@@ -34,6 +34,7 @@ ${decls}
       throw new ${LEGACY_EXCEPTION_HANDLING?TokenMgrError:TokenMgrException}("ERROR: Second call to constructor of static lexer."
         + " You must use ReInit() to initialize the static variables.",
         ${LEGACY_EXCEPTION_HANDLING?TokenMgrError:TokenMgrException}.STATIC_LEXER_ERROR);
+    }
 #elif !USER_CHAR_STREAM
   #if JAVA_UNICODE_ESCAPE
     if (JavaCharStream.staticFlag) {
@@ -41,8 +42,8 @@ ${decls}
     if (${charStreamName}.staticFlag) {
   #fi
       throw new ${LEGACY_EXCEPTION_HANDLING?Error:RuntimeException}("ERROR: Cannot use a static CharStream class with a non-static lexical analyzer.");
-#fi
     }
+#fi
     input_stream = stream;
   }
 
