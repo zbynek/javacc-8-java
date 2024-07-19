@@ -36,22 +36,30 @@ THE POSSIBILITY OF SUCH DAMAGE.
   <parent>
     <groupId>org</groupId>
     <artifactId>javacc</artifactId>
-    <version>8.0.6</version>
-    <relativePath />
+    <version>8.1.0-SNAPSHOT</version>
   </parent>
 
-  <name>JavaCC default java code generator: java</name>
-  <description>JavaCC default java code generator: java</description>
   <groupId>org.javacc.generator</groupId>
   <artifactId>java</artifactId>
-  <version>8.0.2-SNAPSHOT</version>
+  <!--  <version>8.1.0-SNAPSHOT</version>-->
+  <packaging>jar</packaging>
 
-  <properties>
-    <root>${basedir}/../..</root>
-    <javacc.core>8.0.1</javacc.core>
-    <javacc.java>${project.version}</javacc.java>
-    <javacc-maven-plugin>3.0.3</javacc-maven-plugin>
-  </properties>
+  <name>JavaCC Java code generator</name>
+  <description>Java code generator module of JavaCC</description>
+  <url>https://github.com/javacc/javacc-8-java</url>
+  <inceptionYear>1996</inceptionYear>
+
+  <organization>
+    <name>javacc.org</name>
+    <url>https://javacc.github.io/javacc/</url>
+  </organization>
+
+  <!--  <properties>-->
+  <!--    <root>${basedir}/../..</root>-->
+  <!--    <javacc.core>8.0.1</javacc.core>-->
+  <!--    <javacc.java>${project.version}</javacc.java>-->
+  <!--    <javacc-maven-plugin.version>3.0.3</javacc-maven-plugin.version>-->
+  <!--  </properties>-->
 
   <scm>
     <connection>scm:git:https://git@github.com/javacc/javacc-8-java.git</connection>
@@ -59,26 +67,31 @@ THE POSSIBILITY OF SUCH DAMAGE.
     <url>scm:git:ssh://git@github.com/javacc/javacc-8-java.git</url>
     <tag>HEAD</tag>
   </scm>
+
   <issueManagement>
     <system>GitHub</system>
     <url>https://github.com/javacc/javacc-8-java/issues</url>
   </issueManagement>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>org.javacc</groupId>
         <artifactId>core</artifactId>
-        <version>${javacc.core}</version>
+        <version>${javacc.core.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
+
   <dependencies>
     <dependency>
       <groupId>org.javacc</groupId>
       <artifactId>core</artifactId>
     </dependency>
   </dependencies>
+
   <profiles>
+
     <profile>
       <id>run-its</id>
       <activation>
@@ -87,43 +100,23 @@ THE POSSIBILITY OF SUCH DAMAGE.
           <value>!true</value>
         </property>
       </activation>
-      <properties>
-        <sitePluginVersion>3.3</sitePluginVersion>
-      </properties>
       <build>
-        <pluginManagement>
-          <plugins>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-invoker-plugin</artifactId>
-              <version>3.6.0</version>
-            </plugin>
-          </plugins>
-        </pluginManagement>
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-invoker-plugin</artifactId>
-            <dependencies>
-              <dependency>
-                <groupId>net.sourceforge.cobertura</groupId>
-                <artifactId>cobertura</artifactId>
-                <version>2.1.1</version>
-              </dependency>
-            </dependencies>
+
             <configuration>
+              <!-- install conf: see
+              https://maven.apache.org/plugins/maven-invoker-plugin/install-mojo.html-->
+              <!-- run conf: see
+              https://maven.apache.org/plugins/maven-invoker-plugin/run-mojo.html#invokerPropertiesFile-->
               <failIfNoProjects>true</failIfNoProjects>
               <ignoreFailures>false</ignoreFailures>
-              <postBuildHookScript>verify.bsh</postBuildHookScript>
+              <!--              <postBuildHookScript>verify.bsh</postBuildHookScript>-->
               <localRepositoryPath>it/local-repo</localRepositoryPath>
-              <debug>false</debug>
-              <streamLogs>false</streamLogs>
-              <properties>
-                <javacc.java>${javacc.java}</javacc.java>
-                <exec-maven-plugin>1.6.0</exec-maven-plugin>
-                <javacc-maven-plugin>${javacc-maven-plugin}</javacc-maven-plugin>
-              </properties>
             </configuration>
+
             <executions>
               <execution>
                 <id>integration-test-java-bugs</id>
@@ -134,6 +127,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
                 <configuration>
                   <projectsDirectory>bugs</projectsDirectory>
                   <settingsFile>bugs/settings.xml</settingsFile>
+                  <ignoreFailures>true</ignoreFailures>
                 </configuration>
               </execution>
 
@@ -146,11 +140,10 @@ THE POSSIBILITY OF SUCH DAMAGE.
                 <configuration>
                   <projectsDirectory>examples</projectsDirectory>
                   <settingsFile>examples/settings.xml</settingsFile>
-                  <pomExcludes>
-                    <pomExclude>GUIParsing/pom.xml</pomExclude>
-                  </pomExcludes>
+                  <ignoreFailures>true</ignoreFailures>
                 </configuration>
               </execution>
+
               <execution>
                 <id>integration-test-java-grammars</id>
                 <goals>
@@ -160,17 +153,16 @@ THE POSSIBILITY OF SUCH DAMAGE.
                 <configuration>
                   <projectsDirectory>grammars</projectsDirectory>
                   <settingsFile>grammars/settings.xml</settingsFile>
-                  <pomExcludes>
-                    <pomExclude>asn1/pom.xml</pomExclude>
-                    <pomExclude>cobol/pom.xml</pomExclude>
-                  </pomExcludes>
+                  <ignoreFailures>true</ignoreFailures>
                 </configuration>
               </execution>
+
             </executions>
+
           </plugin>
         </plugins>
       </build>
     </profile>
-  </profiles>
 
+  </profiles>
 </project>

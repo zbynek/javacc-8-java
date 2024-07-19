@@ -24,7 +24,7 @@ import java.io.FileInputStream;
 import java.util.HashSet;
 import java.util.Set;
 
-class PlSql {
+public class PlSql {
 
     /** Parse PL/SQL from files.  Each arg is expected to be the name of a file,
         or "-" to indicate System.in.

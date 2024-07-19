@@ -35,6 +35,13 @@ public class CharCollector implements CharStream {
   public int bufpos = -1;
   private char[] buffer;
   private int maxNextCharInd = 0;
+  protected int tabSize = 1;
+  protected boolean trackLineColumn = true;
+
+  public void setTabSize(int i) { tabSize = i; }
+  public int getTabSize() { return tabSize; }
+  public boolean getTrackLineColumn() { return trackLineColumn; }
+  public void setTrackLineColumn(boolean tlc) { trackLineColumn = tlc; }
 
   private final void ExpandBuff(boolean wrapAround)
   {

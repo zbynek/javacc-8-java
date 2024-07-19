@@ -32,17 +32,22 @@ THE POSSIBILITY OF SUCH DAMAGE.
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  
   <parent>
     <groupId>org.javacc.generator.java</groupId>
     <artifactId>examples</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0-SNAPSHOT</version>
   </parent>
-  <name>JavaCC examples Java CORBA-IDL</name>
+  
   <groupId>org.javacc.generator.java.examples</groupId>
   <artifactId>corba-idl</artifactId>
   <packaging>jar</packaging>
+
+  <name>JavaCC Java code generator / examples / CORBA-IDL</name>
+  
   <build>
     <plugins>
+    
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
@@ -61,6 +66,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
           </arguments>
         </configuration>
       </plugin>
+      
     </plugins>
   </build>
 </project>
