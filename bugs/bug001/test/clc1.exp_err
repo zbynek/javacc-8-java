@@ -1,0 +1,423 @@
+<DEFAULT> Current input char: 'a' at 1:1
+<DEFAULT> Current input char: 'a' at 1:1
+No string literal start with char: 'a'
+Starting NFA with start state: 0
+Cur char: 'a'
+Looking to move from state: 0; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 0 characters.
+Cur char: 'a'
+Looking to move from state: 1; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 1 characters.
+Cur char: '	'
+Looking to move from state: 1; for: <Id>
+Done with NFA at pos: 2
+Returning token.
+<DEFAULT> Current input char: '	' at 1:3
+<DEFAULT> Current input char: '	' at 1:3
+Looking for string literal match of kind: 2; token image: "\t"
+Cur char: '	'
+Currently matched the first: 1 chars as kind: 2; with image: "\t"
+No NFA state at pos: 2
+Found a SKIP match.
+<DEFAULT> Current input char: '-' at 1:4
+<DEFAULT> Current input char: '-' at 1:4
+Looking for string literal match of kind: 7; token image: "--"
+Cur char: '-'
+Cur char: '-'
+Currently matched the first: 2 chars as kind: 7; with image: "--"
+No NFA state at pos: 3
+Found a SKIP match.
+<LineComment> Current input char: ' ' at 1:6
+<LineComment> Current input char: ' ' at 1:6
+No string literal start with char: ' '
+Starting NFA with start state: 9
+Cur char: ' '
+Looking to move from state: 6; for:  <UNKNOWN>
+Looking to move from state: 5; for: <token of kind 8>
+Looking to move from state: 4; for:  <UNKNOWN>
+Looking to move from state: 2; for: <token of kind 8>
+Found a match of kind: 8; kind: <token of kind 8> using the first: 0 characters.
+Looking to move from state: 9; for:  <UNKNOWN>
+Cur char: 'I'
+Looking to move from state: 6; for:  <UNKNOWN>
+Looking to move from state: 5; for: <token of kind 8>
+Looking to move from state: 4; for:  <UNKNOWN>
+Looking to move from state: 2; for: <token of kind 8>
+Found a match of kind: 8; kind: <token of kind 8> using the first: 1 characters.
+Cur char: 'n'
+Looking to move from state: 6; for:  <UNKNOWN>
+Looking to move from state: 5; for: <token of kind 8>
+Looking to move from state: 4; for:  <UNKNOWN>
+Looking to move from state: 2; for: <token of kind 8>
+Found a match of kind: 8; kind: <token of kind 8> using the first: 2 characters.
+Cur char: 't'
+Looking to move from state: 6; for:  <UNKNOWN>
+Looking to move from state: 5; for: <token of kind 8>
+Looking to move from state: 4; for:  <UNKNOWN>
+Looking to move from state: 2; for: <token of kind 8>
+Found a match of kind: 8; kind: <token of kind 8> using the first: 3 characters.
+Cur char: '6'
+Looking to move from state: 6; for:  <UNKNOWN>
+Looking to move from state: 5; for: <token of kind 8>
+Looking to move from state: 4; for:  <UNKNOWN>
+Looking to move from state: 2; for: <token of kind 8>
+Found a match of kind: 8; kind: <token of kind 8> using the first: 4 characters.
+Cur char: ' '
+Looking to move from state: 6; for:  <UNKNOWN>
+Looking to move from state: 5; for: <token of kind 8>
+Looking to move from state: 4; for:  <UNKNOWN>
+Looking to move from state: 2; for: <token of kind 8>
+Found a match of kind: 8; kind: <token of kind 8> using the first: 5 characters.
+Cur char: '-'
+Looking to move from state: 6; for:  <UNKNOWN>
+Looking to move from state: 5; for: <token of kind 8>
+Looking to move from state: 4; for:  <UNKNOWN>
+Looking to move from state: 2; for: <token of kind 8>
+Cur char: '-'
+Looking to move from state: 8; for: <token of kind 8>
+Found a match of kind: 8; kind: <token of kind 8> using the first: 7 characters.
+Looking to move from state: 7; for:  <UNKNOWN>
+Looking to move from state: 5; for: <token of kind 8>
+Looking to move from state: 2; for: <token of kind 8>
+Done with NFA at pos: 7
+Found a SKIP match.
+<DEFAULT> Current input char: ' ' at 1:14
+<DEFAULT> Current input char: ' ' at 1:14
+Looking for string literal match of kind: 1; token image: " "
+Cur char: ' '
+Currently matched the first: 1 chars as kind: 1; with image: " "
+No NFA state at pos: 2
+Found a SKIP match.
+<DEFAULT> Current input char: '-' at 1:15
+<DEFAULT> Current input char: '-' at 1:15
+Looking for string literal match of kind: 7; token image: "--"
+Cur char: '-'
+Cur char: '-'
+Currently matched the first: 2 chars as kind: 7; with image: "--"
+No NFA state at pos: 3
+Found a SKIP match.
+<LineComment> Current input char: ' ' at 1:17
+<LineComment> Current input char: ' ' at 1:17
+No string literal start with char: ' '
+Starting NFA with start state: 9
+Cur char: ' '
+Looking to move from state: 6; for:  <UNKNOWN>
+Looking to move from state: 5; for: <token of kind 8>
+Looking to move from state: 4; for:  <UNKNOWN>
+Looking to move from state: 2; for: <token of kind 8>
+Found a match of kind: 8; kind: <token of kind 8> using the first: 0 characters.
+Looking to move from state: 9; for:  <UNKNOWN>
+Cur char: 'N'
+Looking to move from state: 6; for:  <UNKNOWN>
+Looking to move from state: 5; for: <token of kind 8>
+Looking to move from state: 4; for:  <UNKNOWN>
+Looking to move from state: 2; for: <token of kind 8>
+Found a match of kind: 8; kind: <token of kind 8> using the first: 1 characters.
+Cur char: 'o'
+Looking to move from state: 6; for:  <UNKNOWN>
+Looking to move from state: 5; for: <token of kind 8>
+Looking to move from state: 4; for:  <UNKNOWN>
+Looking to move from state: 2; for: <token of kind 8>
+Found a match of kind: 8; kind: <token of kind 8> using the first: 2 characters.
+Cur char: 't'
+Looking to move from state: 6; for:  <UNKNOWN>
+Looking to move from state: 5; for: <token of kind 8>
+Looking to move from state: 4; for:  <UNKNOWN>
+Looking to move from state: 2; for: <token of kind 8>
+Found a match of kind: 8; kind: <token of kind 8> using the first: 3 characters.
+Cur char: ' '
+Looking to move from state: 6; for:  <UNKNOWN>
+Looking to move from state: 5; for: <token of kind 8>
+Looking to move from state: 4; for:  <UNKNOWN>
+Looking to move from state: 2; for: <token of kind 8>
+Found a match of kind: 8; kind: <token of kind 8> using the first: 4 characters.
+Cur char: 'y'
+Looking to move from state: 6; for:  <UNKNOWN>
+Looking to move from state: 5; for: <token of kind 8>
+Looking to move from state: 4; for:  <UNKNOWN>
+Looking to move from state: 2; for: <token of kind 8>
+Found a match of kind: 8; kind: <token of kind 8> using the first: 5 characters.
+Cur char: 'e'
+Looking to move from state: 6; for:  <UNKNOWN>
+Looking to move from state: 5; for: <token of kind 8>
+Looking to move from state: 4; for:  <UNKNOWN>
+Looking to move from state: 2; for: <token of kind 8>
+Found a match of kind: 8; kind: <token of kind 8> using the first: 6 characters.
+Cur char: 't'
+Looking to move from state: 6; for:  <UNKNOWN>
+Looking to move from state: 5; for: <token of kind 8>
+Looking to move from state: 4; for:  <UNKNOWN>
+Looking to move from state: 2; for: <token of kind 8>
+Found a match of kind: 8; kind: <token of kind 8> using the first: 7 characters.
+Cur char: ' '
+Looking to move from state: 6; for:  <UNKNOWN>
+Looking to move from state: 5; for: <token of kind 8>
+Looking to move from state: 4; for:  <UNKNOWN>
+Looking to move from state: 2; for: <token of kind 8>
+Found a match of kind: 8; kind: <token of kind 8> using the first: 8 characters.
+Cur char: 's'
+Looking to move from state: 6; for:  <UNKNOWN>
+Looking to move from state: 5; for: <token of kind 8>
+Looking to move from state: 4; for:  <UNKNOWN>
+Looking to move from state: 2; for: <token of kind 8>
+Found a match of kind: 8; kind: <token of kind 8> using the first: 9 characters.
+Cur char: 'u'
+Looking to move from state: 6; for:  <UNKNOWN>
+Looking to move from state: 5; for: <token of kind 8>
+Looking to move from state: 4; for:  <UNKNOWN>
+Looking to move from state: 2; for: <token of kind 8>
+Found a match of kind: 8; kind: <token of kind 8> using the first: 10 characters.
+Cur char: 'p'
+Looking to move from state: 6; for:  <UNKNOWN>
+Looking to move from state: 5; for: <token of kind 8>
+Looking to move from state: 4; for:  <UNKNOWN>
+Looking to move from state: 2; for: <token of kind 8>
+Found a match of kind: 8; kind: <token of kind 8> using the first: 11 characters.
+Cur char: 'p'
+Looking to move from state: 6; for:  <UNKNOWN>
+Looking to move from state: 5; for: <token of kind 8>
+Looking to move from state: 4; for:  <UNKNOWN>
+Looking to move from state: 2; for: <token of kind 8>
+Found a match of kind: 8; kind: <token of kind 8> using the first: 12 characters.
+Cur char: 'o'
+Looking to move from state: 6; for:  <UNKNOWN>
+Looking to move from state: 5; for: <token of kind 8>
+Looking to move from state: 4; for:  <UNKNOWN>
+Looking to move from state: 2; for: <token of kind 8>
+Found a match of kind: 8; kind: <token of kind 8> using the first: 13 characters.
+Cur char: 'r'
+Looking to move from state: 6; for:  <UNKNOWN>
+Looking to move from state: 5; for: <token of kind 8>
+Looking to move from state: 4; for:  <UNKNOWN>
+Looking to move from state: 2; for: <token of kind 8>
+Found a match of kind: 8; kind: <token of kind 8> using the first: 14 characters.
+Cur char: 't'
+Looking to move from state: 6; for:  <UNKNOWN>
+Looking to move from state: 5; for: <token of kind 8>
+Looking to move from state: 4; for:  <UNKNOWN>
+Looking to move from state: 2; for: <token of kind 8>
+Found a match of kind: 8; kind: <token of kind 8> using the first: 15 characters.
+Cur char: 'e'
+Looking to move from state: 6; for:  <UNKNOWN>
+Looking to move from state: 5; for: <token of kind 8>
+Looking to move from state: 4; for:  <UNKNOWN>
+Looking to move from state: 2; for: <token of kind 8>
+Found a match of kind: 8; kind: <token of kind 8> using the first: 16 characters.
+Cur char: 'd'
+Looking to move from state: 6; for:  <UNKNOWN>
+Looking to move from state: 5; for: <token of kind 8>
+Looking to move from state: 4; for:  <UNKNOWN>
+Looking to move from state: 2; for: <token of kind 8>
+Found a match of kind: 8; kind: <token of kind 8> using the first: 17 characters.
+Cur char: ''
+Looking to move from state: 6; for:  <UNKNOWN>
+Looking to move from state: 5; for: <token of kind 8>
+Found a match of kind: 8; kind: <token of kind 8> using the first: 18 characters.
+Looking to move from state: 4; for:  <UNKNOWN>
+Looking to move from state: 2; for: <token of kind 8>
+Cur char: '
+'
+Looking to move from state: 3; for: <token of kind 8>
+Found a match of kind: 8; kind: <token of kind 8> using the first: 19 characters.
+Done with NFA at pos: 19
+Found a SKIP match.
+<DEFAULT> Current input char: 't' at 2:1
+<DEFAULT> Current input char: 't' at 2:1
+No string literal start with char: 't'
+Starting NFA with start state: 0
+Cur char: 't'
+Looking to move from state: 0; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 0 characters.
+Cur char: 'e'
+Looking to move from state: 1; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 1 characters.
+Cur char: 'n'
+Looking to move from state: 1; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 2 characters.
+Cur char: ' '
+Looking to move from state: 1; for: <Id>
+Done with NFA at pos: 3
+Returning token.
+<DEFAULT> Current input char: ' ' at 2:4
+<DEFAULT> Current input char: ' ' at 2:4
+Looking for string literal match of kind: 1; token image: " "
+Cur char: ' '
+Currently matched the first: 1 chars as kind: 1; with image: " "
+No NFA state at pos: 2
+Found a SKIP match.
+<DEFAULT> Current input char: 'I' at 2:5
+<DEFAULT> Current input char: 'I' at 2:5
+No string literal start with char: 'I'
+Starting NFA with start state: 0
+Cur char: 'I'
+Looking to move from state: 0; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 0 characters.
+Cur char: 'n'
+Looking to move from state: 1; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 1 characters.
+Cur char: 't'
+Looking to move from state: 1; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 2 characters.
+Cur char: '1'
+Looking to move from state: 1; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 3 characters.
+Cur char: ' '
+Looking to move from state: 1; for: <Id>
+Done with NFA at pos: 4
+Returning token.
+<DEFAULT> Current input char: ' ' at 2:9
+<DEFAULT> Current input char: ' ' at 2:9
+Looking for string literal match of kind: 1; token image: " "
+Cur char: ' '
+Currently matched the first: 1 chars as kind: 1; with image: " "
+No NFA state at pos: 2
+Found a SKIP match.
+<DEFAULT> Current input char: 'o' at 2:10
+<DEFAULT> Current input char: 'o' at 2:10
+No string literal start with char: 'o'
+Starting NFA with start state: 0
+Cur char: 'o'
+Looking to move from state: 0; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 0 characters.
+Cur char: 't'
+Looking to move from state: 1; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 1 characters.
+Cur char: 'h'
+Looking to move from state: 1; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 2 characters.
+Cur char: 'e'
+Looking to move from state: 1; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 3 characters.
+Cur char: 'r'
+Looking to move from state: 1; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 4 characters.
+Cur char: '-'
+Looking to move from state: 1; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 5 characters.
+Cur char: 't'
+Looking to move from state: 1; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 6 characters.
+Cur char: 'e'
+Looking to move from state: 1; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 7 characters.
+Cur char: 'n'
+Looking to move from state: 1; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 8 characters.
+Cur char: ''
+Looking to move from state: 1; for: <Id>
+Done with NFA at pos: 9
+Returning token.
+<DEFAULT> Current input char: '' at 2:19
+<DEFAULT> Current input char: '' at 2:19
+Looking for string literal match of kind: 4; token image: "\r"
+Cur char: ''
+Currently matched the first: 1 chars as kind: 4; with image: "\r"
+No NFA state at pos: 2
+Found a SKIP match.
+<DEFAULT> Current input char: '
+' at 2:20
+<DEFAULT> Current input char: '
+' at 2:20
+Looking for string literal match of kind: 3; token image: "\n"
+Cur char: '
+'
+Currently matched the first: 1 chars as kind: 3; with image: "\n"
+No NFA state at pos: 2
+Found a SKIP match.
+<DEFAULT> Current input char: 'o' at 3:1
+<DEFAULT> Current input char: 'o' at 3:1
+No string literal start with char: 'o'
+Starting NFA with start state: 0
+Cur char: 'o'
+Looking to move from state: 0; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 0 characters.
+Cur char: 't'
+Looking to move from state: 1; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 1 characters.
+Cur char: 'h'
+Looking to move from state: 1; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 2 characters.
+Cur char: 'e'
+Looking to move from state: 1; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 3 characters.
+Cur char: 'r'
+Looking to move from state: 1; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 4 characters.
+Cur char: '-'
+Looking to move from state: 1; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 5 characters.
+Cur char: 't'
+Looking to move from state: 1; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 6 characters.
+Cur char: 'e'
+Looking to move from state: 1; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 7 characters.
+Cur char: 'n'
+Looking to move from state: 1; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 8 characters.
+Cur char: ' '
+Looking to move from state: 1; for: <Id>
+Done with NFA at pos: 9
+Returning token.
+<DEFAULT> Current input char: ' ' at 3:10
+<DEFAULT> Current input char: ' ' at 3:10
+Looking for string literal match of kind: 1; token image: " "
+Cur char: ' '
+Currently matched the first: 1 chars as kind: 1; with image: " "
+No NFA state at pos: 2
+Found a SKIP match.
+<DEFAULT> Current input char: 'I' at 3:11
+<DEFAULT> Current input char: 'I' at 3:11
+No string literal start with char: 'I'
+Starting NFA with start state: 0
+Cur char: 'I'
+Looking to move from state: 0; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 0 characters.
+Cur char: 'n'
+Looking to move from state: 1; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 1 characters.
+Cur char: 't'
+Looking to move from state: 1; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 2 characters.
+Cur char: '2'
+Looking to move from state: 1; for: <Id>
+Found a match of kind: 9; kind: <Id> using the first: 3 characters.
+Cur char: ''
+Looking to move from state: 1; for: <Id>
+Done with NFA at pos: 4
+Returning token.
+<DEFAULT> Current input char: '' at 3:15
+<DEFAULT> Current input char: '' at 3:15
+Looking for string literal match of kind: 4; token image: "\r"
+Cur char: ''
+Currently matched the first: 1 chars as kind: 4; with image: "\r"
+No NFA state at pos: 2
+Found a SKIP match.
+<DEFAULT> Current input char: '
+' at 3:16
+<DEFAULT> Current input char: '
+' at 3:16
+Looking for string literal match of kind: 3; token image: "\n"
+Cur char: '
+'
+Currently matched the first: 1 chars as kind: 3; with image: "\n"
+No NFA state at pos: 2
+Found a SKIP match.
+<DEFAULT> Current input char: '' at 4:1
+<DEFAULT> Current input char: '' at 4:1
+Looking for string literal match of kind: 4; token image: "\r"
+Cur char: ''
+Currently matched the first: 1 chars as kind: 4; with image: "\r"
+No NFA state at pos: 2
+Found a SKIP match.
+<DEFAULT> Current input char: '
+' at 4:2
+<DEFAULT> Current input char: '
+' at 4:2
+Looking for string literal match of kind: 3; token image: "\n"
+Cur char: '
+'
+Currently matched the first: 1 chars as kind: 3; with image: "\n"
+Found a SKIP match.
+<DEFAULT> Reached EOF at 4:2
+Input file parsed successfully

@@ -1,0 +1,45 @@
+Current input char: '{' at 1:1
+Current input char: '{' at 1:1
+Looking for string literal match of kind: 7; token image: "{"
+Cur char: '{'
+Currently matched the first: 1 chars as kind: 7; with image: "{"
+No NFA state at pos: 2
+Returning token.
+Current input char: ' ' at 1:2
+Current input char: ' ' at 1:2
+Looking for string literal match of kind: 1; token image: " "
+Cur char: ' '
+Currently matched the first: 1 chars as kind: 1; with image: " "
+No NFA state at pos: 2
+Found a SKIP match.
+Current input char: 'c' at 1:3
+Current input char: 'c' at 1:3
+No string literal start with char: 'c'
+Starting NFA with start state: 0
+Cur char: 'c'
+Looking to move from state: 3; for: <IDENTIFIANT>
+Found a match of kind: 17; kind: <IDENTIFIANT> using the first: 0 characters.
+Looking to move from state: 1; for: <NUMBER>
+Looking to move from state: 0; for: <NUMBER>
+Cur char: ' '
+Looking to move from state: 7; for: <VALUEREFERENCE>
+Looking to move from state: 6; for:  <UNKNOWN>
+Looking to move from state: 5; for: <IDENTIFIANT>
+Looking to move from state: 4; for:  <UNKNOWN>
+Done with NFA at pos: 1
+Returning token.
+Current input char: ' ' at 1:4
+Current input char: ' ' at 1:4
+Looking for string literal match of kind: 1; token image: " "
+Cur char: ' '
+Currently matched the first: 1 chars as kind: 1; with image: " "
+No NFA state at pos: 2
+Found a SKIP match.
+Current input char: '}' at 1:5
+Current input char: '}' at 1:5
+Looking for string literal match of kind: 8; token image: "}"
+Cur char: '}'
+Currently matched the first: 1 chars as kind: 8; with image: "}"
+No NFA state at pos: 2
+Returning token.
+Input file parsed successfully

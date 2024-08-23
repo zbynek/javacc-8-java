@@ -1,28 +1,35 @@
-**/vs2017/
+# Structure
 classes/
 target/
-# Eclipse file
+bin/
+
+# Maven
+**/interpolated-*.*
+
+# IDEs & plugins
 .classpath
 .project
 .settings/
 .idea
-bin/
+.gradle
+.groovy
+.checkstyle
+*.iml
 
-local-repo/
+# it local repositories
+it/local-repo/
 
-# Compiled class file
+# Compiled classes
 *.class
 
-# Log file
-*.log
+# Logs
+**/*.log
 
-# BlueJ files
-*.ctxt
+# Results
+**/*.out
+**/*.err
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
+# Packaging
 *.jar
 *.war
 *.nar
@@ -31,9 +38,10 @@ local-repo/
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+# jvm crash logs
 hs_err_pid*
 
+# MS objects
 *.suo
 *.exe
 *.ilk

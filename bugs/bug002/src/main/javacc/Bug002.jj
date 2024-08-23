@@ -1,11 +1,13 @@
-options {
-SANITY_CHECK=false;
-DEBUG_PARSER=true;
-DEBUG_TOKEN_MANAGER=false;
-DEBUG_LOOKAHEAD=true;
-STATIC=false;
-//NO_DFA=false;
+options
+{
+  SANITY_CHECK = false;
+  DEBUG_PARSER = true;
+  DEBUG_TOKEN_MANAGER = true;
+  DEBUG_LOOKAHEAD = true;
+  STATIC = false;
+  //NO_DFA=false;
 }
+
 PARSER_BEGIN(Bug)
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,82 +15,107 @@ import java.io.InputStream;
 import java.io.PrintStream;
 
 public class Bug {
-
-  public static void main(String args[]) throws FileNotFoundException {
-    InputStream input = System.in;
-    PrintStream output = System.out;
-    PrintStream error = System.err;
-    InputStream prevInput = null;
-    PrintStream prevOutput = null;
-    PrintStream prevError = null;
-    if (args.length == 3) {
-    	prevInput = input;   	input = new FileInputStream(args[0]);
-    	prevOutput = output;   	output = new PrintStream(args[1]);
-    	prevError = error;   	error  = new PrintStream(args[2]);
-       	System.setIn(input);
-       	System.setOut(output);
-       	System.setErr(error);
+  
+  public static void main(String args[]) {
+    if (args.length != 3) {
+      System.err.println("Error: invalid number of arguments (" + args.length + ")");
+      System.err.println("Usage: Bug inputfile outputfile errorfile");
+      System.exit(4);
     }
+    String fn = null;
+    InputStream stdInput  = null;
+    PrintStream stdOutput = null;
+    PrintStream stdError  = null;
     try {
-	    Bug parser = new Bug(System.in);
-    	parser.EnumerationItem();
+      // open files and redirect standard streams to them
+      fn = "input";
+      stdInput = System.in;
+      System.setIn(new FileInputStream(args[0]));
+      fn = "output";
+      stdOutput = System.out;
+      System.setOut(new PrintStream(args[1]));
+      fn = "error";
+      stdError  = System.err;
+      System.setErr(new PrintStream(args[2]));
+      // parse
+      Bug parser = new Bug(System.in);
+      parser.EnumerationItem();
+      System.err.println("Input file parsed successfully");
+    } catch (FileNotFoundException e) {
+      System.err.println("Error opening " + fn + " file");
+      System.err.println(e.getMessage());
     } catch (Exception e) {
-      	error.println(e.getMessage());
+      System.err.println("Error parsing input file");
+      System.err.println(e.getMessage());
     } finally {
-        if (prevInput != null)  System.setIn(prevInput);
-        if (prevOutput != null) System.setOut(prevOutput);
-        if (prevError != null)  System.setErr(prevError);
+      // restore standard streams
+      if (stdInput  != null) System.setIn(stdInput);
+      if (stdOutput != null) System.setOut(stdOutput);
+      if (stdError  != null) System.setErr(stdError);
     }
   }
-
+  
 }
 PARSER_END(Bug)
 
-SKIP 						: { " " | "\t" | "\n" | "\r"  | "\f" }
+SKIP : { " " | "\t" | "\n" | "\r" }
 
-TOKEN:
+TOKEN :
 {
- <LBRACKET:"[">
-|<RBRACKET:"]">
-|<LBRACE:"{">
-|<RBRACE:"}">
-|<LPAREN:"(">
-|<RPAREN:")">
+  < LBRACKET : "[" >
+| < RBRACKET : "]" >
+| < LBRACE : "{" >
+| < RBRACE : "}" >
+| < LPAREN : "(" >
+| < RPAREN : ")" >
 }
 
-
-TOKEN:
+TOKEN :
 {
- <#UPPER:["A"-"Z"]>
-|<#LOWER:["a"-"z"]>
-|<#DIGIT:["0"-"9"]>
-|<NUMBER:("0"|["1"-"9"](<DIGIT>)*)>
-|<#LOWERCASEFIRST:<LOWER>("-"(<LOWER>|<UPPER>|<DIGIT>)|(<LOWER>|<UPPER>|<DIGIT>))*>
-|<#UPPERCASEFIRST:<UPPER>("-"(<LOWER>|<UPPER>|<DIGIT>)|(<LOWER>|<UPPER>|<DIGIT>))*>
+  < #UPPER : ["A"-"Z"] > 
+| < #LOWER : ["a"-"z"] > 
+| < #DIGIT : ["0"-"9"] > 
+| < NUMBER : ( "0" | ["1"-"9"] ( < DIGIT > )*) > 
+| < #LOWERCASEFIRST : < LOWER > ( "-" ( < LOWER > | < UPPER > | < DIGIT > ) | ( < LOWER > | < UPPER > | < DIGIT > ) )* > 
+| < #UPPERCASEFIRST : < UPPER > ( "-" ( < LOWER > | < UPPER > | < DIGIT > ) | ( < LOWER > | < UPPER > | < DIGIT > ) )* >
 }
 
-TOKEN:{
- <IDENTIFIANT		: <LOWERCASEFIRST>>
-|<VALUEREFERENCE	: <LOWERCASEFIRST>>
-}
-
-
-void EnumerationItem()  	: {  } 
-{ 
-	<LBRACE>
-	( LOOKAHEAD(2)
-      NamedNumber()
-	| identifier()
-	)
-	<RBRACE>
-}
-void NamedNumber() : 
-{ }
+TOKEN :
 {
-    ( identifier() | valuereference() )
-    <LPAREN> <NUMBER> <RPAREN>
-	
+  < IDENTIFIANT : < LOWERCASEFIRST > >
+| < VALUEREFERENCE : < LOWERCASEFIRST > >
 }
-void identifier() 						: {} { <IDENTIFIANT>}
-void valuereference() 					: {} { <VALUEREFERENCE> }
 
+void EnumerationItem() :
+{}
+{
+  < LBRACE >
+  (
+    LOOKAHEAD(2)
+    NamedNumber()
+  | identifier()
+  )
+  < RBRACE >
+}
+
+void NamedNumber() :
+{}
+{
+  (
+    identifier()
+  | valuereference()
+  )
+  < LPAREN > < NUMBER > < RPAREN >
+}
+
+void identifier() :
+{}
+{
+  < IDENTIFIANT >
+}
+
+void valuereference() :
+{}
+{
+  < VALUEREFERENCE >
+}
