@@ -88,15 +88,16 @@ THE POSSIBILITY OF SUCH DAMAGE.
             <configuration>
               <mainClass>Bug</mainClass>
               <arguments>
-                <argument>${project.basedir}/test/bug.in</argument>
-                <argument>${project.basedir}/test/bug.out</argument>
-                <argument>${project.basedir}/test/bug.err</argument>
+                <argument>${project.basedir}/files/bug.in</argument>
+                <argument>${project.basedir}/files/bug.out</argument>
+                <argument>${project.basedir}/files/bug.err</argument>
               </arguments>
             </configuration>
           </execution>
         </executions>
       </plugin>
 
+      <!-- check the tests results -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
@@ -110,33 +111,33 @@ THE POSSIBILITY OF SUCH DAMAGE.
             <configuration>
               <target unless="maven.test.skip">
                 <!-- out -->
-                <available file="${project.basedir}/test/bug.out" property="isActualOutAvailable" />
+                <available file="${project.basedir}/files/bug.out" property="isActualOutAvailable" />
                 <fail unless="isActualOutAvailable"
-                  message="${project.basedir}/test/bug.out does not exist!" />
-                <available file="${project.basedir}/test/bug.exp_out"
+                  message="${project.basedir}/files/bug.out does not exist!" />
+                <available file="${project.basedir}/files/bug.exp_out"
                   property="isExpectedOutAvailable" />
                 <fail unless="isExpectedOutAvailable"
-                  message="${project.basedir}/test/bug.exp_out does not exist!" />
+                  message="${project.basedir}/files/bug.exp_out does not exist!" />
                 <condition property="out.files.match">
-                  <filesmatch textfile="true" file1="${project.basedir}/test/bug.out"
-                    file2="${project.basedir}/test/bug.exp_out" />
+                  <filesmatch textfile="true" file1="${project.basedir}/files/bug.out"
+                    file2="${project.basedir}/files/bug.exp_out" />
                 </condition>
                 <fail unless="out.files.match"
-                  message="${project.basedir}/test/bug.out does not match ${project.basedir}/test/bug.exp_out!" />
+                  message="${project.basedir}/files/bug.out does not match ${project.basedir}/files/bug.exp_out!" />
                 <!-- err -->
-                <available file="${project.basedir}/test/bug.err" property="isActualErrAvailable" />
+                <available file="${project.basedir}/files/bug.err" property="isActualErrAvailable" />
                 <fail unless="isActualErrAvailable"
-                  message="${project.basedir}/test/bug.err does not exist!" />
-                <available file="${project.basedir}/test/bug.exp_err"
+                  message="${project.basedir}/files/bug.err does not exist!" />
+                <available file="${project.basedir}/files/bug.exp_err"
                   property="isExpectedErrAvailable" />
                 <fail unless="isExpectedErrAvailable"
-                  message="${project.basedir}/test/bug.exp_err does not exist!" />
+                  message="${project.basedir}/files/bug.exp_err does not exist!" />
                 <condition property="err.files.match">
-                  <filesmatch textfile="true" file1="${project.basedir}/test/bug.err"
-                    file2="${project.basedir}/test/bug.exp_err" />
+                  <filesmatch textfile="true" file1="${project.basedir}/files/bug.err"
+                    file2="${project.basedir}/files/bug.exp_err" />
                 </condition>
                 <fail unless="err.files.match"
-                  message="${project.basedir}/test/bug.err does not match ${project.basedir}/test/bug.exp_err!" />
+                  message="${project.basedir}/files/bug.err does not match ${project.basedir}/files/bug.exp_err!" />
               </target>
             </configuration>
           </execution>

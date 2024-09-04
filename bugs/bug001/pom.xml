@@ -88,9 +88,9 @@ THE POSSIBILITY OF SUCH DAMAGE.
             <configuration>
               <mainClass>clc.ComplexLineComment</mainClass>
               <arguments>
-                <argument>${project.basedir}/test/clc1.in2</argument>
-                <argument>${project.basedir}/test/clc1.out</argument>
-                <argument>${project.basedir}/test/clc1.err</argument>
+                <argument>${project.basedir}/files/clc1.in2</argument>
+                <argument>${project.basedir}/files/clc1.out</argument>
+                <argument>${project.basedir}/files/clc1.err</argument>
               </arguments>
             </configuration>
           </execution>
@@ -103,9 +103,9 @@ THE POSSIBILITY OF SUCH DAMAGE.
             <configuration>
               <mainClass>clc.ComplexLineComment</mainClass>
               <arguments>
-                <argument>${project.basedir}/test/clc2.in</argument>
-                <argument>${project.basedir}/test/clc2.out</argument>
-                <argument>${project.basedir}/test/clc2.err</argument>
+                <argument>${project.basedir}/files/clc2.in</argument>
+                <argument>${project.basedir}/files/clc2.out</argument>
+                <argument>${project.basedir}/files/clc2.err</argument>
               </arguments>
             </configuration>
           </execution>
@@ -127,33 +127,33 @@ THE POSSIBILITY OF SUCH DAMAGE.
               <skip>false</skip>
               <target unless="maven.test.skip">
                 <!-- out -->
-                <available file="${project.basedir}/test/clc1.out" property="isActualOutAvailable" />
+                <available file="${project.basedir}/files/clc1.out" property="isActualOutAvailable" />
                 <fail unless="isActualOutAvailable"
-                  message="${project.basedir}/test/clc1.out does not exist!" />
-                <available file="${project.basedir}/test/clc1.exp_out"
+                  message="${project.basedir}/files/clc1.out does not exist!" />
+                <available file="${project.basedir}/files/clc1.exp_out"
                   property="isExpectedOutAvailable" />
                 <fail unless="isExpectedOutAvailable"
-                  message="${project.basedir}/test/clc1.exp_out does not exist!" />
+                  message="${project.basedir}/files/clc1.exp_out does not exist!" />
                 <condition property="out.files.match">
-                  <filesmatch textfile="true" file1="${project.basedir}/test/clc1.out"
-                    file2="${project.basedir}/test/clc1.exp_out" />
+                  <filesmatch textfile="true" file1="${project.basedir}/files/clc1.out"
+                    file2="${project.basedir}/files/clc1.exp_out" />
                 </condition>
                 <fail unless="out.files.match"
-                  message="${project.basedir}/test/clc1.out does not match ${project.basedir}/test/clc1.exp_out!" />
+                  message="${project.basedir}/files/clc1.out does not match ${project.basedir}/files/clc1.exp_out!" />
                 <!-- err -->
-                <available file="${project.basedir}/test/clc1.err" property="isActualErrAvailable" />
+                <available file="${project.basedir}/files/clc1.err" property="isActualErrAvailable" />
                 <fail unless="isActualErrAvailable"
-                  message="${project.basedir}/test/clc1.err does not exist!" />
-                <available file="${project.basedir}/test/clc1.exp_err"
+                  message="${project.basedir}/files/clc1.err does not exist!" />
+                <available file="${project.basedir}/files/clc1.exp_err"
                   property="isExpectedErrAvailable" />
                 <fail unless="isExpectedErrAvailable"
-                  message="${project.basedir}/test/clc1.exp_err does not exist!" />
+                  message="${project.basedir}/files/clc1.exp_err does not exist!" />
                 <condition property="err.files.match">
-                  <filesmatch textfile="true" file1="${project.basedir}/test/clc1.err"
-                    file2="${project.basedir}/test/clc1.exp_err" />
+                  <filesmatch textfile="true" file1="${project.basedir}/files/clc1.err"
+                    file2="${project.basedir}/files/clc1.exp_err" />
                 </condition>
                 <fail unless="err.files.match"
-                  message="${project.basedir}/test/clc1.err does not match ${project.basedir}/test/clc1.exp_err!" />
+                  message="${project.basedir}/files/clc1.err does not match ${project.basedir}/files/clc1.exp_err!" />
               </target>
             </configuration>
           </execution>
@@ -167,32 +167,32 @@ THE POSSIBILITY OF SUCH DAMAGE.
               <skip>false</skip>
               <target unless="maven.test.skip">
                 <!-- out -->
-                <available file="${project.basedir}/test/clc2.out" property="isActualAvailable" />
+                <available file="${project.basedir}/files/clc2.out" property="isActualAvailable" />
                 <fail unless="isActualAvailable"
-                  message="${project.basedir}/test/clc2.out does not exist!" />
-                <available file="${project.basedir}/test/clc2.ref" property="isExpectedAvailable" />
+                  message="${project.basedir}/files/clc2.out does not exist!" />
+                <available file="${project.basedir}/files/clc2.exp_out" property="isExpectedAvailable" />
                 <fail unless="isExpectedAvailable"
-                  message="${project.basedir}/test/clc2.ref does not exist!" />
+                  message="${project.basedir}/files/clc2.exp_out does not exist!" />
                 <condition property="files.match">
-                  <filesmatch textfile="true" file1="${project.basedir}/test/clc2.out"
-                    file2="${project.basedir}/test/clc2.ref" />
+                  <filesmatch textfile="true" file1="${project.basedir}/files/clc2.out"
+                    file2="${project.basedir}/files/clc2.exp_out" />
                 </condition>
                 <fail unless="files.match"
-                  message="${project.basedir}/test/clc2.out does not match ${project.basedir}/test/clc2.ref!" />
+                  message="${project.basedir}/files/clc2.out does not match ${project.basedir}/files/clc2.exp_out!" />
                 <!-- err -->
-                <available file="${project.basedir}/test/clc2.err" property="isActualErrAvailable" />
+                <available file="${project.basedir}/files/clc2.err" property="isActualErrAvailable" />
                 <fail unless="isActualErrAvailable"
-                  message="${project.basedir}/test/clc2.err does not exist!" />
-                <available file="${project.basedir}/test/clc2.exp_err"
+                  message="${project.basedir}/files/clc2.err does not exist!" />
+                <available file="${project.basedir}/files/clc2.exp_err"
                   property="isExpectedErrAvailable" />
                 <fail unless="isExpectedErrAvailable"
-                  message="${project.basedir}/test/clc2.exp_err does not exist!" />
+                  message="${project.basedir}/files/clc2.exp_err does not exist!" />
                 <condition property="err.files.match">
-                  <filesmatch textfile="true" file1="${project.basedir}/test/clc2.err"
-                    file2="${project.basedir}/test/clc2.exp_err" />
+                  <filesmatch textfile="true" file1="${project.basedir}/files/clc2.err"
+                    file2="${project.basedir}/files/clc2.exp_err" />
                 </condition>
                 <fail unless="err.files.match"
-                  message="${project.basedir}/test/clc2.err does not match ${project.basedir}/test/clc2.exp_err!" />
+                  message="${project.basedir}/files/clc2.err does not match ${project.basedir}/files/clc2.exp_err!" />
               </target>
             </configuration>
           </execution>
