@@ -155,7 +155,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
                 <configuration>
                   <projectsDirectory>grammars</projectsDirectory>
                   <settingsFile>grammars/settings.xml</settingsFile>
-                  <ignoreFailures>true</ignoreFailures>
+                  <ignoreFailures>false</ignoreFailures>
                 </configuration>
               </execution>
 
