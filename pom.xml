@@ -129,7 +129,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
                 <configuration>
                   <projectsDirectory>bugs</projectsDirectory>
                   <settingsFile>bugs/settings.xml</settingsFile>
-                  <ignoreFailures>true</ignoreFailures>
+                  <ignoreFailures>false</ignoreFailures>
                 </configuration>
               </execution>
 
@@ -142,7 +142,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
                 <configuration>
                   <projectsDirectory>examples</projectsDirectory>
                   <settingsFile>examples/settings.xml</settingsFile>
-                  <ignoreFailures>true</ignoreFailures>
+                  <ignoreFailures>false</ignoreFailures>
                 </configuration>
               </execution>
 
@@ -155,7 +155,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
                 <configuration>
                   <projectsDirectory>grammars</projectsDirectory>
                   <settingsFile>grammars/settings.xml</settingsFile>
-                  <ignoreFailures>true</ignoreFailures>
+                  <ignoreFailures>false</ignoreFailures>
                 </configuration>
               </execution>
 

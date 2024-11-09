@@ -88,7 +88,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
             <configuration>
               <mainClass>clc.ComplexLineComment</mainClass>
               <arguments>
-                <argument>${project.basedir}/files/clc1.in2</argument>
+                <argument>${project.basedir}/files/clc1.in</argument>
                 <argument>${project.basedir}/files/clc1.out</argument>
                 <argument>${project.basedir}/files/clc1.err</argument>
               </arguments>

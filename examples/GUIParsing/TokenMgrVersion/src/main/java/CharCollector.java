@@ -227,4 +227,43 @@ public class CharCollector implements CharStream {
   {
      buffer = null;
   }
+
+    private char nextChar;
+
+  /**
+   * Returns next character.
+   *
+   * @return next character in the input
+   */
+  public char getNextChar() {
+    return nextChar;
+  }
+
+  /**
+   * Checks next character.
+   *
+   * @return whether next character is available
+   */
+  public boolean hasNextChar() {
+    try {
+      nextChar = readChar();
+      return true;
+    } catch (java.io.IOException ex) {
+      return false;
+    }
+  }
+
+  /**
+   * Checks next character and marks new token.
+   *
+   * @return whether next character is available
+   */
+  public boolean hasNextToken() {
+    try {
+      nextChar = BeginToken();
+      return true;
+    } catch (java.io.IOException ex) {
+      return false;
+    }
+  }
 }

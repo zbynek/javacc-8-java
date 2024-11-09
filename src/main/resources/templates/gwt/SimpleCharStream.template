@@ -25,6 +25,7 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class SimpleCharStream {
   ${PREFIX}protected Provider inputStream;
 
   ${PREFIX}protected char[] buffer;
+  ${PREFIX}private char nextChar;
   ${PREFIX}protected int maxNextCharInd = 0;
   ${PREFIX}protected int inBuf = 0;
   ${PREFIX}protected int tabSize = 1;
@@ -89,7 +90,7 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class SimpleCharStream {
     tokenBegin = 0;
   }
 
-  ${PREFIX}protected void FillBuff() throws java.io.IOException {
+  ${PREFIX}protected boolean FillBuff() {
     if (maxNextCharInd == available) {
       if (available == bufsize) {
         if (tokenBegin > 2048) {
@@ -113,27 +114,38 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class SimpleCharStream {
     try {
       if ((i = inputStream.read(buffer, maxNextCharInd, available - maxNextCharInd)) == -1) {
         inputStream.close();
-        throw new java.io.IOException();
+        reset();
+        return false;
       } else {
         maxNextCharInd += i;
+        return true;
       }
     } catch (java.io.IOException e) {
-      --bufpos;
-      backup(0);
-      if (tokenBegin == -1) {
-        tokenBegin = bufpos;
-      }
-      throw e;
+      reset();
+      return false;
     }
   }
 
-  /** Start. */
-  ${PREFIX}public char BeginToken() throws java.io.IOException {
-    tokenBegin = -1;
-    char c = readChar();
-    tokenBegin = bufpos;
+  private void reset() {
+    --bufpos;
+    backup(0);
+    if (tokenBegin == -1) {
+      tokenBegin = bufpos;
+    }
+  }
 
-    return c;
+  /**
+   * Checks next character and marks token start.
+   *
+   * @return whether next character is available
+   */
+  ${PREFIX}public boolean hasNextToken() {
+    tokenBegin = -1;
+    if (hasNextChar()) {
+      tokenBegin = bufpos;
+      return true;
+    }
+    return false;
   }
 #if KEEP_LINE_COLUMN
 
@@ -172,8 +184,21 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class SimpleCharStream {
   }
 #fi
 
-  /** Read a character. */
-  ${PREFIX}public char readChar() throws java.io.IOException {
+  /**
+   * Gets next character from the input.
+   *
+   * @return next character in the input
+   */
+  ${PREFIX}public char getNextChar() {
+    return nextChar;
+  }
+
+  /**
+   * Checks if there is another character in the input.
+   *
+   * @return whether next character exists
+   */
+  ${PREFIX}public boolean hasNextChar() {
     if (inBuf > 0) {
       --inBuf;
 
@@ -181,11 +206,14 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class SimpleCharStream {
         bufpos = 0;
       }
 
-      return buffer[bufpos];
+      nextChar = buffer[bufpos];
+      return true;
     }
 
     if (++bufpos >= maxNextCharInd) {
-      FillBuff();
+      if (!FillBuff()) {
+        return false;
+      }
     }
 
     char c = buffer[bufpos];
@@ -193,7 +221,8 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class SimpleCharStream {
 #if KEEP_LINE_COLUMN
     UpdateLineColumn(c);
 #fi
-    return c;
+    nextChar = c;
+    return true;
   }
 
   /**

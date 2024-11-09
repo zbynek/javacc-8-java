@@ -21,9 +21,24 @@ interface CharStream {
   /**
    * Returns the next character from the selected input.  The method
    * of selecting the input is the responsibility of the class
-   * implementing this interface.  Can throw any java.io.IOException.
+   * implementing this interface. Can throw IndexOutOfBoundsException
+   * if there are no more characters.
    */
-  char readChar() throws java.io.IOException;
+  char getNextChar();
+
+  /**
+   * Checks whether there are unread characters in the input.
+   *
+   * @return whether next character exists
+   */
+  boolean hasNextChar();
+
+  /**
+   * Similar to hasNextCharacter, but may have additional side effects.
+   *
+   * @return whether next character exists
+   */
+  boolean hasNextToken();
 
   /**
    * Returns the column position of the character last read.
