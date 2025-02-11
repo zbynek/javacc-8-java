@@ -1,6 +1,38 @@
-
+/*
+ * Copyright (c) 2020-2025, Sreeni Viswanadha <sreeni@viswanadha.net>.
+ * Copyright (c) 2024-2025, Marc Mazas <mazas.marc@gmail.com>.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *     * Redistributions of source code must retain the above copyright notice,
+ *       this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the names of of the copyright holders nor the names of its
+ *       contributors may be used to endorse or promote products derived from
+ *       this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+ * THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package org.javacc.java;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import org.javacc.Version;
 import org.javacc.parser.CodeGeneratorSettings;
 import org.javacc.parser.Context;
@@ -13,151 +45,164 @@ import org.javacc.parser.RegularExpression;
 import org.javacc.parser.TokenProduction;
 import org.javacc.parser.TokenizerData;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- * The {@link JavaHelperFiles} class.
- */
+/** The {@link JavaHelperFiles} class. */
 abstract class JavaHelperFiles {
 
-  /**
-   * Constructs an instance of {@link JavaHelperFiles}.
-   */
+  /** Constructs an instance of {@link JavaHelperFiles}. */
   private JavaHelperFiles() {}
 
-
-  static void genMiscFile(String fileName, String templatePath, Context context) throws Error {
-    try (JavaCodeBuilder builder = JavaCodeBuilder.of(context, CodeGeneratorSettings.of(Options.getOptions()))) {
-      builder.setFile(new File(Options.getOutputDirectory(), fileName));
+  static void genMiscFile(final String fileName, final String templatePath, final Context context)
+      throws Error {
+    try (JavaCodeBuilder jcb =
+        JavaCodeBuilder.of(context, CodeGeneratorSettings.of(Options.getOptions()))) {
+      jcb.setFile(new File(Options.getOutputDirectory(), fileName));
 
       /*
        * cba -- 2013/07/22 -- previously wired to a typo version of this option
        * -- KEEP_LINE_COL
        */
-      builder.setVersion(Version.version).addTools(JavaCCGlobals.toolName)
-      .addOption(Options.USEROPTION__KEEP_LINE_COLUMN);
+      jcb
+          .setVersion(Version.version)
+          .addTools(JavaCCGlobals.toolName)
+          .addOption(Options.UO__KEEP_LINE_COLUMN);
 
-      builder.setPackageName(JavaUtil.parsePackage(context));
-      builder.printTemplate(templatePath);
-    } catch (IOException e) {
+      jcb.setPackageName(JavaUtil.parsePackage(context));
+      jcb.printTemplate(templatePath);
+    } catch (final IOException e) {
       System.err.println("Failed to create " + fileName + " " + e);
       context.errors().semantic_error("Could not open file " + fileName + " for writing.");
       throw new Error();
     }
   }
 
-  static void gen_Token(Context context) {
-    try (JavaCodeBuilder builder = JavaCodeBuilder.of(context, CodeGeneratorSettings.of(Options.getOptions()))) {
-      builder.setFile(new File(Options.getOutputDirectory(), "Token.java"));
-      builder.setVersion(Version.version).addTools(JavaCCGlobals.toolName);
-      builder.setPackageName(JavaUtil.parsePackage(context));
+  static void gen_Token(final Context context) {
+    try (JavaCodeBuilder jcb =
+        JavaCodeBuilder.of(context, CodeGeneratorSettings.of(Options.getOptions()))) {
+      jcb.setFile(new File(Options.getOutputDirectory(), "Token.java"));
+      jcb.setVersion(Version.version).addTools(JavaCCGlobals.toolName);
+      jcb.setPackageName(JavaUtil.parsePackage(context));
 
-      builder.addOption(Options.USEROPTION__TOKEN_EXTENDS, Options.USEROPTION__KEEP_LINE_COLUMN,
-          Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC);
+      jcb.addOption(
+          Options.UO__TOKEN_EXTENDS,
+          Options.UO__KEEP_LINE_COLUMN,
+          Options.UO__SUPPORT_CLASS_VISIBILITY_PUBLIC);
 
-      builder.printTemplate("/templates/Token.template");
-    } catch (IOException e) {
+      jcb.printTemplate("/templates/Token.template");
+    } catch (final IOException e) {
       System.err.println("Failed to create Token " + e);
       context.errors().semantic_error("Could not open file Token.java for writing.");
       throw new Error();
     }
   }
 
-
-  static void gen_TokenManager(Context context) {
-    try (JavaCodeBuilder builder = JavaCodeBuilder.of(context, CodeGeneratorSettings.of(Options.getOptions()))) {
-      builder.setFile(new File(Options.getOutputDirectory(), "TokenManager.java"));
-      builder.setVersion(Version.version).addTools(JavaCCGlobals.toolName)
-      .addOption(Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC);
-      builder.setPackageName(JavaUtil.parsePackage(context));
-      builder.printTemplate("/templates/TokenManager.template");
-    } catch (IOException e) {
+  static void gen_TokenManager(final Context context) {
+    try (JavaCodeBuilder jcb =
+        JavaCodeBuilder.of(context, CodeGeneratorSettings.of(Options.getOptions()))) {
+      jcb.setFile(new File(Options.getOutputDirectory(), "TokenManager.java"));
+      jcb
+          .setVersion(Version.version)
+          .addTools(JavaCCGlobals.toolName)
+          .addOption(Options.UO__SUPPORT_CLASS_VISIBILITY_PUBLIC);
+      jcb.setPackageName(JavaUtil.parsePackage(context));
+      jcb.printTemplate("/templates/TokenManager.template");
+    } catch (final IOException e) {
       System.err.println("Failed to create TokenManager " + e);
       context.errors().semantic_error("Could not open file TokenManager.java for writing.");
       throw new Error();
     }
   }
 
-  static void gen_Constants(Context context, TokenizerData tokenizerData) throws MetaParseException {
+  static void gen_Constants(final Context context, final TokenizerData tokenizerData)
+      throws MetaParseException {
     if (context.errors().get_error_count() != 0) {
       throw new MetaParseException();
     }
 
-    List<String> toolnames = new ArrayList<>(context.globals().toolNames);
+    final List<String> toolnames = new ArrayList<>(context.globals().toolNames);
     toolnames.add(JavaCCGlobals.toolName);
 
-    try (JavaCodeBuilder builder = JavaCodeBuilder.of(context, CodeGeneratorSettings.create())) {
-      builder.setFile(new File(Options.getOutputDirectory(), context.globals().cu_name + "Constants.java"));
-      builder.setPackageName(JavaUtil.parsePackage(context));
-      builder.addTools(toolnames.toArray(new String[toolnames.size()]));
+    try (JavaCodeBuilder jcb = JavaCodeBuilder.of(context, CodeGeneratorSettings.create())) {
+      jcb.setFile(
+          new File(Options.getOutputDirectory(), context.globals().cu_name + "Constants.java"));
+      jcb.setPackageName(JavaUtil.parsePackage(context));
+      jcb.addTools(toolnames.toArray(new String[toolnames.size()]));
 
-      builder.println();
-      builder.println("/**");
-      builder.println(" * Token literal values and constants.");
-      builder.println(" * Generated by org.javacc.parser.OtherFilesGen#start()");
-      builder.println(" */");
+      jcb.println();
+      jcb.println("/**");
+      jcb.println(" * Token literal values and constants.");
+      jcb.println(" * Generated by org.javacc.parser.OtherFilesGen#start()");
+      jcb.println(" */");
 
       if (Options.getSupportClassVisibilityPublic()) {
-        builder.print("public ");
+        jcb.print("public ");
       }
-      builder.println("interface " + context.globals().cu_name + "Constants {");
-      builder.println();
+      jcb.println("interface " + context.globals().cu_name + "Constants {");
+      jcb.println();
 
-      builder.println("  /** End of File. */");
-      builder.println("  int EOF = 0;");
-      for (RegularExpression re : context.globals().ordered_named_tokens) {
-        builder.println("  /** RegularExpression Id. */");
-        builder.println("  int " + re.label + " = " + re.ordinal + ";");
+      jcb.println("  /** End of File. */");
+      jcb.println("  int EOF = 0;");
+      for (final RegularExpression re : context.globals().ordered_named_tokens) {
+        jcb.println("  /** RegularExpression Id. */");
+        jcb.println("  int " + re.label + " = " + re.ordinal + ";");
       }
-      builder.println();
+      jcb.println();
       if (!Options.getUserTokenManager() && Options.getBuildTokenManager()) {
         for (int i = 0; i < tokenizerData.lexStateNames.length; i++) {
-          builder.println("  /** Lexical state. */");
-          builder.println("  int " + tokenizerData.lexStateNames[i] + " = " + i + ";");
+          jcb.println("  /** Lexical state. */");
+          jcb.println("  int " + tokenizerData.lexStateNames[i] + " = " + i + ";");
         }
-        builder.println();
+        jcb.println();
       }
-      builder.println("  /** Literal token values. */");
-      builder.println("  String[] tokenImage = {");
-      builder.println("    \"<EOF>\",");
+      jcb.println("  /** Literal token values. */");
+      jcb.println("  String[] tokenImage = {");
+      jcb.println("    \"<EOF>\",");
 
-      for (TokenProduction tp : context.globals().rexprlist) {
-        for (RegExprSpec res : tp.respecs) {
-          builder.print("    ");
+      for (final TokenProduction tp : context.globals().rexprlist) {
+        for (final RegExprSpec res : tp.respecs) {
+          jcb.print("    ");
           if (res.rexp instanceof RStringLiteral) {
-            builder.println("\"\\\""
-                + JavaCCGlobals.add_escapes(JavaCCGlobals.add_escapes(((RStringLiteral) res.rexp).image)) + "\\\"\",");
+            jcb.println(
+                "\"\\\""
+                    + JavaCCGlobals.add_escapes(
+                        JavaCCGlobals.add_escapes(((RStringLiteral) res.rexp).image))
+                    + "\\\"\",");
           } else if (!res.rexp.label.equals("")) {
-            builder.println("\"<" + res.rexp.label + ">\",");
+            jcb.println("\"<" + res.rexp.label + ">\",");
           } else {
             if (res.rexp.tpContext.kind == TokenProduction.TOKEN) {
-              context.errors().warning(res.rexp,
-                  "Consider giving this non-string token a label for better error reporting.");
+              context
+                  .errors()
+                  .warning(
+                      res.rexp,
+                      "Consider giving this non-string token a label for better error reporting.");
             }
-            builder.println("\"<token of kind " + res.rexp.ordinal + ">\",");
+            jcb.println("\"<token of kind " + res.rexp.ordinal + ">\",");
           }
         }
       }
-      builder.println("  };");
-      builder.println("}");
-    } catch (java.io.IOException e) {
-      context.errors()
-      .semantic_error("Could not open file " + context.globals().cu_name + "Constants.java for writing.");
+      jcb.println("  };");
+      jcb.println("}");
+    } catch (final java.io.IOException e) {
+      context
+          .errors()
+          .semantic_error(
+              "Could not open file " + context.globals().cu_name + "Constants.java for writing.");
       throw new Error();
     }
   }
 
-  static void generateSimple(String template, String outputFileName, CodeGeneratorSettings settings,
-      Context context) throws IOException {
-    File file = new File((String) settings.get("OUTPUT_DIRECTORY"), outputFileName);
+  static void generateSimple(
+      final String template,
+      final String outputFileName,
+      final CodeGeneratorSettings settings,
+      final Context context)
+      throws IOException {
+    final File file = new File((String) settings.get("OUTPUT_DIRECTORY"), outputFileName);
 
-    try (JavaCodeBuilder builder = JavaCodeBuilder.of(context, settings)) {
-      builder.setFile(file);
-      builder.setPackageName(JavaUtil.parsePackage(context));
-      builder.printTemplate(template);
+    try (JavaCodeBuilder jcb = JavaCodeBuilder.of(context, settings)) {
+      jcb.setFile(file);
+      jcb.setPackageName(JavaUtil.parsePackage(context));
+      jcb.printTemplate(template);
     }
   }
 }

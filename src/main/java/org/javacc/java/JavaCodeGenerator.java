@@ -1,4 +1,32 @@
-
+/*
+ * Copyright (c) 2020-2025, Sreeni Viswanadha <sreeni@viswanadha.net>.
+ * Copyright (c) 2024-2025, Marc Mazas <mazas.marc@gmail.com>.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *     * Redistributions of source code must retain the above copyright notice,
+ *       this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the names of of the copyright holders nor the names of its
+ *       contributors may be used to endorse or promote products derived from
+ *       this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+ * THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package org.javacc.java;
 
 import org.javacc.jjtree.DefaultJJTreeVisitor;
@@ -11,91 +39,99 @@ import org.javacc.parser.TokenizerData;
 
 public class JavaCodeGenerator implements CodeGenerator {
 
-  /**
-   * The name of the Java code generator.
-   */
+  /** The name of the Java code generator. */
   @Override
   public final String getName() {
     return "Java";
   }
 
-  /**
-   * Generate any other support files you need.
-   */
+  /** Generate any other support files you need. */
   @Override
-  public boolean generateHelpers(Context context, CodeGeneratorSettings settings, TokenizerData tokenizerData) {
-    JavaTemplates templates = JavaTemplates.getTemplates();
+  public boolean generateHelpers(
+      final Context context,
+      final CodeGeneratorSettings settings,
+      final TokenizerData tokenizerData) {
+    final JavaTemplates templates = JavaTemplates.getTemplates();
 
     try {
-      JavaHelperFiles.generateSimple("/templates/TokenMgrError.template",
-          JavaTemplates.getTokenMgrErrorClass() + ".java", settings, context);
-      JavaHelperFiles.generateSimple(templates.getParseExceptionTemplateResourceUrl(), "ParseException.java", settings,
+      JavaHelperFiles.generateSimple(
+          "/templates/TokenMgrError.template",
+          JavaTemplates.getTokenMgrErrorClass() + ".java",
+          settings,
+          context);
+      JavaHelperFiles.generateSimple(
+          templates.getParseExceptionTemplateResourceUrl(),
+          "ParseException.java",
+          settings,
           context);
 
       JavaHelperFiles.gen_Constants(context, tokenizerData);
 
-      if (Options.isGenerateBoilerplateCode()) {
+      if (Options.getGenerateBoilerplateCode()) {
         JavaHelperFiles.gen_Token(context);
         if (Options.getUserTokenManager()) {
-          // CBA -- I think that Token managers are unique so will always be
-          // generated
+          // CBA -- I think that Token managers are unique so will always be generated
+          // TODO: the generated TM does not declare it is implementing this TM interface
           JavaHelperFiles.gen_TokenManager(context);
         }
 
         if (Options.getUserCharStream()) {
-          JavaHelperFiles.generateSimple("/templates/CharStream.template", "CharStream.java", settings, context);
+          JavaHelperFiles.generateSimple(
+              "/templates/CharStream.template", "CharStream.java", settings, context);
         } else if (Options.getJavaUnicodeEscape()) {
-          JavaHelperFiles.generateSimple(templates.getJavaCharStreamTemplateResourceUrl(), "JavaCharStream.java",
-              settings, context);
+          JavaHelperFiles.generateSimple(
+              templates.getJavaCharStreamTemplateResourceUrl(),
+              "JavaCharStream.java",
+              settings,
+              context);
         } else {
-          JavaHelperFiles.generateSimple(templates.getSimpleCharStreamTemplateResourceUrl(), "SimpleCharStream.java",
-              settings, context);
+          JavaHelperFiles.generateSimple(
+              templates.getSimpleCharStreamTemplateResourceUrl(),
+              "SimpleCharStream.java",
+              settings,
+              context);
         }
 
         if (JavaTemplates.isJavaModern()) {
           JavaHelperFiles.genMiscFile("Provider.java", "/templates/gwt/Provider.template", context);
-          JavaHelperFiles.genMiscFile("StringProvider.java", "/templates/gwt/StringProvider.template", context);
+          JavaHelperFiles.genMiscFile(
+              "StringProvider.java", "/templates/gwt/StringProvider.template", context);
           // This provides a bridge to standard Java readers.
-          JavaHelperFiles.genMiscFile("StreamProvider.java", "/templates/gwt/StreamProvider.template", context);
+          JavaHelperFiles.genMiscFile(
+              "StreamProvider.java", "/templates/gwt/StreamProvider.template", context);
         }
       }
-    } catch (Exception e) {
+    } catch (final Exception e) {
       return false;
     }
 
     return true;
   }
 
-  /**
-   * The Token class generator.
-   */
+  /** The Token class generator. */
   @Override
-  public final TokenCodeGenerator getTokenCodeGenerator(Context context) {
+  public final TokenCodeGenerator getTokenCodeGenerator(final Context context) {
     return new TokenCodeGenerator(context);
   }
 
-  /**
-   * The TokenManager class generator.
-   */
+  /** The TokenManager class generator. */
   @Override
-  public final TokenManagerCodeGenerator getTokenManagerCodeGenerator(Context context) {
+  public final TokenManagerCodeGenerator getTokenManagerCodeGenerator(final Context context) {
     return new TokenManagerCodeGenerator(context);
   }
 
-  /**
-   * The Parser class generator.
-   */
+  /** The Parser class generator. */
   @Override
-  public final ParserCodeGenerator getParserCodeGenerator(Context context) {
+  public final ParserCodeGenerator getParserCodeGenerator(final Context context) {
     return new ParserCodeGenerator(context);
   }
 
   /**
-   * TODO(sreeni): Fix this when we do tree annotations in the parser code
-   * generator. The JJTree preprocesor.
+   * TODO(sreeni): Fix this when we do tree annotations in the parser code generator. The JJTree
+   * preprocesor.
    */
   @Override
-  public final DefaultJJTreeVisitor getJJTreeCodeGenerator(JJTreeContext context) {
+  public final DefaultJJTreeVisitor getJJTreeCodeGenerator(final JJTreeContext context) {
     return new JJTreeCodeGenerator(context);
   }
 }

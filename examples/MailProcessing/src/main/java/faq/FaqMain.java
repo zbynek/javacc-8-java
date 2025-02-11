@@ -2,19 +2,19 @@
  * Copyright (c) 2020-2025, Sreeni Viswanadha <sreeni@viswanadha.net>.
  * Copyright (c) 2024-2025, Marc Mazas <mazas.marc@gmail.com>.
  * All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the names of of the copyright holders nor the names of its
+ *     * Neither the name of the Sun Microsystems, Inc. nor the names of its
  *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,40 +27,47 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package eg3;
+package faq;
 
-import eg3.Node;
-import eg3.ASTMyID;
+import java.io.*;
 
-/**
- * An ID.
- */
-public class ASTMyID extends Node {
-  private String name;
+public class FaqMain {
 
-  /**
-   * Constructor.
-   * @param id the id
-   */
-  public ASTMyID(int id) {
-    super(id);
+  static int count = 0;
+
+  static int beginAt = 1;
+
+  static String outdir;
+
+  static PrintWriter indexpw;
+
+  static String fix(String s) {
+    String retval = "";
+    for (int i = 0; i < s.length(); i++) {
+      char c = s.charAt(i);
+      if (c == '<') {
+        retval += "&lt;";
+      } else if (c == '>') {
+        retval += "&gt;";
+      } else {
+        retval += c;
+      }
+    }
+    return retval;
   }
 
-
-  /**
-   * Set the name.
-   * @param n the name
-   */
-  public void setName(String n) {
-    name = n;
+  public static void main(String args[]) throws ParseException, IOException, FileNotFoundException {
+    if (args.length < 2) {
+      System.err.println("Error: bad number of arguments (" + args.length + " instead of 3)");
+      System.err.println("Usage: FaqMain index infile outdir");
+      System.exit(4);
+    }
+    beginAt = Integer.parseInt(args[0]);
+    outdir = args[2];
+    indexpw = new PrintWriter(new FileWriter(outdir + "/index.out.html"));
+    indexpw.println("<title>Selected list of emails from the JavaCC mailing list</title>");
+    indexpw.println("<h2>Selected list of emails from the JavaCC mailing list</h2>");
+    Faq parser = new Faq(new FileInputStream(args[1]));
+    parser.MailFile();
   }
-
-  /**
-   * {@inheritDoc}
-   * @see org.javacc.examples.jjtree.eg2.Node#toString()
-   */
-  public String toString() {
-    return "Identifier: " + name;
-  }
-
 }

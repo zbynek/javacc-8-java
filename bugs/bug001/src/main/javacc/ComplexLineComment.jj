@@ -1,5 +1,7 @@
 options {
   DEBUG_TOKEN_MANAGER=true;
+  JAVA_UNICODE_ESCAPE = true; // (JavaCC - default false)
+//  KEEP_LINE_COLUMN = false; // (JavaCC - default true; undocumented) // test
 }
 
 PARSER_BEGIN(ComplexLineComment)

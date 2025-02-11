@@ -27,40 +27,9 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package eg3;
+package eg4;
 
-import eg3.Node;
-import eg3.ASTMyID;
+public class MyVisException extends RuntimeException {
 
-/**
- * An ID.
- */
-public class ASTMyID extends Node {
-  private String name;
-
-  /**
-   * Constructor.
-   * @param id the id
-   */
-  public ASTMyID(int id) {
-    super(id);
-  }
-
-
-  /**
-   * Set the name.
-   * @param n the name
-   */
-  public void setName(String n) {
-    name = n;
-  }
-
-  /**
-   * {@inheritDoc}
-   * @see org.javacc.examples.jjtree.eg2.Node#toString()
-   */
-  public String toString() {
-    return "Identifier: " + name;
-  }
-
+  private static final long serialVersionUID = 1L;
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Copyright (c) 2020-2024, Sreeni Viswanadha <sreeni@viswanadha.net>.
-Copyright (c) 2024, Marc Mazas <mazas.marc@gmail.com>.
+Copyright (c) 2020-2025, Sreeni Viswanadha <sreeni@viswanadha.net>.
+Copyright (c) 2024-2025, Marc Mazas <mazas.marc@gmail.com>.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -88,7 +88,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
             <configuration>
               <mainClass>clc.ComplexLineComment</mainClass>
               <arguments>
-                <argument>${project.basedir}/files/clc1.in2</argument>
+                <argument>${project.basedir}/files/clc1.in</argument>
                 <argument>${project.basedir}/files/clc1.out</argument>
                 <argument>${project.basedir}/files/clc1.err</argument>
               </arguments>

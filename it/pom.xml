@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Copyright (c) 2020-2024, Sreeni Viswanadha <sreeni@viswanadha.net>.
-Copyright (c) 2024, Marc Mazas <mazas.marc@gmail.com>.
+Copyright (c) 2020-2025, Sreeni Viswanadha <sreeni@viswanadha.net>.
+Copyright (c) 2024-2025, Marc Mazas <mazas.marc@gmail.com>.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -91,8 +91,8 @@ THE POSSIBILITY OF SUCH DAMAGE.
                   <goal>javacc</goal>
                 </goals>
                 <configuration>
-                  <outputDirectory>${project.basedir}/target/generated-sources/java</outputDirectory>
                   <sourceDirectory>${project.basedir}/src/main/javacc</sourceDirectory>
+                  <outputDirectory>${project.basedir}/target/generated-sources/java</outputDirectory>
                   <codeGenerator>java</codeGenerator>
                 </configuration>
               </execution>
@@ -143,9 +143,14 @@ THE POSSIBILITY OF SUCH DAMAGE.
                   <goal>jjtree-javacc</goal>
                 </goals>
                 <configuration>
-                  <outputDirectory>${project.basedir}/target/generated-sources/java</outputDirectory>
                   <sourceDirectory>${project.basedir}/src/main/jjtree</sourceDirectory>
+                  <outputDirectory>${project.basedir}/target/generated-sources/java</outputDirectory>
+                  <!-- generated nodes in src dir because of custom nodes
+                     - but the plugin will not copy them there! -->
                   <nodeDirectory>${project.basedir}/src/main/java</nodeDirectory>
+                  <!--
+                  <nodeDirectory>${project.basedir}/target/generated-sources/jjtree</nodeDirectory>
+                  -->
                   <codeGenerator>java</codeGenerator>
                 </configuration>
               </execution>
