@@ -1,4 +1,6 @@
-/* Copyright (c) 2006, Sun Microsystems, Inc.
+/*
+ * Copyright (c) 2020-2025, Sreeni Viswanadha <sreeni@viswanadha.net>.
+ * Copyright (c) 2024-2025, Marc Mazas <mazas.marc@gmail.com>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +11,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Sun Microsystems, Inc. nor the names of its
+ *     * Neither the names of the copyright holders nor the names of its
  *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  *
@@ -25,8 +27,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-
 public class Main {
 
   public static void main(String[] args) {

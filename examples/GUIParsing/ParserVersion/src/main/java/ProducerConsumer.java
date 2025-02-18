@@ -1,4 +1,6 @@
-/* Copyright (c) 2006, Sun Microsystems, Inc.
+/*
+ * Copyright (c) 2020-2025, Sreeni Viswanadha <sreeni@viswanadha.net>.
+ * Copyright (c) 2024-2025, Marc Mazas <mazas.marc@gmail.com>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +11,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Sun Microsystems, Inc. nor the names of its
+ *     * Neither the names of the copyright holders nor the names of its
  *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  *
@@ -25,35 +27,25 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-
 public class ProducerConsumer {
 
-  /**
-   * A single producer-consumer instance that is used by others.
-   */
+  /** A single producer-consumer instance that is used by others. */
   public static ProducerConsumer pc = new ProducerConsumer();
 
-  /**
-   * The data structure where the tokens are stored.
-   */
+  /** The data structure where the tokens are stored. */
   private java.util.Vector queue = new java.util.Vector();
 
-  /**
-   * The producer calls this method to add a new token
-   * whenever it is available.
-   */
-  synchronized public void addToken(Token token) {
+  /** The producer calls this method to add a new token whenever it is available. */
+  public synchronized void addToken(Token token) {
     queue.addElement(token);
     notify();
   }
 
   /**
-   * The consumer calls this method to get the next token
-   * in the queue.  If the queue is empty, this method
-   * blocks until a token becomes available.
+   * The consumer calls this method to get the next token in the queue.<br>
+   * If the queue is empty, this method blocks until a token becomes available.
    */
-  synchronized public Token getToken() {
+  public synchronized Token getToken() {
     if (queue.isEmpty()) {
       try {
         wait();
@@ -61,9 +53,8 @@ public class ProducerConsumer {
         throw new Error();
       }
     }
-    Token retval = (Token)(queue.elementAt(0));
+    Token retval = (Token) (queue.elementAt(0));
     queue.removeElementAt(0);
     return retval;
   }
-
 }

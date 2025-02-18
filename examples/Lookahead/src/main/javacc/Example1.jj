@@ -57,5 +57,9 @@ void Input() :
 void BC() :
 {}
 {
-  "b" [ "c" ]
+  "b"
+  [
+    LOOKAHEAD(2)
+    "c"
+  ]
 }

@@ -1,4 +1,6 @@
-/* Copyright (c) 2006, Sun Microsystems, Inc.
+/*
+ * Copyright (c) 2020-2025, Sreeni Viswanadha <sreeni@viswanadha.net>.
+ * Copyright (c) 2024-2025, Marc Mazas <mazas.marc@gmail.com>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +11,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Sun Microsystems, Inc. nor the names of its
+ *     * Neither the names of the copyright holders nor the names of its
  *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  *
@@ -25,17 +27,15 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-
 import java.awt.*;
 
 public class CalcGUI extends Frame implements CalcInputParserConstants {
 
-  /**
-   * A button object is created for each calculator button.  Since
-   * there is going to be only one calculator GUI, these objects can
-   * be static.
+  /*
+   * A button object is created for each calculator button. Since there is going to be only one
+   * calculator GUI, these objects can be static.
    */
+
   static Button one = new Button("1");
   static Button two = new Button("2");
   static Button three = new Button("3");
@@ -54,39 +54,28 @@ public class CalcGUI extends Frame implements CalcInputParserConstants {
   static Button div = new Button("/");
   static Button quit = new Button("QUIT");
 
-  /**
-   * The display window with its initial setting.
-   */
+  /** The display window with its initial setting. */
   static Label display = new Label("0 ");
 
-  /**
-   * The class that collects the characters produced by the GUI
-   */
+  /** The class that collects the characters produced by the GUI */
   static final CharCollector collector = new CharCollector();
 
-  static final CharStream getCollector()
-  {
-     return collector;
+  static final CharStream getCollector() {
+    return collector;
   }
 
-  /**
-   * string that holds what the calculator displays
-   */
+  /** string that holds what the calculator displays */
   static String label = "0";
 
-  /**
-   * flag to indicate if this is the first digit.
-   */
+  /** flag to indicate if this is the first digit. */
   static boolean firstDigit = true;
 
-  /**
-   * Indicates an error has occured
-   */
+  /** Indicates an error has occured */
   static boolean error = false;
 
   /**
-   * Constructor that creates the full GUI.  This is called by the
-   * main program to create one calculator GUI.
+   * Constructor that creates the full GUI.<br>
+   * This is called by the main program to create one calculator GUI.
    */
   public CalcGUI() {
 
@@ -107,11 +96,23 @@ public class CalcGUI extends Frame implements CalcInputParserConstants {
 
     Panel buttonPanel = new Panel();
     buttonPanel.setFont(new Font("TimesRoman", Font.BOLD, 14));
-    buttonPanel.setLayout(new GridLayout(4,4));
-    buttonPanel.add(one); buttonPanel.add(two); buttonPanel.add(three); buttonPanel.add(four);
-    buttonPanel.add(five); buttonPanel.add(six); buttonPanel.add(seven); buttonPanel.add(eight);
-    buttonPanel.add(nine); buttonPanel.add(zero); buttonPanel.add(dot);  buttonPanel.add(equal);
-    buttonPanel.add(add); buttonPanel.add(sub); buttonPanel.add(mul); buttonPanel.add(div);
+    buttonPanel.setLayout(new GridLayout(4, 4));
+    buttonPanel.add(one);
+    buttonPanel.add(two);
+    buttonPanel.add(three);
+    buttonPanel.add(four);
+    buttonPanel.add(five);
+    buttonPanel.add(six);
+    buttonPanel.add(seven);
+    buttonPanel.add(eight);
+    buttonPanel.add(nine);
+    buttonPanel.add(zero);
+    buttonPanel.add(dot);
+    buttonPanel.add(equal);
+    buttonPanel.add(add);
+    buttonPanel.add(sub);
+    buttonPanel.add(mul);
+    buttonPanel.add(div);
     gbc.weighty = 1.0;
     gb.setConstraints(buttonPanel, gbc);
     add(buttonPanel);
@@ -125,9 +126,7 @@ public class CalcGUI extends Frame implements CalcInputParserConstants {
     show();
   }
 
-  /**
-   * Here we just return the character that is input.
-   */
+  /** Here we just return the character that is input. */
   public boolean handleEvent(Event evt) {
     char c = 0;
 
@@ -139,95 +138,74 @@ public class CalcGUI extends Frame implements CalcInputParserConstants {
       System.exit(0);
     }
 
-    if (error)
-    {
-       if (evt.target == zero)
-       {
-          error = false;
-          print("0");
-          firstDigit = true;
-          return true;
-       }
+    if (error) {
+      if (evt.target == zero) {
+        error = false;
+        print("0");
+        firstDigit = true;
+        return true;
+      }
 
-       return false;
+      return false;
     }
 
     if (evt.target == equal) {
       c = '=';
       firstDigit = true;
-    }
-    else if (evt.target == add) {
+    } else if (evt.target == add) {
       c = '+';
       label = "0";
       firstDigit = true;
-    }
-    else if (evt.target == sub) {
+    } else if (evt.target == sub) {
       c = '-';
       label = "0";
       firstDigit = true;
-    }
-    else if (evt.target == mul) {
+    } else if (evt.target == mul) {
       c = '*';
       label = "0";
       firstDigit = true;
-    }
-    else if (evt.target == div) {
+    } else if (evt.target == div) {
       c = '/';
       label = "0";
       firstDigit = true;
-    }
-    else
-    {
-      if (firstDigit)
-         label = "";
+    } else {
+      if (firstDigit) label = "";
       firstDigit = false;
 
       if (evt.target == one) {
         c = '1';
         label += c;
-      }
-      else if (evt.target == two) {
+      } else if (evt.target == two) {
         c = '2';
         label += c;
-      }
-      else if (evt.target == three) {
+      } else if (evt.target == three) {
         c = '3';
         label += c;
-      }
-      else if (evt.target == four) {
+      } else if (evt.target == four) {
         c = '4';
         label += c;
-      }
-      else if (evt.target == five) {
+      } else if (evt.target == five) {
         c = '5';
         label += c;
-      }
-      else if (evt.target == six) {
+      } else if (evt.target == six) {
         c = '6';
         label += c;
-      }
-      else if (evt.target == seven) {
+      } else if (evt.target == seven) {
         c = '7';
         label += c;
-      }
-      else if (evt.target == eight) {
+      } else if (evt.target == eight) {
         c = '8';
         label += c;
-      }
-      else if (evt.target == nine) {
+      } else if (evt.target == nine) {
         c = '9';
         label += c;
-      }
-      else if (evt.target == zero) {
+      } else if (evt.target == zero) {
         c = '0';
         label += c;
-      }
-      else if (evt.target == dot) {
+      } else if (evt.target == dot) {
         c = '.';
         label += ".";
-      }
-      else
-        return false;
+      } else return false;
     }
 
     print(label);
@@ -244,11 +222,10 @@ public class CalcGUI extends Frame implements CalcInputParserConstants {
   }
 
   public static void Error(String image) {
-     print(image);
-     Toolkit.getDefaultToolkit().beep();
-     collector.Clear();
-     label = "0";
-     error = true;
+    print(image);
+    Toolkit.getDefaultToolkit().beep();
+    collector.Clear();
+    label = "0";
+    error = true;
   }
-
 }

@@ -11,7 +11,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the names of of the copyright holders nor the names of its
+ *     * Neither the names of the copyright holders nor the names of its
  *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  *
@@ -29,23 +29,22 @@
  */
 package eg2;
 
-/**
- * An ID.
- */
+/** An ID. */
 public class ASTMyID extends Node {
   private String name;
 
   /**
    * Constructor.
+   *
    * @param id the id
    */
   public ASTMyID(int id) {
     super(id);
   }
 
-
   /**
    * Set the name.
+   *
    * @param n the name
    */
   public void setName(String n) {
@@ -54,10 +53,10 @@ public class ASTMyID extends Node {
 
   /**
    * {@inheritDoc}
+   *
    * @see org.javacc.examples.jjtree.eg2.SimpleNode#toString()
    */
   public String toString() {
     return "Identifier: " + name;
   }
-
 }

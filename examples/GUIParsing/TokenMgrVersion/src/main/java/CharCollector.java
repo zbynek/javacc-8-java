@@ -1,4 +1,6 @@
-/* Copyright (c) 2006, Sun Microsystems, Inc.
+/*
+ * Copyright (c) 2020-2025, Sreeni Viswanadha <sreeni@viswanadha.net>.
+ * Copyright (c) 2024-2025, Marc Mazas <mazas.marc@gmail.com>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +11,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Sun Microsystems, Inc. nor the names of its
+ *     * Neither the names of the copyright holders nor the names of its
  *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  *
@@ -25,8 +27,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-
 public class CharCollector implements CharStream {
 
   int bufsize;
@@ -38,193 +38,167 @@ public class CharCollector implements CharStream {
   protected int tabSize = 1;
   protected boolean trackLineColumn = true;
 
-  public void setTabSize(int i) { tabSize = i; }
-  public int getTabSize() { return tabSize; }
-  public boolean getTrackLineColumn() { return trackLineColumn; }
-  public void setTrackLineColumn(boolean tlc) { trackLineColumn = tlc; }
-
-  private final void ExpandBuff(boolean wrapAround)
-  {
-     char[] newbuffer = new char[bufsize + 2048];
-
-     try
-     {
-        if (wrapAround)
-        {
-           System.arraycopy(buffer, tokenBegin, newbuffer, 0, bufsize - tokenBegin);
-           System.arraycopy(buffer, 0, newbuffer, bufsize - tokenBegin, bufpos);
-           buffer = newbuffer;
-           maxNextCharInd = (bufpos += (bufsize - tokenBegin));
-        }
-        else
-        {
-           System.arraycopy(buffer, tokenBegin, newbuffer, 0, bufsize - tokenBegin);
-           buffer = newbuffer;
-           maxNextCharInd = (bufpos -= tokenBegin);
-        }
-     }
-     catch (Throwable t)
-     {
-        System.out.println("Error : " + t.getClass().getName());
-        throw new Error();
-     }
-
-     bufsize += 2048;
-     available = bufsize;
-     tokenBegin = 0;
+  public void setTabSize(int i) {
+    tabSize = i;
   }
 
-  private final void FillBuff()
-  {
-     if (maxNextCharInd == available)
-     {
-        if (available == bufsize)
-        {
-           if (tokenBegin > 2048)
-           {
-              bufpos = maxNextCharInd = 0;
-              available = tokenBegin;
-           }
-           else if (tokenBegin < 0)
-              bufpos = maxNextCharInd = 0;
-           else
-              ExpandBuff(false);
-        }
-        else if (available > tokenBegin)
-           available = bufsize;
-        else if ((tokenBegin - available) < 2048)
-           ExpandBuff(true);
-        else
-           available = tokenBegin;
-     }
-
-     try {
-       wait();
-     } catch (InterruptedException willNotHappen) {
-       throw new Error();
-     }
+  public int getTabSize() {
+    return tabSize;
   }
 
-  /**
-   * Puts a character into the buffer.
-   */
-  synchronized public final void put(char c)
-  {
-     buffer[maxNextCharInd++] = c;
-     notify();
+  public boolean getTrackLineColumn() {
+    return trackLineColumn;
   }
 
-  public char BeginToken() throws java.io.IOException
-  {
-     tokenBegin = -1;
-     char c = readChar();
-     tokenBegin = bufpos;
+  public void setTrackLineColumn(boolean tlc) {
+    trackLineColumn = tlc;
+  }
 
-     return c;
+  private final void ExpandBuff(boolean wrapAround) {
+    char[] newbuffer = new char[bufsize + 2048];
+
+    try {
+      if (wrapAround) {
+        System.arraycopy(buffer, tokenBegin, newbuffer, 0, bufsize - tokenBegin);
+        System.arraycopy(buffer, 0, newbuffer, bufsize - tokenBegin, bufpos);
+        buffer = newbuffer;
+        maxNextCharInd = (bufpos += (bufsize - tokenBegin));
+      } else {
+        System.arraycopy(buffer, tokenBegin, newbuffer, 0, bufsize - tokenBegin);
+        buffer = newbuffer;
+        maxNextCharInd = (bufpos -= tokenBegin);
+      }
+    } catch (Throwable t) {
+      System.out.println("Error : " + t.getClass().getName());
+      throw new Error();
+    }
+
+    bufsize += 2048;
+    available = bufsize;
+    tokenBegin = 0;
+  }
+
+  private final void FillBuff() {
+    if (maxNextCharInd == available) {
+      if (available == bufsize) {
+        if (tokenBegin > 2048) {
+          bufpos = maxNextCharInd = 0;
+          available = tokenBegin;
+        } else if (tokenBegin < 0) bufpos = maxNextCharInd = 0;
+        else ExpandBuff(false);
+      } else if (available > tokenBegin) available = bufsize;
+      else if ((tokenBegin - available) < 2048) ExpandBuff(true);
+      else available = tokenBegin;
+    }
+
+    try {
+      wait();
+    } catch (InterruptedException willNotHappen) {
+      throw new Error();
+    }
+  }
+
+  /** Puts a character into the buffer. */
+  public final synchronized void put(char c) {
+    buffer[maxNextCharInd++] = c;
+    notify();
+  }
+
+  public char BeginToken() throws java.io.IOException {
+    tokenBegin = -1;
+    char c = readChar();
+    tokenBegin = bufpos;
+
+    return c;
   }
 
   private int inBuf = 0;
-  synchronized public final char readChar() throws java.io.IOException
-  {
-     if (inBuf > 0)
-     {
-        --inBuf;
-        return (char)((char)0xff & buffer[(bufpos == bufsize - 1) ? (bufpos = 0) : ++bufpos]);
-     }
 
-     if (++bufpos >= maxNextCharInd)
-        FillBuff();
+  public final synchronized char readChar() throws java.io.IOException {
+    if (inBuf > 0) {
+      --inBuf;
+      return (char) ((char) 0xff & buffer[(bufpos == bufsize - 1) ? (bufpos = 0) : ++bufpos]);
+    }
 
-     return buffer[bufpos];
+    if (++bufpos >= maxNextCharInd) FillBuff();
+
+    return buffer[bufpos];
   }
 
   /**
    * @deprecated
    * @see #getEndColumn
    */
-
   public final int getColumn() {
-      return 0;
+    return 0;
   }
 
   /**
    * @deprecated
    * @see #getEndLine
    */
-
   public final int getLine() {
-      return 0;
+    return 0;
   }
 
   public final int getEndColumn() {
-      return 0;
+    return 0;
   }
 
   public final int getEndLine() {
-      return 0;
+    return 0;
   }
 
   public final int getBeginColumn() {
-      return 0;
+    return 0;
   }
 
   public final int getBeginLine() {
-      return 0;
+    return 0;
   }
 
   public final void backup(int amount) {
 
     inBuf += amount;
-    if ((bufpos -= amount) < 0)
-       bufpos += bufsize;
+    if ((bufpos -= amount) < 0) bufpos += bufsize;
   }
 
-  public CharCollector(int buffersize)
-  {
+  public CharCollector(int buffersize) {
     available = bufsize = buffersize;
     buffer = new char[buffersize];
   }
 
-  public CharCollector()
-  {
+  public CharCollector() {
     available = bufsize = 4096;
     buffer = new char[4096];
   }
 
-  public void Clear()
-  {
-     bufpos = -1;
-     maxNextCharInd = 0;
-     inBuf = 0;
+  public void Clear() {
+    bufpos = -1;
+    maxNextCharInd = 0;
+    inBuf = 0;
   }
 
-  public final String GetImage()
-  {
-     if (bufpos >= tokenBegin)
-        return new String(buffer, tokenBegin, bufpos - tokenBegin + 1);
-     else
-        return new String(buffer, tokenBegin, bufsize - tokenBegin) +
-                              new String(buffer, 0, bufpos + 1);
+  public final String GetImage() {
+    if (bufpos >= tokenBegin) return new String(buffer, tokenBegin, bufpos - tokenBegin + 1);
+    else
+      return new String(buffer, tokenBegin, bufsize - tokenBegin)
+          + new String(buffer, 0, bufpos + 1);
   }
 
-  public final char[] GetSuffix(int len)
-  {
-     char[] ret = new char[len];
+  public final char[] GetSuffix(int len) {
+    char[] ret = new char[len];
 
-     if (bufpos + 1 >= len)
-        System.arraycopy(buffer, bufpos - len + 1, ret, 0, len);
-     else
-     {
-        System.arraycopy(buffer, bufsize - (len - bufpos - 1), ret, 0,
-                                                          len - bufpos - 1);
-        System.arraycopy(buffer, 0, ret, len - bufpos, bufpos + 1);
-     }
+    if (bufpos + 1 >= len) System.arraycopy(buffer, bufpos - len + 1, ret, 0, len);
+    else {
+      System.arraycopy(buffer, bufsize - (len - bufpos - 1), ret, 0, len - bufpos - 1);
+      System.arraycopy(buffer, 0, ret, len - bufpos, bufpos + 1);
+    }
 
-     return ret;
+    return ret;
   }
 
-  public void Done()
-  {
-     buffer = null;
+  public void Done() {
+    buffer = null;
   }
 }

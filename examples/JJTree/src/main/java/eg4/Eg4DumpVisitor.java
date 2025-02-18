@@ -11,7 +11,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the names of of the copyright holders nor the names of its
+ *     * Neither the names of the copyright holders nor the names of its
  *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  *
@@ -37,25 +37,20 @@ import eg4.Eg4Visitor;
 import eg4.Node;
 
 /**
- *  This is an example of how the Visitor pattern might be used to
- *  implement the dumping code that comes with Node.  It's a bit
- *  long-winded, but it does illustrate a couple of the main points.
- *  <ol>
- *  <li> the visitor can maintain state between the nodes that it visits
- *  (for example the current indentation level).
- *  </li>
+ * This is an example of how the Visitor pattern might be used to implement the dumping code that
+ * comes with Node. It's a bit long-winded, but it does illustrate a couple of the main points.
  *
- *  <li>if you don't implement a jjtAccept() method for a subclass of
- *  Node, then Node's acceptor will get called.
- *  </li>
- *  <li> the utility method childrenAccept() can be useful when
- *  implementing preorder or postorder tree walks.
- *  </li>
- *  </ol>
- *
+ * <ol>
+ *   <li>the visitor can maintain state between the nodes that it visits (for example the current
+ *       indentation level).
+ *   <li>if you don't implement a jjtAccept() method for a subclass of Node, then Node's acceptor
+ *       will get called.
+ *   <li>the utility method childrenAccept() can be useful when implementing preorder or postorder
+ *       tree walks.
+ * </ol>
  */
 public class Eg4DumpVisitor implements Eg4Visitor {
-  
+
   private int indent = 0;
 
   private String indentString() {
@@ -67,8 +62,7 @@ public class Eg4DumpVisitor implements Eg4Visitor {
   }
 
   public Object visit(Node node, Object data) {
-    System.out.println(indentString() + node +
-                   ": acceptor not unimplemented in subclass?");
+    System.out.println(indentString() + node + ": acceptor not unimplemented in subclass?");
     ++indent;
     data = node.childrenAccept(this, data);
     --indent;
@@ -115,4 +109,3 @@ public class Eg4DumpVisitor implements Eg4Visitor {
     return data;
   }
 }
-

@@ -26,7 +26,6 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 PARSER_BEGIN(Example)
 package example2;
 
@@ -49,11 +48,6 @@ SKIP :
 | "\r"
 }
 
-TOKEN [IGNORE_CASE] :
-{
-  <ID: (["a"-"z"])+>
-}
-
 void basic_expr() :
 {}
 {
@@ -68,4 +62,9 @@ void expr() :
 {}
 {
   "TBD"
+}
+
+TOKEN [IGNORE_CASE] :
+{
+  < ID  : (["a"-"z"])+ >
 }

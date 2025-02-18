@@ -11,7 +11,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the names of of the copyright holders nor the names of its
+ *     * Neither the names of the copyright holders nor the names of its
  *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  *
@@ -33,11 +33,10 @@ import eg4.Eg4;
 import eg4.Eg4Visitor;
 import eg4.Node;
 
-public
-class ASTMyOtherID extends Node {
-  
+public class ASTMyOtherID extends Node {
+
   private String name;
-  
+
   public ASTMyOtherID(int id) {
     super(id);
   }
@@ -48,6 +47,7 @@ class ASTMyOtherID extends Node {
 
   /**
    * Set the name.
+   *
    * @param n the name
    */
   public void setName(String n) {
@@ -56,13 +56,14 @@ class ASTMyOtherID extends Node {
 
   /**
    * {@inheritDoc}
+   *
    * @see org.javacc.examples.jjtree.eg2.Node#toString()
    */
   public String toString() {
     return "Identifier: " + name;
   }
 
-  /** Accept the visitor. **/
+  /** Accept the visitor. * */
   public Object jjtAccept(Eg4Visitor visitor, Object data) {
     return visitor.visit(this, data);
   }

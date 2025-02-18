@@ -1,4 +1,6 @@
-/* Copyright (c) 2006, Sun Microsystems, Inc.
+/*
+ * Copyright (c) 2020-2025, Sreeni Viswanadha <sreeni@viswanadha.net>.
+ * Copyright (c) 2024-2025, Marc Mazas <mazas.marc@gmail.com>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +11,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Sun Microsystems, Inc. nor the names of its
+ *     * Neither the names of the copyright holders nor the names of its
  *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  *
@@ -25,16 +27,13 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-
 import java.awt.*;
 
 public class CalcGUI extends Frame implements CalcInputParserConstants {
 
   /**
-   * A button object is created for each calculator button.  Since
-   * there is going to be only one calculator GUI, these objects can
-   * be static.
+   * A button object is created for each calculator button.<br>
+   * Since there is going to be only one calculator GUI, these objects can be static.
    */
   static Button one = new Button("1");
   static Button two = new Button("2");
@@ -54,14 +53,12 @@ public class CalcGUI extends Frame implements CalcInputParserConstants {
   static Button div = new Button("/");
   static Button quit = new Button("QUIT");
 
-  /**
-   * The display window with its initial setting.
-   */
+  /** The display window with its initial setting. */
   static Label display = new Label("0 ");
 
   /**
-   * Constructor that creates the full GUI.  This is called by the
-   * main program to create one calculator GUI.
+   * Constructor that creates the full GUI.<br>
+   * This is called by the main program to create one calculator GUI.
    */
   public CalcGUI() {
 
@@ -81,11 +78,23 @@ public class CalcGUI extends Frame implements CalcInputParserConstants {
 
     Panel buttonPanel = new Panel();
     buttonPanel.setFont(new Font("TimesRoman", Font.BOLD, 14));
-    buttonPanel.setLayout(new GridLayout(4,4));
-    buttonPanel.add(one); buttonPanel.add(two); buttonPanel.add(three); buttonPanel.add(four);
-    buttonPanel.add(five); buttonPanel.add(six); buttonPanel.add(seven); buttonPanel.add(eight);
-    buttonPanel.add(nine); buttonPanel.add(zero); buttonPanel.add(dot);  buttonPanel.add(equal);
-    buttonPanel.add(add); buttonPanel.add(sub); buttonPanel.add(mul); buttonPanel.add(div);
+    buttonPanel.setLayout(new GridLayout(4, 4));
+    buttonPanel.add(one);
+    buttonPanel.add(two);
+    buttonPanel.add(three);
+    buttonPanel.add(four);
+    buttonPanel.add(five);
+    buttonPanel.add(six);
+    buttonPanel.add(seven);
+    buttonPanel.add(eight);
+    buttonPanel.add(nine);
+    buttonPanel.add(zero);
+    buttonPanel.add(dot);
+    buttonPanel.add(equal);
+    buttonPanel.add(add);
+    buttonPanel.add(sub);
+    buttonPanel.add(mul);
+    buttonPanel.add(div);
     gbc.weighty = 1.0;
     gb.setConstraints(buttonPanel, gbc);
     add(buttonPanel);
@@ -100,8 +109,7 @@ public class CalcGUI extends Frame implements CalcInputParserConstants {
   }
 
   /**
-   * Note how handleEvent creates tokens and sends them to the parser
-   * through the producer-consumer.
+   * Note how handleEvent creates tokens and sends them to the parser through the producer-consumer.
    */
   public boolean handleEvent(Event evt) {
     Token t;
@@ -233,5 +241,4 @@ public class CalcGUI extends Frame implements CalcInputParserConstants {
   public static void print(String image) {
     display.setText(image + " ");
   }
-
 }

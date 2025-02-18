@@ -12,7 +12,7 @@ modification, are permitted provided that the following conditions are met:
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the names of of the copyright holders nor the names of its
+    * Neither the names of the copyright holders nor the names of its
       contributors may be used to endorse or promote products derived from
       this software without specific prior written permission.
 
@@ -63,7 +63,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
               <excludeDefaultDirectories>true</excludeDefaultDirectories>
               <filesets>
                 <fileset>
-                  <directory>test</directory>
+                  <directory>files</directory>
                   <includes>
                     <include>*.out, *.err</include>
                   </includes>
@@ -127,33 +127,15 @@ THE POSSIBILITY OF SUCH DAMAGE.
               <skip>false</skip>
               <target unless="maven.test.skip">
                 <!-- out -->
-                <available file="${project.basedir}/files/clc1.out" property="isActualOutAvailable" />
-                <fail unless="isActualOutAvailable"
-                  message="${project.basedir}/files/clc1.out does not exist!" />
-                <available file="${project.basedir}/files/clc1.exp_out"
-                  property="isExpectedOutAvailable" />
-                <fail unless="isExpectedOutAvailable"
-                  message="${project.basedir}/files/clc1.exp_out does not exist!" />
-                <condition property="out.files.match">
-                  <filesmatch textfile="true" file1="${project.basedir}/files/clc1.out"
-                    file2="${project.basedir}/files/clc1.exp_out" />
-                </condition>
-                <fail unless="out.files.match"
-                  message="${project.basedir}/files/clc1.out does not match ${project.basedir}/files/clc1.exp_out!" />
+                <ant antfile="${project.basedir}/../../it/build-utils.xml" target="compare-out">
+                  <property name="dir" value="${project.basedir}" />
+                  <property name="file" value="clc1" />
+                </ant>
                 <!-- err -->
-                <available file="${project.basedir}/files/clc1.err" property="isActualErrAvailable" />
-                <fail unless="isActualErrAvailable"
-                  message="${project.basedir}/files/clc1.err does not exist!" />
-                <available file="${project.basedir}/files/clc1.exp_err"
-                  property="isExpectedErrAvailable" />
-                <fail unless="isExpectedErrAvailable"
-                  message="${project.basedir}/files/clc1.exp_err does not exist!" />
-                <condition property="err.files.match">
-                  <filesmatch textfile="true" file1="${project.basedir}/files/clc1.err"
-                    file2="${project.basedir}/files/clc1.exp_err" />
-                </condition>
-                <fail unless="err.files.match"
-                  message="${project.basedir}/files/clc1.err does not match ${project.basedir}/files/clc1.exp_err!" />
+                <ant antfile="${project.basedir}/../../it/build-utils.xml" target="compare-err">
+                  <property name="dir" value="${project.basedir}" />
+                  <property name="file" value="clc1" />
+                </ant>
               </target>
             </configuration>
           </execution>
@@ -167,32 +149,15 @@ THE POSSIBILITY OF SUCH DAMAGE.
               <skip>false</skip>
               <target unless="maven.test.skip">
                 <!-- out -->
-                <available file="${project.basedir}/files/clc2.out" property="isActualAvailable" />
-                <fail unless="isActualAvailable"
-                  message="${project.basedir}/files/clc2.out does not exist!" />
-                <available file="${project.basedir}/files/clc2.exp_out" property="isExpectedAvailable" />
-                <fail unless="isExpectedAvailable"
-                  message="${project.basedir}/files/clc2.exp_out does not exist!" />
-                <condition property="files.match">
-                  <filesmatch textfile="true" file1="${project.basedir}/files/clc2.out"
-                    file2="${project.basedir}/files/clc2.exp_out" />
-                </condition>
-                <fail unless="files.match"
-                  message="${project.basedir}/files/clc2.out does not match ${project.basedir}/files/clc2.exp_out!" />
+                <ant antfile="${project.basedir}/../../it/build-utils.xml" target="compare-out">
+                  <property name="dir" value="${project.basedir}" />
+                  <property name="file" value="clc2" />
+                </ant>
                 <!-- err -->
-                <available file="${project.basedir}/files/clc2.err" property="isActualErrAvailable" />
-                <fail unless="isActualErrAvailable"
-                  message="${project.basedir}/files/clc2.err does not exist!" />
-                <available file="${project.basedir}/files/clc2.exp_err"
-                  property="isExpectedErrAvailable" />
-                <fail unless="isExpectedErrAvailable"
-                  message="${project.basedir}/files/clc2.exp_err does not exist!" />
-                <condition property="err.files.match">
-                  <filesmatch textfile="true" file1="${project.basedir}/files/clc2.err"
-                    file2="${project.basedir}/files/clc2.exp_err" />
-                </condition>
-                <fail unless="err.files.match"
-                  message="${project.basedir}/files/clc2.err does not match ${project.basedir}/files/clc2.exp_err!" />
+                <ant antfile="${project.basedir}/../../it/build-utils.xml" target="compare-err">
+                  <property name="dir" value="${project.basedir}" />
+                  <property name="file" value="clc2" />
+                </ant>
               </target>
             </configuration>
           </execution>

@@ -12,7 +12,7 @@ modification, are permitted provided that the following conditions are met:
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the names of of the copyright holders nor the names of its
+    * Neither the names of the copyright holders nor the names of its
       contributors may be used to endorse or promote products derived from
       this software without specific prior written permission.
 
@@ -63,7 +63,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
               <excludeDefaultDirectories>true</excludeDefaultDirectories>
               <filesets>
                 <fileset>
-                  <directory>test</directory>
+                  <directory>files</directory>
                   <includes>
                     <include>*.out, *.err</include>
                   </includes>
@@ -80,7 +80,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
         <artifactId>exec-maven-plugin</artifactId>
         <executions>
           <execution>
-            <id>exec-1</id>
+            <id>exec</id>
             <phase>test</phase>
             <goals>
               <goal>java</goal>
@@ -103,7 +103,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
         <artifactId>maven-antrun-plugin</artifactId>
         <executions>
           <execution>
-            <id>check-res-1</id>
+            <id>check-res</id>
             <phase>test</phase>
             <goals>
               <goal>run</goal>
@@ -111,33 +111,15 @@ THE POSSIBILITY OF SUCH DAMAGE.
             <configuration>
               <target unless="maven.test.skip">
                 <!-- out -->
-                <available file="${project.basedir}/files/bug.out" property="isActualOutAvailable" />
-                <fail unless="isActualOutAvailable"
-                  message="${project.basedir}/files/bug.out does not exist!" />
-                <available file="${project.basedir}/files/bug.exp_out"
-                  property="isExpectedOutAvailable" />
-                <fail unless="isExpectedOutAvailable"
-                  message="${project.basedir}/files/bug.exp_out does not exist!" />
-                <condition property="out.files.match">
-                  <filesmatch textfile="true" file1="${project.basedir}/files/bug.out"
-                    file2="${project.basedir}/files/bug.exp_out" />
-                </condition>
-                <fail unless="out.files.match"
-                  message="${project.basedir}/files/bug.out does not match ${project.basedir}/files/bug.exp_out!" />
+                <ant antfile="${project.basedir}/../../it/build-utils.xml" target="compare-out">
+                  <property name="dir" value="${project.basedir}" />
+                  <property name="file" value="bug" />
+                </ant>
                 <!-- err -->
-                <available file="${project.basedir}/files/bug.err" property="isActualErrAvailable" />
-                <fail unless="isActualErrAvailable"
-                  message="${project.basedir}/files/bug.err does not exist!" />
-                <available file="${project.basedir}/files/bug.exp_err"
-                  property="isExpectedErrAvailable" />
-                <fail unless="isExpectedErrAvailable"
-                  message="${project.basedir}/files/bug.exp_err does not exist!" />
-                <condition property="err.files.match">
-                  <filesmatch textfile="true" file1="${project.basedir}/files/bug.err"
-                    file2="${project.basedir}/files/bug.exp_err" />
-                </condition>
-                <fail unless="err.files.match"
-                  message="${project.basedir}/files/bug.err does not match ${project.basedir}/files/bug.exp_err!" />
+                <ant antfile="${project.basedir}/../../it/build-utils.xml" target="compare-err">
+                  <property name="dir" value="${project.basedir}" />
+                  <property name="file" value="bug" />
+                </ant>
               </target>
             </configuration>
           </execution>
