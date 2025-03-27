@@ -45,7 +45,7 @@ class TokenCodeGenerator implements org.javacc.parser.TokenCodeGenerator {
   @Override
   public boolean generateCodeForToken(final CodeGeneratorSettings settings) {
     try {
-      JavaHelperFiles.generateSimple("/templates/Token.template", "Token.java", settings, context);
+      JavaHelperFiles.generateSimple("/templates/java/Token.template", "Token.java", settings, context);
     } catch (final IOException e) {
       return false;
     }

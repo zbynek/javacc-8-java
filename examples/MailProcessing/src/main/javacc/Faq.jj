@@ -46,13 +46,17 @@ public class Faq {
 PARSER_END(Faq)
 
 void MailFile() :
-{}
+{
+  System.out.print("Faq: ");
+}
 {
   (
-    { count++; }
+    {
+      count++;
+    }
     MailMessage()
     {
-      System.out.print(count + ".");
+      System.out.print(count + ". ");
       System.out.flush();
     }
   )*

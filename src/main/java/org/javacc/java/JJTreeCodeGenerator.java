@@ -172,9 +172,8 @@ class JJTreeCodeGenerator extends DefaultJJTreeVisitor {
     while (true) {
       if (t == JJTreeGlobals.parserImports) {
 
-        // If the parser and nodes are in separate packages (NODE_PACKAGE
-        // specified in
-        // OPTIONS), then generate an import for the node package.
+        // If the parser and nodes are in separate packages (NODE_PACKAGE specified in OPTIONS),
+        // then generate an import for the node package.
         if (!JJTreeGlobals.nodePackageName.equals("")
             && !JJTreeGlobals.nodePackageName.equals(JJTreeGlobals.packageName)) {
           io.getOut().println("");
@@ -526,7 +525,7 @@ class JJTreeCodeGenerator extends DefaultJJTreeVisitor {
               "JJT" + JJTreeGlobals.parserName + "State.java"));
       builder.setVersion(Version.version).addTools(JavaCCGlobals.toolName);
       NodeFiles.generateProlog(builder);
-      builder.printTemplate("/templates/JJTTreeState.template");
+      builder.printTemplate("/templates/java/JJTTreeState.template");
     }
 
     NodeFiles.generateOutputFiles(context);

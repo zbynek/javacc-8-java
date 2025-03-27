@@ -35,6 +35,12 @@ public class DigestMain {
 
   PrintWriter digpw;
 
+  /*
+   * Note that this example silently displays nothing on these 3 exceptions,
+   * and IOException is indeed occurring when the end of the input file is reached
+   * and seen by the SimpleCharStream, who throws a new IOException().
+   */
+  
   public static void main(String[] args) throws ParseException, IOException, FileNotFoundException {
     if (args.length < 1) {
       System.err.println("Error: bad number of arguments (" + args.length + " instead of 2)");
@@ -49,12 +55,15 @@ public class DigestMain {
     digpw = new PrintWriter(new FileWriter(args[1]));
     Digest parser = new Digest(new FileInputStream(args[0]));
     parser.setDigpw(digpw);
+    
     digpw.println("DIGEST OF RECENT MESSAGES FROM THE JAVACC MAILING LIST");
     digpw.println("----------------------------------------------------------------------");
     digpw.println("");
     digpw.println("MESSAGE SUMMARY:");
     digpw.println("");
+    
     String buffer = parser.MailFile();
+    
     if (buffer.length() == 0) {
       digpw.println("There have been no messages since the last digest posting.");
       digpw.println("");

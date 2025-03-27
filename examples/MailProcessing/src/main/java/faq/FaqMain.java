@@ -56,17 +56,25 @@ public class FaqMain {
     return retval;
   }
 
+  /*
+   * Note that this example silently displays nothing on these 3 exceptions,
+   * and IOException is indeed occurring when the end of the input file is reached
+   * and seen by the SimpleCharStream, who throws a new IOException().
+   */
+  
   public static void main(String args[]) throws ParseException, IOException, FileNotFoundException {
     if (args.length < 2) {
       System.err.println("Error: bad number of arguments (" + args.length + " instead of 3)");
       System.err.println("Usage: FaqMain index infile outdir");
       System.exit(4);
     }
+    
     beginAt = Integer.parseInt(args[0]);
     outdir = args[2];
     indexpw = new PrintWriter(new FileWriter(outdir + "/index.out.html"));
     indexpw.println("<title>Selected list of emails from the JavaCC mailing list</title>");
     indexpw.println("<h2>Selected list of emails from the JavaCC mailing list</h2>");
+    
     Faq parser = new Faq(new FileInputStream(args[1]));
     parser.MailFile();
   }

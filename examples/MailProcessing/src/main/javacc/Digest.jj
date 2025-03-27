@@ -50,20 +50,23 @@ PARSER_END(Digest)
 String MailFile() :
 {
   String mail, mails = "";
+  System.out.print("Digest: ");
 }
 {
   (
-    { count++; }
+    {
+      count++;
+    }
     mail = MailMessage()
     {
       mails += mail;
-      System.out.print(count + ".");
+      System.out.print(count + ". ");
       System.out.flush();
     }
   )*
   <EOF>
   {
-    System.out.println("");
+    System.out.println();
     return mails;
   }
 }

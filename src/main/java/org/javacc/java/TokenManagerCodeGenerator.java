@@ -47,7 +47,7 @@ import org.javacc.utils.CodeBuilder;
 /** Class that implements a table driven code generator for the token manager in Java. */
 class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGenerator {
 
-  private static final String tokenManagerTemplate = "/templates/TokenManagerDriver.template";
+  private static final String tokenManagerTemplate = "/templates/java/TokenManagerDriver.template";
 
   private final Context context;
   private JavaCodeBuilder jcb;
@@ -71,14 +71,14 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
     settings.put("maxLongs", (tokenizerData.allMatches.size() / 64) + 1);
     settings.put("parserName", tokenizerData.parserName);
     settings.put("charStreamName", Options.getCharStreamName());
-    settings.put("defaultLexState", tokenizerData.defaultLexState);
+    settings.put("defaultLexState", tokenizerData.lexStateNames[tokenizerData.defaultLexState]);
     settings.put("decls", tokenizerData.decls);
     settings.put("generatedStates", tokenizerData.nfa.size());
 
-    final String superClass = (String) settings.get(Options.UO__TOKEN_MANAGER_SUPER_CLASS);
+    final String tmSuperClass = (String) settings.get(Options.UO__TOKEN_MANAGER_SUPER_CLASS);
     settings.put(
-        "superClass",
-        ((superClass == null) || superClass.equals("")) ? "" : "extends " + superClass);
+        "tmSuperClass",
+        ((tmSuperClass == null) || tmSuperClass.equals("")) ? "" : "extends " + tmSuperClass);
     settings.put("noDfa", Options.getNoDfa());
 
     try {
@@ -112,15 +112,25 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
       jcb.println("/* End of code from " + tokenManagerTemplate + " */");
       jcb.println();
 
-      generateConstants(jcb, tokenizerData);
-
-      dumpDfaTables(jcb, tokenizerData);
-      dumpNfaTables(jcb, tokenizerData);
+      jcb.println("  /* Match info. */");
+      jcb.println();
       dumpMatchInfo(jcb, tokenizerData);
 
+      if (!Options.getNoDfa()) {
+        jcb.println("  /* DFA tables. */");
+        jcb.println();
+        dumpDfaTables(jcb, tokenizerData);
+      }
+
+      jcb.println("  /* NFA tables. */");
+      jcb.println();
+      dumpNfaTables(jcb, tokenizerData);
+
       jcb.println("  static {");
-      jcb.println("    InitStringLiteralData();");
-      jcb.println("    InitNfaData();");
+      if (!Options.getNoDfa()) {
+        jcb.println("    InitStartAndSize();");
+      }
+      jcb.println("    initJjChars();");
       jcb.println("  }");
       jcb.println();
       jcb.println("}");
@@ -146,6 +156,8 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
   }
 
   private static void dumpDfaTables(final JavaCodeBuilder jcb, final TokenizerData tokenizerData) {
+
+    /* stringLiterals. */
     jcb.println("  private static final int[] stringLiterals = {");
     int i = 0;
     final Map<Integer, int[]> startAndSize = new HashMap<>();
@@ -192,8 +204,13 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
     jcb.println("  };");
     jcb.println();
 
-    // Static block to actually initialize the map from the int array above.
-    jcb.println("  static void InitStringLiteralData() {");
+    /* startAndSize. */
+    jcb.println("  private static final java.util.Map<Integer, int[]> startAndSize =");
+    jcb.println("      new java.util.HashMap<Integer, int[]>();");
+    jcb.println();
+
+    /* InitStartAndSize. */
+    jcb.println("  private static void InitStartAndSize() {");
     for (final int key : tokenizerData.literalSequence.keySet()) {
       final int[] arr = startAndSize.get(key);
       jcb.println("    startAndSize.put(" + key + ", new int[] {" + arr[0] + ", " + arr[1] + "});");
@@ -203,13 +220,59 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
   }
 
   private static void dumpNfaTables(final JavaCodeBuilder jcb, final TokenizerData tokenizerData) {
+
+    /* canMatchAnyChar. */
+    jcb.print("  private static final int[] canMatchAnyChar = {");
+    int v = 0;
+    for (int i = 0; i < tokenizerData.wildcardKind.size(); i++) {
+      if (v++ > 0) {
+        jcb.print(", ");
+      } else {
+        jcb.println();
+        jcb.print("    ");
+      }
+      jcb.print(tokenizerData.wildcardKind.get(i));
+    }
+    if (!tokenizerData.wildcardKind.isEmpty()) {
+      jcb.println();
+      jcb.println("  };");
+    } else {
+      jcb.println("};");
+    }
+    jcb.println();
+
+    /* jjInitStates. */
+    jcb.print("  private static final int[] jjInitStates = {");
+    v = 0;
+    for (final int i : tokenizerData.initialStates.keySet()) {
+      if (v++ > 0) {
+        jcb.print(", ");
+      } else {
+        jcb.println();
+        jcb.print("    ");
+      }
+      jcb.print(tokenizerData.initialStates.get(i));
+    }
+    if (!tokenizerData.initialStates.isEmpty()) {
+      jcb.println();
+      jcb.println("  };");
+    } else {
+      jcb.println("};");
+    }
+    jcb.println();
+
+    // We do the following for Java so that the generated code is reasonable
+    // size and can be compiled. May not be needed for other languages.
+
+    /* EMPTY_CHAR_DATA. */
     jcb.println("  private static final long[] EMPTY_CHAR_DATA = new long[] {};");
     jcb.println();
-    final Map<String, String> charDataVars = new HashMap<String, String>();
-    final String charDataVarPrefix = "CHAR_DATA";
-    // We do the following for java so that the generated code is reasonable
-    // size and can be compiled. May not be needed for other languages.
+
+    /* jjCharData. */
     jcb.print("  private static final long[][] jjCharData = {");
+    final Map<String, String> charDataVars = new HashMap<String, String>();
+    final Map<String, String> charDataCdbs = new HashMap<String, String>();
+    final String charDataVarPrefix = "CHAR_DATA";
     final Map<Integer, TokenizerData.NfaState> nfa = tokenizerData.nfa;
     final StringBuilder charDataBuilder = new StringBuilder(64);
     for (int i = 0; i < nfa.size(); i++) {
@@ -219,7 +282,7 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
         jcb.println();
       }
       charDataBuilder.setLength(0);
-      // We have a lot of similar states. So factor them out so we don't get code too big errors.
+      // We have a lot of similar states. So factor them so we don't get "Code too large" errors.
       final TokenizerData.NfaState tmp = nfa.get(i);
       if (tmp == null) {
         jcb.println("    EMPTY_CHAR_DATA");
@@ -248,6 +311,7 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
         if (var == null) {
           var = charDataVarPrefix + (charDataVars.size() + 1);
           charDataVars.put(cdb, var);
+          charDataCdbs.put(var, cdb);
         }
         jcb.print("    CharDataConsts." + var);
       }
@@ -260,25 +324,21 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
     }
     jcb.println();
 
-    // Now dump the chardata vars.
+    /* CharDataConsts. */
     jcb.println("  private static final class CharDataConsts {");
-    for (final Map.Entry<String, String> charDataEntry : charDataVars.entrySet()) {
-      jcb.println(
-          "    private static final long[] "
-              + charDataEntry.getValue()
-              + " = "
-              + charDataEntry.getKey()
-              + ";");
+    // in order, for easier comparison with C# & C++
+    for (int k = 1; k <= charDataCdbs.size(); k++) {
+      final String key = charDataVarPrefix + Integer.toString(k);
+      jcb.println("    private static final long[] " + key + " = " + charDataCdbs.get(key) + ";");
     }
-    if (!charDataVars.isEmpty()) {
-      jcb.println("  }");
-    } else {
-      jcb.println("}");
-    }
+    jcb.println("  }");
     jcb.println();
 
+    /* EMPTY_STATE_SET. */
     jcb.println("  private static final int[] EMPTY_STATE_SET = new int[] {};");
     jcb.println();
+
+    /* jjcompositeState. */
     jcb.print("  private static final int[][] jjcompositeState = {");
     for (int i = 0; i < nfa.size(); i++) {
       final TokenizerData.NfaState tmp = nfa.get(i);
@@ -290,7 +350,7 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
       if (tmp == null || tmp.compositeStates.isEmpty()) {
         jcb.print("    EMPTY_STATE_SET");
       } else {
-        jcb.print("    new int[] {");
+        jcb.print("    new int[] { ");
         int k = 0;
         for (final int st : tmp.compositeStates) {
           if (k++ > 0) {
@@ -298,7 +358,7 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
           }
           jcb.print(st);
         }
-        jcb.print("}");
+        jcb.print(" }");
       }
     }
     if (!nfa.isEmpty()) {
@@ -309,7 +369,8 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
     }
     jcb.println();
 
-    jcb.println("  private static final int[] jjmatchKinds = {");
+    /* jjmatchKinds. */
+    jcb.print("  private static final int[] jjmatchKinds = {");
     for (int i = 0; i < nfa.size(); i++) {
       final TokenizerData.NfaState tmp = nfa.get(i);
       if (i > 0) {
@@ -329,7 +390,8 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
     }
     jcb.println();
 
-    jcb.println("  private static final int[][] jjnextStateSet = {");
+    /* jjnextStateSet. */
+    jcb.print("  private static final int[][] jjnextStateSet = {");
     for (int i = 0; i < nfa.size(); i++) {
       final TokenizerData.NfaState tmp = nfa.get(i);
       if (i > 0) {
@@ -341,53 +403,17 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
         jcb.print("    EMPTY_STATE_SET");
       } else {
         int k = 0;
-        jcb.print("    new int[] {");
+        jcb.print("    new int[] { ");
         for (final int s : tmp.nextStates) {
           if (k++ > 0) {
             jcb.print(", ");
           }
           jcb.print(s);
         }
-        jcb.print("}");
+        jcb.print(" }");
       }
     }
     if (!nfa.isEmpty()) {
-      jcb.println();
-      jcb.println("  };");
-    } else {
-      jcb.println("};");
-    }
-    jcb.println();
-
-    jcb.println("  private static final int[] jjInitStates = {");
-    int k = 0;
-    for (final int i : tokenizerData.initialStates.keySet()) {
-      if (k++ > 0) {
-        jcb.print(", ");
-      } else {
-        jcb.print("    ");
-      }
-      jcb.print(tokenizerData.initialStates.get(i));
-    }
-    if (!tokenizerData.initialStates.isEmpty()) {
-      jcb.println();
-      jcb.println("  };");
-    } else {
-      jcb.println("};");
-    }
-    jcb.println();
-
-    jcb.println("  private static final int[] canMatchAnyChar = {");
-    k = 0;
-    for (int i = 0; i < tokenizerData.wildcardKind.size(); i++) {
-      if (k++ > 0) {
-        jcb.print(", ");
-      } else {
-        jcb.print("    ");
-      }
-      jcb.print(tokenizerData.wildcardKind.get(i));
-    }
-    if (!tokenizerData.wildcardKind.isEmpty()) {
       jcb.println();
       jcb.println("  };");
     } else {
@@ -411,9 +437,8 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
     toMore.set(allMatches.size() + 1, true);
     toSpecial.set(allMatches.size() + 1, true);
 
-    // Kind map.
+    /* jjstrLiteralImages. */
     jcb.println("  public static final String[] jjstrLiteralImages = {");
-
     int k = 0;
     for (int i = 0; i < allMatches.size(); i++) {
       final TokenizerData.MatchInfo matchInfo = allMatches.get(i);
@@ -491,16 +516,17 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
     jcb.println("  };");
     jcb.println();
 
-    // Now generate the bit masks.
+    /* Bit masks. */
+    generateBitVector(jcb, "jjtoToken", toToken);
+    jcb.println();
     generateBitVector(jcb, "jjtoSkip", toSkip);
     jcb.println();
     generateBitVector(jcb, "jjtoSpecial", toSpecial);
     jcb.println();
     generateBitVector(jcb, "jjtoMore", toMore);
     jcb.println();
-    generateBitVector(jcb, "jjtoToken", toToken);
-    jcb.println();
 
+    /* jjnewLexState. */
     jcb.println("  private static final int[] jjnewLexState = {");
     for (int i = 0; i < newStates.length; i++) {
       if (i > 0) {
@@ -521,6 +547,7 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
 
     // Token actions.
     jcb.println(staticString + "void TokenLexicalActions(Token matchedToken) {");
+    jcb.println("  // TOKEN lexical actions");
     dumpLexicalActions(jcb, allMatches, TokenizerData.MatchType.TOKEN, "matchedToken.kind");
     jcb.println("  }");
     jcb.println();
@@ -528,7 +555,9 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
     // Skip actions.
     // TODO(sreeni) : Streamline this mess.
     jcb.println(staticString + "void SkipLexicalActions(Token matchedToken) {");
+    jcb.println("  // SKIP lexical actions");
     dumpLexicalActions(jcb, allMatches, TokenizerData.MatchType.SKIP, "jjmatchedKind");
+    jcb.println("  // SPECIAL_TOKEN lexical actions");
     dumpLexicalActions(jcb, allMatches, TokenizerData.MatchType.SPECIAL_TOKEN, "jjmatchedKind");
     jcb.println("  }");
     jcb.println();
@@ -536,6 +565,7 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
     // More actions.
     jcb.println(staticString + "void MoreLexicalActions() {");
     jcb.println("    jjimageLen += (lengthOfMatch = jjmatchedPos + 1);");
+    jcb.println("  // MORE lexical actions");
     dumpLexicalActions(jcb, allMatches, TokenizerData.MatchType.MORE, "jjmatchedKind");
     jcb.println("  }");
     jcb.println();
@@ -553,7 +583,20 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
       if ((matchInfo.action == null) || (matchInfo.matchType != matchType)) {
         continue;
       }
-      jcb.println("      case " + i + ": {\n");
+      jcb.println("      case " + i + ": {");
+      // TODO check (MMa start added)
+      //      if (matchInfo.matchType == MatchType.SKIP) {
+      //        jcb.println("        lengthOfMatch = jjmatchedPos + 1;");
+      //        jcb.println("        image.append(input_stream.GetSuffix(jjimageLen +
+      // lengthOfMatch));");
+      //      } else if (matchInfo.matchType == MatchType.MORE) {
+      //        jcb.println("        image.append(input_stream.GetSuffix(jjimageLen));");
+      //        jcb.println("        jjimageLen = 0;");
+      //      } else if (matchInfo.matchType == MatchType.TOKEN) {
+      //        jcb.println("        image.append(jjstrLiteralImages[" + i + "]);");
+      //        jcb.println("        lengthOfMatch = jjstrLiteralImages[" + i + "].length();");
+      //      }
+      // TODO check (MMa end added)
       jcb.println("        " + matchInfo.action.trim());
       jcb.println("        break;");
       jcb.println("      }");
@@ -576,19 +619,5 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
     }
     jcb.println();
     jcb.println("  };");
-  }
-
-  private static void generateConstants(
-      final JavaCodeBuilder jcb, final TokenizerData tokenizerData) {
-    jcb.println("  public static String[] lexStateNames = {");
-    for (int i = 0; i < tokenizerData.lexStateNames.length; i++) {
-      if (i > 0) {
-        jcb.println(",");
-      }
-      jcb.print("    \"" + tokenizerData.lexStateNames[i] + "\"");
-    }
-    jcb.println();
-    jcb.println("  };");
-    jcb.println();
   }
 }

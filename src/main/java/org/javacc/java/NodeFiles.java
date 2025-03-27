@@ -100,7 +100,7 @@ final class NodeFiles {
     options.set(
         "VISITOR_RETURN_TYPE_VOID",
         Boolean.valueOf(context.treeOptions().getVisitorReturnType().equals("void")));
-    builder.printTemplate("/templates/MultiNode.template", options);
+    builder.printTemplate("/templates/java/MultiNode.template", options);
   }
 
   private static void generateTreeConstants(final JJTreeContext context) {
@@ -269,12 +269,12 @@ final class NodeFiles {
     try (JavaCodeBuilder jcb = JavaCodeBuilder.of(context, options)) {
       jcb.setFile(new File(context.treeOptions().getJJTreeOutputDirectory(), "Tree.java"));
       NodeFiles.generateProlog(jcb);
-      jcb.printTemplate("/templates/Tree.template");
+      jcb.printTemplate("/templates/java/Tree.template");
     }
     try (JavaCodeBuilder jcb = JavaCodeBuilder.of(context, options)) {
       jcb.setFile(new File(context.treeOptions().getJJTreeOutputDirectory(), "Node.java"));
       NodeFiles.generateProlog(jcb);
-      jcb.printTemplate("/templates/Node.template");
+      jcb.printTemplate("/templates/java/Node.template");
     }
   }
 

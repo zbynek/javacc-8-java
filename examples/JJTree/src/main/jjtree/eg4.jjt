@@ -29,6 +29,8 @@
  */
 options
 {
+  STATIC = false;
+
   MULTI = true;
   NODE_DEFAULT_VOID = true;
   NODE_PACKAGE = "eg4";

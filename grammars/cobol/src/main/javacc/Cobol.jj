@@ -1,10 +1,11 @@
 /**
  * This is an experimental COBOL-85 grammar for JavaCC.
- * <p>References used for this grammar :<ol>
+ * <p>References used for this grammar :
+ * <ol>
  * <li> Ralf Lämmel & Chris Verhoef : VS COBOL II grammar Version 1.0.3
  * <li> Fujitsu Cobol compiler reference
  * <li> Compaq-HP Non-stop Cobol reference
- * </od>
+ * </ol>
  * <p>This grammar is released under the GNU Library Public License (LGPL).
  * <p><address>Bernard Pinon, august 2002</address>
  * <p><address>Thierry Blind, september 2009</address>
@@ -12,14 +13,18 @@
  * @see http://www.cwi.nl/
  * @see http://www.wins.uva.nl/
  * @author Thierry Blind (initial work from Bernard Pinon)
+ * @author Marc Mazas
  *
- * <p>History:<ul>
- * <li><date>9-aug-2002</date> [BP] make changes to comply with JTB :<ol>
- * <li> Changed Integer() to IntegerConstant() to avoid conflicts with java.lang.Integer
- * <li> Removed Java code to make the grammar bare bone
- * <li> Fixed Identification Division entries
- * </ol>
- * <li><date>8-aug-2002</date> [BP] fixed several bugs :<ol>
+ * <p>History:
+ * <ul>
+ * <li><date>9-aug-2002</date> [BP] make changes to comply with JTB :
+ *   <ol>
+ *   <li> Changed Integer() to IntegerConstant() to avoid conflicts with java.lang.Integer
+ *   <li> Removed Java code to make the grammar bare bone
+ *   <li> Fixed Identification Division entries
+ *   </ol>
+ * <li><date>8-aug-2002</date> [BP] fixed several bugs :
+ *   <ol>
  *   <li> INSTALLATION section
  *   <li> wrong spelling in keywords
  *   <li> DOT missing in FD/SD entries
@@ -33,7 +38,8 @@
  *   <li> Fixed problems with abbreviated conditions
  *   <li> Fixed Add statement
  *   </ol>
- * <li><date>01-sept-2009</date> :<ol>
+ * <li><date>01-sept-2009</date> :
+ *   <ol>
  *   <li> corrected picture values and enhanced linkage section
  *   <li> corrected relational operators, arithmetic expressions and conditions
  *   <li> corrected perform, evaluate and call clauses
@@ -42,6 +48,10 @@
  *   <li> added function support from cobol 2000
  *   <li> added LOOKAHEAD() instructions, with reorderings, to remove parser ambiguities
  *   <li> ... and many many corrections, new clauses and new tokens relative to cobol 85 and (some from) cobol 2000
+ *   </ol>
+ * <li><date>mar-2025</date> :
+ *   <ol>
+ *   <li>splitted MemoryUsage, for MSVC C++ compiler error C1061: compiler limit: blocks nested too deeply
  *   </ol>
  * </ul>
  */
@@ -1937,10 +1947,10 @@ void DataIdentifiedClause() :
 void DataUsageClause() :
 {}
 {
-  [ <USAGE> [ <IS> ] ] ( MemoryUsage() | ExternalUsage() | PropertyObjectModifier() )
+  [ <USAGE> [ <IS> ] ] ( MemoryUsage_1()  MemoryUsage_2() | ExternalUsage() | PropertyObjectModifier() )
 }
 
-void MemoryUsage() :
+void MemoryUsage_1() :
 {}
 {
     <DISPLAY> | <DISPLAY_1>
@@ -1958,14 +1968,19 @@ void MemoryUsage() :
   | <COMP_6> | <COMPUTATIONAL_6>
   | <COMP_S> | <COMPUTATIONAL_S> | <COMP_1_A> | <COMPUTATIONAL_1_A>
   | <COMP_D> | <COMPUTATIONAL_D> | <COMP_2_A> | <COMPUTATIONAL_2_A>
-  | <PACKED_DECIMAL> | <COMP_P> | <COMPUTATIONAL_P>
+  | <COMP_X> | <COMP_X> | <COMPUTATIONAL_X> | <COMPUTATIONAL_X> | <COMP_5_M> | <COMPUTATIONAL_5_M>
+  | <COMP_X_REV> | <COMPUTATIONAL_X_REV>
+}
+
+void MemoryUsage_2() :
+{}
+{
+    <PACKED_DECIMAL> | <COMP_P> | <COMPUTATIONAL_P>
   | <PACKED_DECIMAL_A> | <COMP_3_A> | <COMPUTATIONAL_3_A>
   | <PACKED_DECIMAL_I> | <PACKED_DECIMAL_E> | <PACKED_DECIMAL_H> | <COMP_3_M> | <COMPUTATIONAL_3_M> | <PACKED_DECIMAL_M>
   | <BINARY> | <BINARY_M> | <COMP_M> | <COMPUTATIONAL_M> | <COMP_A> | <COMPUTATIONAL_A> | <COMP_4_M> | <COMPUTATIONAL_4_M> | <COMP_B> | <COMPUTATIONAL_B>
   | <BINARY_REV>
   | <SQLIND>
-  | <COMP_X> | <COMP_X> | <COMPUTATIONAL_X> | <COMPUTATIONAL_X> | <COMP_5_M> | <COMPUTATIONAL_5_M>
-  | <COMP_X_REV> | <COMPUTATIONAL_X_REV>
   | <DISPLAY_WS>
   | <EXTERNAL_FORM>
   | <NATIONAL>

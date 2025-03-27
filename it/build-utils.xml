@@ -30,62 +30,90 @@ THE POSSIBILITY OF SUCH DAMAGE.
 
 <!-- 
   Some utility ant targets to be called from maven.
-  Feb 2025. Authors: Maͫzͣaͬsͨ
+  Feb-Mar 2025. Authors: Maͫzͣaͬsͨ
 -->
 <project name="build-utils" basedir="../..">
 
   <!-- compares output file (.out) to expected one (.exp_out)
-     param1: dir: the directory where the files directory lies
-     param2: file: the name of the test file (without extension) -->
+       param1: dir: the directory where the files directory lies
+       param2: file: the name of the test file (without extension) -->
   <target name="compare-out">
     <available file="${dir}/files/${file}.out" property="isActualOutAvailable" />
     <fail unless="isActualOutAvailable" message="${dir}/files/${file}.out does not exist!" />
     <available file="${dir}/files/${file}.exp_out" property="isExpectedOutAvailable" />
     <fail unless="isExpectedOutAvailable" message="${dir}/files/${file}.exp_out does not exist!" />
     <!-- need to get rid of the project's base directory string in the out file -->
-    <copy file="${dir}/files/${file}.out" tofile="${dir}/files/${file}2.out" />
-    <replace file="${dir}/files/${file}2.out">
+    <copy file="${dir}/files/${file}.out" tofile="${dir}/files/${file}.cpy.out" />
+    <replace file="${dir}/files/${file}.cpy.out">
       <replacetoken expandProperties="true">${dir}</replacetoken>
       <!-- expand set to false does not seem to work, so using an unknown property -->
       <replacevalue expandProperties="false">${project-basedir}</replacevalue>
     </replace>
     <condition property="out.files.match">
       <filesmatch textfile="true"
-                  file1="${dir}/files/${file}2.out"
+                  file1="${dir}/files/${file}.cpy.out"
                   file2="${dir}/files/${file}.exp_out"
       />
     </condition>
     <fail unless="out.files.match"
-          message="${dir}/files/${file}2.out does not match ${dir}/files/${file}.exp_out!"
+          message="${dir}/files/${file}(.cpy).out does not match ${dir}/files/${file}.exp_out!"
     />
     <echo message="Output file ${dir}/files/${file}.out is the one expected :)" level="info" />
   </target>
 
   <!-- compares error file (.err) to expected one (.exp_err)
-     param1: dir: the directory where the files directory lies
-     param2: file: the name of the test file (without extension) -->
+       param1: dir: the directory where the files directory lies
+       param2: file: the name of the test file (without extension) -->
   <target name="compare-err">
     <available file="${dir}/files/${file}.err" property="isActualErrAvailable" />
     <fail unless="isActualErrAvailable" message="${dir}/files/${file}.err does not exist!" />
     <available file="${dir}/files/${file}.exp_err" property="isExpectedErrAvailable" />
     <fail unless="isActualErrAvailable" message="${dir}/files/${file}.exp_err does not exist!" />
     <!-- need to get rid of the project's base directory string in the err file -->
-    <copy file="${dir}/files/${file}.err" tofile="${dir}/files/${file}2.err" />
-    <replace file="${dir}/files/${file}2.err">
+    <copy file="${dir}/files/${file}.err" tofile="${dir}/files/${file}.cpy.err" />
+    <replace file="${dir}/files/${file}.cpy.err">
       <replacetoken expandProperties="true">${dir}</replacetoken>
       <!-- expand set to false does not seem to work, so using an unknown property -->
       <replacevalue expandProperties="false">${project-basedir}</replacevalue>
     </replace>
     <condition property="err.files.match">
       <filesmatch textfile="true"
-                  file1="${dir}/files/${file}2.err"
+                  file1="${dir}/files/${file}.cpy.err"
                   file2="${dir}/files/${file}.exp_err"
       />
     </condition>
     <fail unless="err.files.match"
-          message="${dir}/files/${file}2.err does not match ${dir}/files/${file}.exp_err!"
+          message="${dir}/files/${file}(.cpy).err does not match ${dir}/files/${file}.exp_err!"
     />
-    <echo message="Error file {dir}/files/${file}.err is the one expected :)" level="info" />
+    <echo message="Error file ${dir}/files/${file}.err is the one expected :)" level="info" />
+  </target>
+
+  <!-- compares an actual file to the expected one
+       param1: dir: the directory where the files directory lies
+       param2: actual: the name of the actual file 
+       param3: expected: the name of the expected file -->
+  <target name="compare-any">
+    <available file="${dir}/files/${actual}" property="isActualOutAvailable" />
+    <fail unless="isActualOutAvailable" message="${dir}/files/${actual} does not exist!" />
+    <available file="${dir}/files/${expected}" property="isExpectedOutAvailable" />
+    <fail unless="isExpectedOutAvailable" message="${dir}/files/${expected} does not exist!" />
+    <!-- need to get rid of the project's base directory string in the actual file -->
+    <copy file="${dir}/files/${actual}" tofile="${dir}/files/cpy.${actual}" />
+    <replace file="${dir}/files/cpy.${actual}">
+      <replacetoken expandProperties="true">${dir}</replacetoken>
+      <!-- expand set to false does not seem to work, so using an unknown property -->
+      <replacevalue expandProperties="false">${project-basedir}</replacevalue>
+    </replace>
+    <condition property="out.files.match">
+      <filesmatch textfile="true"
+                  file1="${dir}/files/cpy.${actual}"
+                  file2="${dir}/files/${expected}"
+      />
+    </condition>
+    <fail unless="out.files.match"
+          message="${dir}/files/(cpy.)${actual} does not match ${dir}/files/${expected}!"
+    />
+    <echo message="Output file ${dir}/files/${actual} is the one expected :)" level="info" />
   </target>
 
 </project>

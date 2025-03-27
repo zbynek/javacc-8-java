@@ -32,6 +32,11 @@
  */
 class MyLexer extends CalcInputParserTokenManager {
 
+  public MyLexer(CalcGUI guiObj) {
+    super(guiObj.getCollector(), OPERAND);
+    gui = guiObj;
+  }
+
   /**
    * We redefined the lexical error reporting function so that it beeps and displays a message
    * through the GUI.
@@ -40,10 +45,5 @@ class MyLexer extends CalcInputParserTokenManager {
     CalcGUI.Error("ERROR (click 0)");
     ReInit(gui.getCollector(), OPERAND);
     result = 0.0;
-  }
-
-  public MyLexer(CalcGUI guiObj) {
-    super(guiObj.getCollector(), OPERAND);
-    gui = guiObj;
   }
 }

@@ -68,6 +68,7 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class JavaCharStream {
   protected int tabSize = 1;
 
   /** Get starting character for token. */
+  // Don't know why this method is different than in SimpleCharStream. Makes EOF handling different.
   public char BeginToken() throws java.io.IOException {
     if (inBuf > 0) {
       --inBuf;
@@ -252,7 +253,7 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class JavaCharStream {
     try {
       if ((i = inputStream.read(nextCharBuf, maxNextCharInd, 4096 - maxNextCharInd)) == -1) {
         inputStream.close();
-        throw new java.io.IOException();
+        throw new java.io.IOException("End of file");
       } else {
         maxNextCharInd += i;
       }

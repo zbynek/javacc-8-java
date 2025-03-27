@@ -1,0 +1,7 @@
+Call:   EnumerationItem (pa)
+  Consumed token: <7 / <LBRACE> / "{"> (in jj_consume_token()) (pa)
+  Call:   NamedNumber(LOOKING AHEAD...) (la)
+    Visited token: <7 / <LBRACE> / "{">; Expected token: <17 / <IDENTIFIANT>> (la)
+    Visited token: <7 / <LBRACE> / "{">; Expected token: <18 / <VALUEREFERENCE>> (la)
+  Return: NamedNumber(LOOKAHEAD FAILED) (la)
+Return: EnumerationItem (pa)

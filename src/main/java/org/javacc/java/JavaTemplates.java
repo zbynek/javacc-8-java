@@ -65,17 +65,17 @@ abstract class JavaTemplates {
 
     @Override
     public String getJavaCharStreamTemplateResourceUrl() {
-      return "/templates/JavaCharStream.template";
+      return "/templates/java/JavaCharStream.template";
     }
 
     @Override
     public String getSimpleCharStreamTemplateResourceUrl() {
-      return "/templates/SimpleCharStream.template";
+      return "/templates/java/SimpleCharStream.template";
     }
 
     @Override
     public String getParseExceptionTemplateResourceUrl() {
-      return "/templates/ParseException.template";
+      return "/templates/java/ParseException.template";
     }
   }
 

@@ -87,9 +87,9 @@ abstract class JavaUtil {
     return (Options.getStatic() ? "static " : "");
   }
 
-  public static String getBooleanType() {
-    return "boolean";
-  }
+  //  public static String getBooleanType() {
+  //    return "boolean";
+  //  }
 
   private static void printTokenSetup(final Token t, final Context context) {
     Token tt = t;

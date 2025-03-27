@@ -53,40 +53,50 @@ public class ParseException extends Exception {
    */
   protected static String EOL = "\n";
 
-   /**
+  /**
    * This constructor is used by the method "generateParseException" in the generated parser.<br>
    * Calling this constructor generates a new object of this type with the fields "currentToken",
-   *  "expectedTokenSequences", and "tokenImage" set.
+   *  "expectedTokenSequences", "tokenImage, "expectedExpansionLineVal" and "expectedExpansionColumnVal" set.
    */
-  public ParseException(Token currentTokenVal,
-                        int[][] expectedTokenSequencesVal,
-                        String[] tokenImageVal) {
-    this (currentTokenVal, expectedTokenSequencesVal, tokenImageVal, null);
+  public ParseException(   Token currentTokenVal,
+                         int[][] expectedTokenSequencesVal,
+                        String[] tokenImageVal,
+                             int expectedExpansionLineVal,
+                             int expectedExpansionColumnVal) {
+    this(currentTokenVal, expectedTokenSequencesVal, tokenImageVal,
+        expectedExpansionLineVal, expectedExpansionColumnVal, null);
   }
 
   /**
    * This constructor is used by the method "generateParseException" in the generated parser.<br>
    * Calling this constructor generates a new object of this type with the fields "currentToken",
-   *  "expectedTokenSequences", and "tokenImage" set.
+   *  "expectedTokenSequences", "tokenImage, "expectedExpansionLineVal" and "expectedExpansionColumnVal" set.
    */
-  public ParseException(Token currentTokenVal,
-                        int[][] expectedTokenSequencesVal,
+  public ParseException(   Token currentTokenVal,
+                         int[][] expectedTokenSequencesVal,
                         String[] tokenImageVal,
-                        String lexicalStateName) {
-    super(initialise(currentTokenVal, expectedTokenSequencesVal, tokenImageVal, lexicalStateName));
+                             int expectedExpansionLineVal,
+                             int expectedExpansionColumnVal,
+                          String lexicalStateName) {
+    super(initialise(currentTokenVal, expectedTokenSequencesVal, tokenImageVal,
+                     expectedExpansionLineVal, expectedExpansionColumnVal, lexicalStateName));
     currentToken = currentTokenVal;
     expectedTokenSequences = expectedTokenSequencesVal;
     tokenImage = tokenImageVal;
+    expectedExpansionLine = expectedExpansionLineVal;
+    expectedTokenSequences = expectedTokenSequencesVal;
   }
 
-  /**
+  /*
    * The following constructors are for use by you for whatever purpose you can think of.
    * Constructing the exception in this manner makes the exception behave in the normal way
    *  - i.e., as documented in the class "Throwable".<br>
-   * The fields "errorToken", "expectedTokenSequences", and "tokenImage" do not contain
-   *  relevant information.<br>
+   * The fields "errorToken", "expectedTokenSequences", "tokenImage, "expectedExpansionLineVal" and
+   *  "expectedExpansionColumnVal" do not contain relevant information.<br>
    * The JavaCC generated code does not use these constructors.
    */
+
+  /** Constructor without message. */
   public ParseException() {
     super();
   }
@@ -104,9 +114,9 @@ public class ParseException extends Exception {
   public Token currentToken;
 
   /**
-   * This is the last token that has been consumed successfully.<br>
-   * If this object has been created due to a parse error,
-   *  the token following this token will (therefore) be the first error token.
+   * Each entry in this array is an array of integers.<br>
+   * Each array of integers represents a sequence of tokens (by their ordinal values)
+   * that is expected at this point of the parse.
    */
   public int[][] expectedTokenSequences;
 
@@ -118,17 +128,32 @@ public class ParseException extends Exception {
   public String[] tokenImage;
 
   /**
-   * It uses "currentToken" and "expectedTokenSequences" to generate a parse error message
-   *  and returns it.<br>
+   * The beginning line of the expansion where the exception arose.
+   */
+  public int expectedExpansionLine;
+
+  /**
+   * The beginning column of the expansion where the exception arose.
+   */
+  public int expectedExpansionColumn;
+
+  /**
+   * Generate a parse error message and returns it.<br>
    * If this object has been created due to a parse error and you do not catch it (i.e. it gets
    *  thrown from the parser), the correct error message gets displayed.
    */
-  private static String initialise(Token currentToken,
-                           int[][] expectedTokenSequences,
-                           String[] tokenImage,
-                           String lexicalStateName) {
-    StringBuilder expected = new StringBuilder(32);
+  private static String initialise(   Token currentToken,
+                                    int[][] expectedTokenSequences,
+                                   String[] tokenImage,
+                                        int expectedExpansionLine,
+                                        int expectedExpansionColumn,
+                                     String lexicalStateName) {
+                                     
+    final StringBuilder expected = new StringBuilder(32);
     int maxSize = 0;
+    
+    // would need to keep in sync lines & columns with the sorted sequences
+    /*
     java.util.TreeSet<String> sortedOptions = new java.util.TreeSet<String>();
     for (int i = 0; i < expectedTokenSequences.length; i++) {
       if (maxSize < expectedTokenSequences[i].length) {
@@ -141,41 +166,82 @@ public class ParseException extends Exception {
     for (String option : sortedOptions) {
       expected.append(INDENT).append(option).append(EOL);
     }
+    */
+    
+    // outer:
+    for (int i = 0; i < expectedTokenSequences.length; i++) {
+      final int[] expTkSeq = expectedTokenSequences[i];
+      // for the moment we prefer to keep printing duplicated sequences,
+      //  hoping we can find a way to print their (different) locations in the grammar
+      // for (int k = 0; k < i; k++) {
+        // // don't print duplicated sequences
+        // if (java.util.Arrays.equals(expTkSeq, expectedTokenSequences[k])) {
+        //   continue outer;
+        // }
+      // }
+      if (maxSize < expTkSeq.length) {
+        maxSize = expTkSeq.length;
+      }
+      for (int j = 0; j < expTkSeq.length; j++) {
+        if (j > 0) {
+          expected.append(' ');
+        }
+        expected.append(tokenImage[expTkSeq[j]]);
+      }
+      if (expTkSeq[expTkSeq.length - 1] != 0) {
+        expected.append("...");
+      }
+      expected.append(EOL).append("    ");
+    }
+    
     StringBuilder sb = new StringBuilder(64);
+    // temp debug
+    /*
+    sb.append("currentToken = " + currentToken).append(EOL);
+    for (int i = 0; i < expectedTokenSequences.length; i++) {
+      sb.append("expectedTokenSequences[" + i + "] = " + java.util.Arrays.toString(expectedTokenSequences[i])).append(EOL);
+    }
+    sb.append("tokenImage = " + java.util.Arrays.toString(tokenImage)).append(EOL);
+    sb.append("expectedExpansionLine = " + expectedExpansionLine).append(EOL);
+    sb.append("expectedExpansionColumn = " + expectedExpansionColumn).append(EOL);
+    */
     sb.append("Encountered unexpected token:");
     Token tok = currentToken.next;
     for (int i = 0; i < maxSize; i++) {
-      String tokenText = tok.image;
-      final String escapedTokenText = add_escapes(tokenText);
       if (i != 0) {
-        sb.append(" ");
+        sb.append(' ');
       }
       if (tok.kind == 0) {
         sb.append(tokenImage[0]);
         break;
       }
-      sb.append(" \"");
-      sb.append(escapedTokenText);
-      sb.append("\"");
-      sb.append(" " + tokenImage[tok.kind]);
+      sb.append(' ').append(tokenImage[tok.kind]);
+      sb.append(" \"").append(add_escapes(tok.image)).append(" \"");
+      sb.append(" (").append(tok.kind).append(")");
       tok = tok.next;
     }
 #if KEEP_LINE_COLUMN
-    sb.append(EOL).append(INDENT).append("at line ").append(currentToken.next.beginLine)
+    sb.append("\" at line ").append(currentToken.next.beginLine)
       .append(", column ").append(currentToken.next.beginColumn);
 #fi
-    sb.append(".").append(EOL);
+    sb.append('.').append(EOL);
+    
     if (expectedTokenSequences.length == 0) {
       // Nothing to add here
     } else {
-      int numExpectedTokens = expectedTokenSequences.length;
-      sb.append(EOL).append("Was expecting").append(numExpectedTokens == 1 ? ":" : " one of:")
-          .append(EOL).append(EOL);
+      if (expectedTokenSequences.length == 1) {
+        sb.append("Was expecting this terminal ");
+      } else {
+        sb.append("Was expecting one of these terminals ");
+      }
+      sb.append("within expansion starting at line ").append(expectedExpansionLine);
+      sb.append(", column ").append(expectedExpansionColumn).append(":").append(EOL).append("    ");
       sb.append(expected.toString());
     }
     // 2013/07/30 --> Appending lexicalStateName seems to be inaccurate as represents the readahead
     // state, not the lexical state BEFORE the unknown token
     return sb.toString();
+    
   }
 
   /**
@@ -183,7 +249,7 @@ public class ParseException extends Exception {
    *  cannot be used as part of an ASCII string literal.
    */
   static String add_escapes(String str) {
-    StringBuilder retval = new StringBuilder();
+    final StringBuilder retval = new StringBuilder();
     char ch;
     for (int i = 0; i < str.length(); i++) {
       switch (str.charAt(i)) {

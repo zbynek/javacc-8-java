@@ -1,0 +1,6 @@
+ParseException parsing input file
+Encountered: <LBRACE> / "{".
+Was expecting one of these terminals:
+    <IDENTIFIANT>...
+    <IDENTIFIANT>...
+
