@@ -54,8 +54,8 @@ THE POSSIBILITY OF SUCH DAMAGE.
         <artifactId>maven-clean-plugin</artifactId>
         <executions>
           <execution>
-            <id>clear-res</id>
-            <phase>test</phase>
+            <id>clear-res-test</id>
+            <phase>process-test-resources</phase>
             <goals>
               <goal>clean</goal>
             </goals>
@@ -65,7 +65,8 @@ THE POSSIBILITY OF SUCH DAMAGE.
                 <fileset>
                   <directory>files</directory>
                   <includes>
-                    <include>*.out, *.err</include>
+                    <include>*.out</include>
+                    <include>*.err</include>
                   </includes>
                 </fileset>
               </filesets>
@@ -82,14 +83,14 @@ THE POSSIBILITY OF SUCH DAMAGE.
 
           <!-- test -->
           <execution>
-            <id>test</id>
+            <id>exec-test</id>
             <phase>test</phase>
             <goals>
               <goal>run</goal>
             </goals>
             <configuration>
-              <skip>false</skip>
-              <target unless="maven.test.skip">
+              <skip>${skip.test.java.examples.CORBA-IDL}</skip> <!-- default false -->
+              <target>
                 <echo message="Executing IDLParser on ${project.basedir}/files/Hello.idl"
                   level="info" />
                 <java failonerror="true"
@@ -106,14 +107,15 @@ THE POSSIBILITY OF SUCH DAMAGE.
 
           <!-- check the tests results -->
           <execution>
-            <id>check-res</id>
+            <id>check-res-test</id>
             <phase>test</phase>
             <goals>
               <goal>run</goal>
             </goals>
             <configuration>
-              <skip>false</skip>
-              <target unless="maven.test.skip">
+              <skip>${skip.test.java.examples.CORBA-IDL}</skip> <!-- default false -->
+              <failOnError>${failOnError.check.java.examples.CORBA-IDL}</failOnError>
+              <target>
                 <ant antfile="${project.basedir}/../../it/build-utils.xml" target="compare-out">
                   <property name="dir" value="${project.basedir}" />
                   <property name="file" value="Hello" />

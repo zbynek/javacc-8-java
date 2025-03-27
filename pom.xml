@@ -109,13 +109,13 @@ THE POSSIBILITY OF SUCH DAMAGE.
               https://maven.apache.org/plugins/maven-invoker-plugin/install-mojo.html-->
               <localRepositoryPath>${project.basedir}/it/local-repo</localRepositoryPath>
               <!-- run conf: see
-              https://maven.apache.org/plugins/maven-invoker-plugin/run-mojo.html#invokerPropertiesFile-->
-              <debug>false</debug>
-              <failIfNoProjects>true</failIfNoProjects>
-              <ignoreFailures>false</ignoreFailures>
+              -->
+              <debug>false</debug> <!-- default false -->
+              <failIfNoProjects>true</failIfNoProjects> <!-- default false -->
+              <ignoreFailures>false</ignoreFailures> <!-- default false -->
               <!--              <postBuildHookScript>verify.bsh</postBuildHookScript>-->
               <settingsFile>${project.basedir}/it/settings.xml</settingsFile>
-              <streamLogs>true</streamLogs>
+              <streamLogs>true</streamLogs> <!-- default false -->
             </configuration>
 
             <executions>
@@ -128,13 +128,14 @@ THE POSSIBILITY OF SUCH DAMAGE.
               </execution>
 
               <execution>
-                <id>integration-test-java-bugs</id>
+                <id>integration-test-java-issues</id>
                 <goals>
                   <goal>run</goal>
                 </goals>
                 <configuration>
-                  <!--                  <ignoreFailures>true</ignoreFailures>-->
-                  <projectsDirectory>bugs</projectsDirectory>
+                  <skipInvocation>${skip.it.java.issues}</skipInvocation>
+                  <ignoreFailures>ignoreFailures.java.issues</ignoreFailures>
+                  <projectsDirectory>issues</projectsDirectory>
                 </configuration>
               </execution>
 
@@ -144,7 +145,8 @@ THE POSSIBILITY OF SUCH DAMAGE.
                   <goal>run</goal>
                 </goals>
                 <configuration>
-                  <!--                  <ignoreFailures>true</ignoreFailures>-->
+                  <skipInvocation>${skip.it.java.examples}</skipInvocation>
+                  <ignoreFailures>ignoreFailures.java.examples</ignoreFailures>
                   <projectsDirectory>examples</projectsDirectory>
                 </configuration>
               </execution>
@@ -155,7 +157,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
                   <goal>run</goal>
                 </goals>
                 <configuration>
-                  <!--                  <ignoreFailures>true</ignoreFailures>-->
+                  <skipInvocation>${skip.it.java.grammars}</skipInvocation>
                   <projectsDirectory>grammars</projectsDirectory>
                 </configuration>
               </execution>
@@ -166,5 +168,108 @@ THE POSSIBILITY OF SUCH DAMAGE.
       </build>
     </profile>
 
+    <profile>
+      <!-- Sets a set of properties for skipping some integration tests; needs explicit activation -->
+      <id>only-it-java-issues</id>
+      <properties>
+        <skip.it.java.issues>false</skip.it.java.issues>
+        <skip.it.java.examples>true</skip.it.java.examples>
+        <skip.it.java.grammars>true</skip.it.java.grammars>
+      </properties>
+    </profile>
+
+    <profile>
+      <!-- Relays activating a profile in the invoked tests; needs explicit activation -->
+      <id>failOnError-check-java-issues</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-invoker-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>integration-test-java-issues</id>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <profiles>failOnError-check-java-issues</profiles>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <!-- Sets a set of properties for skipping some integration tests; needs explicit activation -->
+      <id>only-it-java-examples</id>
+      <properties>
+        <skip.it.java.issues>true</skip.it.java.issues>
+        <skip.it.java.examples>false</skip.it.java.examples>
+        <skip.it.java.grammars>true</skip.it.java.grammars>
+      </properties>
+    </profile>
+
+    <profile>
+      <!-- Relays activating a profile in the invoked tests; needs explicit activation -->
+      <id>failOnError-check-java-examples</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-invoker-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>integration-test-java-examples</id>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <profiles>failOnError-check-java-examples</profiles>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <!-- Sets a set of properties for skipping some integration tests; needs explicit activation -->
+      <id>only-it-java-grammars</id>
+      <properties>
+        <skip.it.java.issues>true</skip.it.java.issues>
+        <skip.it.java.examples>true</skip.it.java.examples>
+        <skip.it.java.grammars>false</skip.it.java.grammars>
+      </properties>
+    </profile>
+
+    <profile>
+      <!-- Relays activating a profile in the invoked tests; needs explicit activation -->
+      <id>failOnError-check-java-grammars</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-invoker-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>integration-test-java-grammars</id>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <profiles>failOnError-check-java-grammars</profiles>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
   </profiles>
+
 </project>

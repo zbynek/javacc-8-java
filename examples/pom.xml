@@ -60,4 +60,29 @@ THE POSSIBILITY OF SUCH DAMAGE.
     <module>VTransformer</module>
   </modules>
 
+  <profiles>
+
+    <profile>
+      <!-- Sets a set of properties for skipping execution & results checking of tests in
+      submodules; needs explicit activation -->
+      <id>skip-test-java-examples</id>
+      <properties>
+        <skip.test.java.examples.CORBA-IDL>true</skip.test.java.examples.CORBA-IDL>
+        <skip.test.java.examples.MailProcessing.Digest>true</skip.test.java.examples.MailProcessing.Digest>
+        <skip.test.java.examples.MailProcessing.Faq>true</skip.test.java.examples.MailProcessing.Faq>
+      </properties>
+    </profile>
+    <profile>
+      <!-- Sets a set of properties for not failing on error in checking results in submodules;
+           needs explicit activation -->
+      <id>failOnError-check-java-examples</id>
+      <properties>
+        <failOnError.check.java.examples.CORBA-IDL>false</failOnError.check.java.examples.CORBA-IDL>
+        <failOnError.check.java.examples.MailProcessing.Digest>false</failOnError.check.java.examples.MailProcessing.Digest>
+        <failOnError.check.java.examples.MailProcessing.Faq>false</failOnError.check.java.examples.MailProcessing.Faq>
+      </properties>
+    </profile>
+
+  </profiles>
+
 </project>

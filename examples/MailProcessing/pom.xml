@@ -32,30 +32,30 @@ THE POSSIBILITY OF SUCH DAMAGE.
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  
+
   <parent>
     <groupId>org.javacc.generator.java</groupId>
     <artifactId>examples</artifactId>
     <version>1.1.0-SNAPSHOT</version>
   </parent>
-  
+
   <groupId>org.javacc.generator.java.examples</groupId>
   <artifactId>mailprocessing</artifactId>
   <packaging>jar</packaging>
 
   <name>JavaCC Java code generator / examples / MailProcessing</name>
-  
+
   <build>
     <plugins>
-    
+
       <!-- clear the tests results files -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-clean-plugin</artifactId>
         <executions>
           <execution>
-            <id>clear-res</id>
-            <phase>test</phase>
+            <id>clear-res-test</id>
+            <phase>process-test-resources</phase>
             <goals>
               <goal>clean</goal>
             </goals>
@@ -65,7 +65,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
                 <fileset>
                   <directory>files</directory>
                   <includes>
-                    <include>*.out,*.out.html</include>
+                    <include>cpy.*,*.out,*.out.html</include>
                   </includes>
                 </fileset>
               </filesets>
@@ -80,12 +80,13 @@ THE POSSIBILITY OF SUCH DAMAGE.
         <artifactId>exec-maven-plugin</artifactId>
         <executions>
           <execution>
-            <id>exec-Digest-1</id>
+            <id>exec-Digest-test</id>
             <phase>test</phase>
             <goals>
               <goal>java</goal>
             </goals>
             <configuration>
+              <skip>${skip.test.java.examples.MailProcessing.Digest}</skip> <!-- default false -->
               <mainClass>dig.DigestMain</mainClass>
               <arguments>
                 <argument>${project.basedir}/files/sampleMailFile.in</argument>
@@ -94,12 +95,13 @@ THE POSSIBILITY OF SUCH DAMAGE.
             </configuration>
           </execution>
           <execution>
-            <id>exec-Faq-2</id>
+            <id>exec-Faq-test</id>
             <phase>test</phase>
             <goals>
               <goal>java</goal>
             </goals>
             <configuration>
+              <skip>${skip.test.java.examples.MailProcessing.Faq}</skip> <!-- default false -->
               <mainClass>faq.FaqMain</mainClass>
               <arguments>
                 <argument>1</argument>
@@ -110,7 +112,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
           </execution>
         </executions>
       </plugin>
-      
+
 
       <!-- check the tests results -->
       <plugin>
@@ -118,92 +120,57 @@ THE POSSIBILITY OF SUCH DAMAGE.
         <artifactId>maven-antrun-plugin</artifactId>
         <executions>
           <execution>
-            <id>check-Digest-1</id>
+            <id>check-Digest-test</id>
             <phase>test</phase>
             <goals>
               <goal>run</goal>
             </goals>
             <configuration>
-              <skip>false</skip>
-              <target unless="maven.test.skip">
+              <skip>${skip.test.java.examples.MailProcessing.Digest}</skip> <!-- default false -->
+              <failOnError>${failOnError.check.java.examples.MailProcessing.Digest}</failOnError>
+              <target>
                 <!-- out -->
-                <available file="${project.basedir}/files/digestFile.out" property="isActualOutAvailable" />
-                <fail unless="isActualOutAvailable"
-                  message="${project.basedir}/files/digestFile.out does not exist!" />
-                <available file="${project.basedir}/files/digestFile.exp_out"
-                  property="isExpectedOutAvailable" />
-                <fail unless="isExpectedOutAvailable"
-                  message="${project.basedir}/files/digestFile.exp_out does not exist!" />
-                <condition property="out.files.match">
-                  <filesmatch textfile="true" file1="${project.basedir}/files/digestFile.out"
-                    file2="${project.basedir}/files/digestFile.exp_out" />
-                </condition>
-                <fail unless="out.files.match"
-                  message="${project.basedir}/files/digestFile.out does not match ${project.basedir}/files/digestFile.exp_out!" />
+                <ant antfile="${project.basedir}/../../it/build-utils.xml" target="compare-out">
+                  <property name="dir" value="${project.basedir}" />
+                  <property name="file" value="digestFile" />
+                </ant>
               </target>
             </configuration>
           </execution>
           <execution>
-            <id>check-Faq-2</id>
+            <id>check-Faq-test</id>
             <phase>test</phase>
             <goals>
               <goal>run</goal>
             </goals>
             <configuration>
-              <skip>false</skip>
-              <target unless="maven.test.skip">
+              <skip>${skip.test.java.examples.MailProcessing.Faq}</skip> <!-- default false -->
+              <failOnError>${failOnError.check.java.examples.MailProcessing.Faq}</failOnError>
+              <target>
                 <!-- out index.out.html -->
-                <available file="${project.basedir}/files/index.out.html" property="isActualAvailable" />
-                <fail unless="isActualAvailable"
-                  message="${project.basedir}/files/index.out.html does not exist!" />
-                <available file="${project.basedir}/files/index.exp_out.html" property="isExpectedAvailable" />
-                <fail unless="isExpectedAvailable"
-                  message="${project.basedir}/files/index.exp_out.html does not exist!" />
-                <condition property="files.match">
-                  <filesmatch textfile="true" file1="${project.basedir}/files/index.out.html"
-                    file2="${project.basedir}/files/index.exp_out.html" />
-                </condition>
-                <fail unless="files.match"
-                  message="${project.basedir}/files/index.out.html does not match ${project.basedir}/files/index.exp_out.html!" />
+                <ant antfile="${project.basedir}/../../it/build-utils.xml" target="compare-any">
+                  <property name="dir" value="${project.basedir}" />
+                  <property name="actual" value="index.out.html" />
+                  <property name="expected" value="index.exp_out.html" />
+                </ant>
                 <!-- out 1.out.html -->
-                <available file="${project.basedir}/files/1.out.html" property="isActualAvailable" />
-                <fail unless="isActualAvailable"
-                  message="${project.basedir}/files/1.out.html does not exist!" />
-                <available file="${project.basedir}/files/1.exp_out.html" property="isExpectedAvailable" />
-                <fail unless="isExpectedAvailable"
-                  message="${project.basedir}/files/1.exp_out.html does not exist!" />
-                <condition property="files.match">
-                  <filesmatch textfile="true" file1="${project.basedir}/files/1.out.html"
-                    file2="${project.basedir}/files/1.exp_out.html" />
-                </condition>
-                <fail unless="files.match"
-                  message="${project.basedir}/files/1.out.html does not match ${project.basedir}/files/1.exp_out.html!" />
+                <ant antfile="${project.basedir}/../../it/build-utils.xml" target="compare-any">
+                  <property name="dir" value="${project.basedir}" />
+                  <property name="actual" value="1.out.html" />
+                  <property name="expected" value="1.exp_out.html" />
+                </ant>
                 <!-- out 2.out.html -->
-                <available file="${project.basedir}/files/2.out.html" property="isActualAvailable" />
-                <fail unless="isActualAvailable"
-                  message="${project.basedir}/files/2.out.html does not exist!" />
-                <available file="${project.basedir}/files/2.exp_out.html" property="isExpectedAvailable" />
-                <fail unless="isExpectedAvailable"
-                  message="${project.basedir}/files/2.exp_out.html does not exist!" />
-                <condition property="files.match">
-                  <filesmatch textfile="true" file1="${project.basedir}/files/2.out.html"
-                    file2="${project.basedir}/files/2.exp_out.html" />
-                </condition>
-                <fail unless="files.match"
-                  message="${project.basedir}/files/2.out.html does not match ${project.basedir}/files/2.exp_out.html!" />
+                <ant antfile="${project.basedir}/../../it/build-utils.xml" target="compare-any">
+                  <property name="dir" value="${project.basedir}" />
+                  <property name="actual" value="2.out.html" />
+                  <property name="expected" value="2.exp_out.html" />
+                </ant>
                 <!-- out 3.out.html -->
-                <available file="${project.basedir}/files/3.out.html" property="isActualAvailable" />
-                <fail unless="isActualAvailable"
-                  message="${project.basedir}/files/3.out.html does not exist!" />
-                <available file="${project.basedir}/files/3.exp_out.html" property="isExpectedAvailable" />
-                <fail unless="isExpectedAvailable"
-                  message="${project.basedir}/files/3.exp_out.html does not exist!" />
-                <condition property="files.match">
-                  <filesmatch textfile="true" file1="${project.basedir}/files/3.out.html"
-                    file2="${project.basedir}/files/3.exp_out.html" />
-                </condition>
-                <fail unless="files.match"
-                  message="${project.basedir}/files/3.out.html does not match ${project.basedir}/files/3.exp_out.html!" />
+                <ant antfile="${project.basedir}/../../it/build-utils.xml" target="compare-any">
+                  <property name="dir" value="${project.basedir}" />
+                  <property name="actual" value="3.out.html" />
+                  <property name="expected" value="3.exp_out.html" />
+                </ant>
               </target>
             </configuration>
           </execution>

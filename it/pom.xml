@@ -57,26 +57,29 @@ THE POSSIBILITY OF SUCH DAMAGE.
 
     <pluginManagement>
       <plugins>
-        <!-- all in parent javacc-8/pom.xml -->
+        <!-- all in parent javacc-8/pom.xml except the following one -->
+        <plugin>
+          <!-- processes JavaCC/JJTree grammar files;
+               goals: javacc, jjtree-javacc, jjtree -->
+          <!-- although defined in parent javacc-8/pom.xml,
+               redefined here to decouple building it from src -->
+          <groupId>org.javacc.plugin</groupId>
+          <artifactId>javacc-maven-plugin</artifactId>
+          <version>${javacc-maven-plugin.version}</version>
+          <dependencies>
+            <!-- uses v8 Java generator; overriden in v7 profiles -->
+            <dependency>
+              <groupId>org.javacc.generator</groupId>
+              <artifactId>java</artifactId>
+              <version>${javacc.cpp.version}</version>
+              <scope>runtime</scope>
+            </dependency>
+          </dependencies>
+        </plugin>
       </plugins>
     </pluginManagement>
 
     <plugins>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-help-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>display-active-profiles</id>
-            <phase>validate</phase>
-            <!-- displays the list of the profiles which are currently active for this build -->
-            <goals>
-              <goal>active-profiles</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
 
       <plugin>
         <groupId>org.javacc.plugin</groupId>
@@ -112,11 +115,11 @@ THE POSSIBILITY OF SUCH DAMAGE.
                   <goal>jjtree-javacc</goal>
                 </goals>
                 <configuration>
-                  <sourceDirectory>${project.basedir}/src/main/jjtree</sourceDirectory>
-                  <interimDirectory>${project.basedir}/target/generated-sources/jjtree</interimDirectory>
-                  <outputDirectory>${project.basedir}/target/generated-sources/java</outputDirectory>
-                  <nodeDirectory>${project.basedir}/src/main/java</nodeDirectory>
-           </configuration>
+                  <sourceDirectory>src/main/jjtree</sourceDirectory>
+                  <interimDirectory>target/generated-sources/jjtree</interimDirectory>
+                  <outputDirectory>target/generated-sources/java</outputDirectory>
+                  <nodeDirectory>src/main/java</nodeDirectory>
+                </configuration>
               </execution>
             </executions>
           </plugin>
@@ -145,8 +148,8 @@ THE POSSIBILITY OF SUCH DAMAGE.
                   <goal>javacc</goal>
                 </goals>
                 <configuration>
-                  <sourceDirectory>${project.basedir}/src/main/javacc</sourceDirectory>
-                  <outputDirectory>${project.basedir}/target/generated-sources/java</outputDirectory>
+                  <sourceDirectory>src/main/javacc</sourceDirectory>
+                  <outputDirectory>target/generated-sources/java</outputDirectory>
                 </configuration>
               </execution>
             </executions>
@@ -156,19 +159,23 @@ THE POSSIBILITY OF SUCH DAMAGE.
     </profile>
 
     <profile>
-      <!-- JJTree/JavaCC project compiled with JavaCC v7; needs explicit activation; not tested -->
+      <!-- JJTree/JavaCC project compiled with JavaCC v7;
+           needs explicit activation and deactivation of jjt8 (-Pjjt7,!jjt8) -->
       <id>jjt7</id>
       <build>
         <pluginManagement>
           <plugins>
             <plugin>
-              <groupId>org.javacc.plugin</groupId>
+              <groupId>org.codehaus.mojo</groupId>
               <artifactId>javacc-maven-plugin</artifactId>
+              <version>${mojohaus.javacc-maven-plugin.version}</version>
               <dependencies>
+                <!-- uses v7; overrides general build setting -->
                 <dependency>
                   <groupId>net.java.dev.javacc</groupId>
                   <artifactId>javacc</artifactId>
                   <version>${javacc.v7.version}</version>
+                  <!--                                    <version>4.2</version>-->
                   <scope>runtime</scope>
                 </dependency>
               </dependencies>
@@ -177,7 +184,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
         </pluginManagement>
         <plugins>
           <plugin>
-            <groupId>org.javacc.plugin</groupId>
+            <groupId>org.codehaus.mojo</groupId>
             <artifactId>javacc-maven-plugin</artifactId>
             <executions>
               <execution>
@@ -188,7 +195,6 @@ THE POSSIBILITY OF SUCH DAMAGE.
                 </goals>
                 <configuration>
                   <outputDirectory>target/generated-sources/java</outputDirectory>
-                  <outputLanguage>java</outputLanguage>
                 </configuration>
               </execution>
             </executions>
@@ -198,19 +204,26 @@ THE POSSIBILITY OF SUCH DAMAGE.
     </profile>
 
     <profile>
-      <!-- JavaCC project compiled with JavaCC v7; needs explicit activation; not tested -->
+      <!-- JavaCC project compiled with JavaCC v7;
+           needs explicit activation and deactivation of jcc8 (-Pjcc7,!jcc8) -->
       <id>jcc7</id>
       <build>
         <pluginManagement>
           <plugins>
             <plugin>
-              <groupId>org.javacc.plugin</groupId>
+              <groupId>org.codehaus.mojo</groupId>
               <artifactId>javacc-maven-plugin</artifactId>
+              <version>${mojohaus.javacc-maven-plugin.version}</version>
               <dependencies>
+                <!-- uses v7; overrides general build setting -->
                 <dependency>
                   <groupId>net.java.dev.javacc</groupId>
                   <artifactId>javacc</artifactId>
-                  <version>${javacc.v7.version}</version>
+                  <!--                  <version>${javacc.v7.version}</version>-->
+                  <!--                  <version>7.0.0</version>-->
+<!--                  <version>6.1.2</version>-->
+                  <version>5.0</version>
+                  <!--                  <version>4.2</version>-->
                   <scope>runtime</scope>
                 </dependency>
               </dependencies>
@@ -219,7 +232,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
         </pluginManagement>
         <plugins>
           <plugin>
-            <groupId>org.javacc.plugin</groupId>
+            <groupId>org.codehaus.mojo</groupId>
             <artifactId>javacc-maven-plugin</artifactId>
             <executions>
               <execution>
@@ -230,7 +243,6 @@ THE POSSIBILITY OF SUCH DAMAGE.
                 </goals>
                 <configuration>
                   <outputDirectory>target/generated-sources/java</outputDirectory>
-                  <outputLanguage>java</outputLanguage>
                 </configuration>
               </execution>
             </executions>
