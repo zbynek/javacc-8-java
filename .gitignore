@@ -1,35 +1,20 @@
-# Structure
-classes/
-target/
-bin/
+# current folders & files #
 
-# Maven
-**/interpolated-*.*
-
-# IDEs & plugins
 .classpath
-.project
-.settings/
-.idea
 .gradle
-.groovy
-.checkstyle
-*.iml
+.idea
+.project
+.settings
+.vs
 
-# it local repositories
+classes/
+gradle/
 it/local-repo/
+junit/
+target/
 
-# Compiled classes
-*.class
+hs_err_pid*
 
-# Logs
-**/*.log
-
-# Results
-**/*.out
-**/*.err
-
-# Packaging
 *.jar
 *.war
 *.nar
@@ -38,10 +23,44 @@ it/local-repo/
 *.tar.gz
 *.rar
 
-# jvm crash logs
-hs_err_pid*
+# current sub folders & files #
 
-# MS objects
+**/target/
+**/interpolated-*.*
+**/local-repo/
+**/*.err
+**/*.out
+**/*.log
+
+# old folders & files #
+
+bin/
+build
+build-eclipse
+codegen/
+core/
+test.tmp/
+tmp/
+TEST-*
+
+.checkstyle
+.groovy
+.svn/
+
+*.*~
+*.asc
+*.iml
+
+**/out-dir/
+**/gen/
+
+test/**/*.h
+test/**/*.cc
+test/**/*.jj
+test/**/*.jjt
+
+# MS objects #
+
 *.suo
 *.exe
 *.ilk
