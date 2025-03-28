@@ -160,6 +160,66 @@ THE POSSIBILITY OF SUCH DAMAGE.
               <outputDirectory>${project.basedir}/target/generated-sources/java</outputDirectory>
             </configuration>
           </execution>
+          <execution>
+            <id>ReadingLookahedDebugTrace_Example8</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>javacc</goal>
+            </goals>
+            <configuration>
+              <includes>ReadingLookahedDebugTrace_Example8.jj</includes>
+              <sourceDirectory>${project.basedir}/src/main/javacc</sourceDirectory>
+              <outputDirectory>${project.basedir}/target/generated-sources/java</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>NestedLookaheadGrammar_Example11</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>javacc</goal>
+            </goals>
+            <configuration>
+              <includes>NestedLookaheadGrammar_Example11.jj</includes>
+              <sourceDirectory>${project.basedir}/src/main/javacc</sourceDirectory>
+              <outputDirectory>${project.basedir}/target/generated-sources/java</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>NonChoiceLookaheadGrammar_Example12</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>javacc</goal>
+            </goals>
+            <configuration>
+              <includes>NonChoiceLookaheadGrammar_Example12.jj</includes>
+              <sourceDirectory>${project.basedir}/src/main/javacc</sourceDirectory>
+              <outputDirectory>${project.basedir}/target/generated-sources/java</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>VersionAwareGrammar_Example13</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>javacc</goal>
+            </goals>
+            <configuration>
+              <includes>VersionAwareGrammar_Example13.jj</includes>
+              <sourceDirectory>${project.basedir}/src/main/javacc</sourceDirectory>
+              <outputDirectory>${project.basedir}/target/generated-sources/java</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>RewrittenGrammar_Example14</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>javacc</goal>
+            </goals>
+            <configuration>
+              <includes>RewrittenGrammar_Example14.jj</includes>
+              <sourceDirectory>${project.basedir}/src/main/javacc</sourceDirectory>
+              <outputDirectory>${project.basedir}/target/generated-sources/java</outputDirectory>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
 
