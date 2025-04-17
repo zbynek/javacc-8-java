@@ -31,9 +31,9 @@ package org.javacc.java;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import org.javacc.Version;
 import org.javacc.jjtree.ASTNodeDescriptor;
 import org.javacc.jjtree.JJTreeContext;
@@ -43,64 +43,113 @@ import org.javacc.parser.Options;
 
 final class NodeFiles {
 
-  private NodeFiles() {}
+  NodeFiles() {}
 
-  /** ID of the latest version (of JJTree) in which one of the Node classes was modified. */
-  private static final String nodeVersion = Version.version;
+  private final Set<String> nodesToBuild = new TreeSet<>();
 
-  private static Set<String> nodesToBuild = new HashSet<>();
-
-  static void generateNodeType(final String nodeType) {
+  void generateNodeType(final String nodeType) {
     if (!nodeType.equals("Tree") && !nodeType.equals("Node")) {
-      NodeFiles.nodesToBuild.add(nodeType);
+      nodesToBuild.add(nodeType);
     }
   }
 
-  private static void generateTreeNodes(final JJTreeContext context) {
-    try (JavaCodeBuilder jcb = JavaCodeBuilder.of(context, CodeGeneratorSettings.create())) {
+  void generateOutputFiles(final JJTreeContext context) throws IOException {
+    NodeFiles.generateDefaultNode(context);
+    generateTreeNodes(context);
+    generateTreeConstants(context);
+    generateVisitor(context);
+    generateDefaultVisitor(context);
+  }
+
+  private static void generateDefaultNode(final JJTreeContext context) throws IOException {
+    final CodeGeneratorSettings options = CodeGeneratorSettings.of(Options.getOptions());
+    options.set(Options.NUO__PARSER_NAME, JJTreeGlobals.parserName);
+    options.set(
+        "VISITOR_RETURN_TYPE_VOID",
+        Boolean.valueOf(context.treeOptions().getVisitorReturnType().equals("void")));
+
+    // interface
+    try (JavaCodeBuilder jcb = JavaCodeBuilder.of(context, options)) {
+      jcb.setFile(new File(context.treeOptions().getJJTreeOutputDirectory(), "Tree.java"));
+      jcb.setVersion(Version.version).addTools(JJTreeGlobals.toolName);
+      jcb.addOption(
+          "SUPPORT_CLASS_VISIBILITY_PUBLIC",
+          "VISITOR",
+          "VISITOR_DATA_TYPE",
+          "VISITOR_EXCEPTION",
+          "VISITOR_RETURN_TYPE");
+      NodeFiles.generateProlog(jcb);
+      jcb.printTemplate("/templates/java/Tree.template");
+    }
+
+    // class
+    try (JavaCodeBuilder jcb = JavaCodeBuilder.of(context, options)) {
+      jcb.setFile(new File(context.treeOptions().getJJTreeOutputDirectory(), "Node.java"));
+      jcb.setVersion(Version.version).addTools(JJTreeGlobals.toolName);
+      jcb.addOption(
+          "NODE_EXTENDS",
+          "NODE_FACTORY",
+          "SUPPORT_CLASS_VISIBILITY_PUBLIC",
+          "TRACK_TOKENS",
+          "VISITOR",
+          "VISITOR_DATA_TYPE",
+          "VISITOR_EXCEPTION",
+          "VISITOR_RETURN_TYPE",
+          "VISITOR_RETURN_TYPE_VOID");
+      NodeFiles.generateProlog(jcb);
+      jcb.printTemplate("/templates/java/Node.template");
+    }
+  }
+
+  private void generateTreeNodes(final JJTreeContext context) {
+    /* Options.getOptions() gets a copy of Options.resOptions, so the following non user options
+     *  are not known by Options.fmtOptionsArray() when OutputFile.getPrintWriter() prints
+     *  the options banner line and are output with a null value. */
+    final CodeGeneratorSettings options = CodeGeneratorSettings.of(Options.getOptions());
+    options.set(Options.NUO__PARSER_NAME, JJTreeGlobals.parserName);
+    options.set(
+        "VISITOR_RETURN_TYPE_VOID",
+        Boolean.valueOf(context.treeOptions().getVisitorReturnType().equals("void")));
+
+    try (JavaCodeBuilder jcb = JavaCodeBuilder.of(context, options)) {
       jcb.setFile(
           new File(
               context.treeOptions().getJJTreeOutputDirectory(),
               JJTreeGlobals.parserName + "Tree.java"));
-      jcb.addTools(JJTreeGlobals.toolName).setVersion(NodeFiles.nodeVersion);
+      jcb.setVersion(Version.version).addTools(JJTreeGlobals.toolName);
       jcb.addOption(
-          "MULTI",
-          "NODE_USES_PARSER",
-          "VISITOR",
-          "TRACK_TOKENS",
-          "NODE_PREFIX",
+          "NODE_CLASS",
           "NODE_EXTENDS",
           "NODE_FACTORY",
-          Options.UO__SUPPORT_CLASS_VISIBILITY_PUBLIC);
+          "NODE_PREFIX",
+          "NODE_USES_PARSER",
+          "TRACK_TOKENS",
+          "VISITOR",
+          "VISITOR_DATA_TYPE",
+          "VISITOR_EXCEPTION",
+          "VISITOR_METHOD_NAME_INCLUDES_TYPE_NAME",
+          "VISITOR_RETURN_TYPE");
+
       NodeFiles.generateProlog(jcb);
+      jcb.println("/* ");
+      jcb.println(
+          " * Option MULTI set to true produces this file containing the set of all generated node classes");
+      jcb.println(" *  (those that are not user defined); it may be empty.");
+      jcb.println(" */");
+      jcb.println();
 
-      for (final String node : NodeFiles.nodesToBuild) {
-        if (new File(
-                new File(
-                    context.treeOptions().getASTNodeDirectory(),
-                    context.treeOptions().getNodePackage()),
-                node + ".java")
-            .exists()) {
-          continue;
+      final File path =
+          new File(
+              context.treeOptions().getNodeDirectory(), context.treeOptions().getNodePackage());
+      for (final String node : nodesToBuild) {
+        if (!new File(path, node + ".java").exists()) {
+          options.set("NODE_TYPE", node);
+          jcb.printTemplate("/templates/java/MultiNode.template", options);
         }
-
-        NodeFiles.generateMULTINode(jcb, node, context);
       }
     } catch (final IOException e) {
       throw new Error(e.toString());
     }
-  }
-
-  private static void generateMULTINode(
-      final JavaCodeBuilder builder, final String nodeType, final JJTreeContext context)
-      throws IOException {
-    final CodeGeneratorSettings options = CodeGeneratorSettings.of(Options.getOptions());
-    options.set(Options.NUO__PARSER_NAME, JJTreeGlobals.parserName);
-    options.set("NODE_TYPE", nodeType);
-    options.set(
-        "VISITOR_RETURN_TYPE_VOID",
-        Boolean.valueOf(context.treeOptions().getVisitorReturnType().equals("void")));
-    builder.printTemplate("/templates/java/MultiNode.template", options);
   }
 
   private static void generateTreeConstants(final JJTreeContext context) {
@@ -115,6 +164,7 @@ final class NodeFiles {
       NodeFiles.generateProlog(jcb);
 
       jcb.println("public interface " + JavaTemplates.nodeConstants(), " {");
+      jcb.println("");
 
       for (int i = 0; i < nodeIds.size(); ++i) {
         jcb.println("  public final int ", nodeIds.get(i), " = ", i, ";");
@@ -135,27 +185,31 @@ final class NodeFiles {
     if (!context.treeOptions().getVisitor()) {
       return;
     }
+
     final List<String> nodeNames = ASTNodeDescriptor.getNodeNames();
     final String ve = NodeFiles.mergeVisitorException(context);
     String argumentType = "Object";
     if (!context.treeOptions().getVisitorDataType().equals("")) {
       argumentType = context.treeOptions().getVisitorDataType();
     }
+
     try (JavaCodeBuilder jcb = JavaCodeBuilder.of(context, CodeGeneratorSettings.create())) {
+
       jcb.setFile(
           new File(
               context.treeOptions().getJJTreeOutputDirectory(),
               JavaTemplates.visitorClass() + ".java"));
       NodeFiles.generateProlog(jcb);
-      jcb.println("public interface " + JavaTemplates.visitorClass(), " {");
+      jcb.println("public interface " + JavaTemplates.visitorClass() + " {");
       jcb.println(
           "  public ",
           context.treeOptions().getVisitorReturnType(),
-          " visit(Node node, ",
+          " visit(final Node node, ",
           argumentType,
           " data)",
           ve,
           ";");
+
       if (context.treeOptions().getMulti()) {
         for (final String n : nodeNames) {
           if (!n.equals("void")) {
@@ -165,7 +219,7 @@ final class NodeFiles {
                 context.treeOptions().getVisitorReturnType(),
                 " ",
                 NodeFiles.getVisitMethodName(nodeType),
-                "(",
+                "(final ",
                 nodeType,
                 " node, ",
                 argumentType + " data)",
@@ -175,26 +229,17 @@ final class NodeFiles {
         }
       }
       jcb.println("}");
+
     } catch (final IOException e) {
       throw new Error(e.toString());
     }
-  }
-
-  private static String getVisitMethodName(final String className) {
-    final StringBuffer sb = new StringBuffer("visit");
-    if (Options.booleanValue("VISITOR_METHOD_NAME_INCLUDES_TYPE_NAME")) {
-      sb.append(Character.toUpperCase(className.charAt(0)));
-      for (int i = 1; i < className.length(); i++) {
-        sb.append(className.charAt(i));
-      }
-    }
-    return sb.toString();
   }
 
   private static void generateDefaultVisitor(final JJTreeContext context) {
     if (!context.treeOptions().getVisitor()) {
       return;
     }
+
     final String ve = NodeFiles.mergeVisitorException(context);
     final String ret = context.treeOptions().getVisitorReturnType();
     String argumentType = "Object";
@@ -202,25 +247,37 @@ final class NodeFiles {
       argumentType = context.treeOptions().getVisitorDataType();
     }
     final List<String> nodeNames = ASTNodeDescriptor.getNodeNames();
+
     try (JavaCodeBuilder jcb = JavaCodeBuilder.of(context, CodeGeneratorSettings.create())) {
       jcb.setFile(
           new File(
               context.treeOptions().getJJTreeOutputDirectory(),
               JavaTemplates.defaultVisitorClass() + ".java"));
       NodeFiles.generateProlog(jcb);
+
       jcb.println(
           "public class ",
           JavaTemplates.defaultVisitorClass(),
           " implements ",
           JavaTemplates.visitorClass(),
           "{");
-      jcb.println("  public ", ret, " defaultVisit(Node node, ", argumentType, " data)", ve, " {");
-      jcb.println("    node.childrenAccept(this, data);");
-      jcb.println("    return", (ret.trim().equals("void") ? "" : " data"), ";");
-      jcb.println("  }");
-      jcb.println("  public ", ret, " visit(Node node, ", argumentType, " data)", ve, " {");
+
       jcb.println(
-          "    ", (ret.trim().equals("void") ? "" : "return "), "defaultVisit(node, data);");
+          "  public "
+              + ret
+              + " defaultVisit(final Node node, "
+              + argumentType
+              + " data)"
+              + ve
+              + " {");
+      jcb.println("    node.childrenAccept(this, data);");
+      jcb.println("    return" + (ret.trim().equals("void") ? "" : " data") + ";");
+      jcb.println("  }");
+
+      jcb.println(
+          "  public " + ret + " visit(final Node node, " + argumentType + " data)" + ve + " {");
+      jcb.println(
+          "    " + (ret.trim().equals("void") ? "" : "return ") + "defaultVisit(node, data);");
       jcb.println("  }");
 
       if (context.treeOptions().getMulti()) {
@@ -234,7 +291,7 @@ final class NodeFiles {
               ret,
               " ",
               NodeFiles.getVisitMethodName(nodeType),
-              "(",
+              "(final ",
               nodeType,
               " node, ",
               argumentType,
@@ -247,6 +304,7 @@ final class NodeFiles {
         }
       }
       jcb.println("}");
+
     } catch (final IOException e) {
       throw new Error(e.toString());
     }
@@ -260,25 +318,18 @@ final class NodeFiles {
     return ve;
   }
 
-  private static void generateDefaultNode(final JJTreeContext context) throws IOException {
-    final CodeGeneratorSettings options = CodeGeneratorSettings.of(Options.getOptions());
-    options.set(Options.NUO__PARSER_NAME, JJTreeGlobals.parserName);
-    options.set(
-        "VISITOR_RETURN_TYPE_VOID",
-        Boolean.valueOf(context.treeOptions().getVisitorReturnType().equals("void")));
-    try (JavaCodeBuilder jcb = JavaCodeBuilder.of(context, options)) {
-      jcb.setFile(new File(context.treeOptions().getJJTreeOutputDirectory(), "Tree.java"));
-      NodeFiles.generateProlog(jcb);
-      jcb.printTemplate("/templates/java/Tree.template");
+  private static String getVisitMethodName(final String className) {
+    final StringBuffer sb = new StringBuffer("visit");
+    if (Options.booleanValue("VISITOR_METHOD_NAME_INCLUDES_TYPE_NAME")) {
+      sb.append(Character.toUpperCase(className.charAt(0)));
+      for (int i = 1; i < className.length(); i++) {
+        sb.append(className.charAt(i));
+      }
     }
-    try (JavaCodeBuilder jcb = JavaCodeBuilder.of(context, options)) {
-      jcb.setFile(new File(context.treeOptions().getJJTreeOutputDirectory(), "Node.java"));
-      NodeFiles.generateProlog(jcb);
-      jcb.printTemplate("/templates/java/Node.template");
-    }
+    return sb.toString();
   }
 
-  // Using when packageName & nodePackageName are different
+  // Used when packageName & nodePackageName are different
   static void generateProlog(final JavaCodeBuilder jcb) {
     if (!JJTreeGlobals.nodePackageName.isEmpty()
         && !JJTreeGlobals.nodePackageName.equals(JJTreeGlobals.packageName)) {
@@ -287,15 +338,5 @@ final class NodeFiles {
     } else {
       jcb.setPackageName(JJTreeGlobals.packageName);
     }
-  }
-
-  static void generateOutputFiles(final JJTreeContext context) throws IOException {
-    NodeFiles.generateDefaultNode(context);
-    if (!NodeFiles.nodesToBuild.isEmpty()) {
-      NodeFiles.generateTreeNodes(context);
-    }
-    NodeFiles.generateTreeConstants(context);
-    NodeFiles.generateVisitor(context);
-    NodeFiles.generateDefaultVisitor(context);
   }
 }

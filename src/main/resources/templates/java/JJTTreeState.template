@@ -35,7 +35,7 @@
  */
 public class JJT${PARSER_NAME}State {
 
-  private java.util.List<Node> nodes;
+  private java.util.List<Node>    nodes;
   private java.util.List<Integer> marks;
   private int sp;        // number of nodes on stack
   private int mk;        // current mark
@@ -49,7 +49,7 @@ public class JJT${PARSER_NAME}State {
   }
 
   /**
-   * Determines whether the current node was actually closed and pushed.<br>
+   * Tells whether the current node was actually closed and pushed.<br>
    * This should only be called in the final user action of a node scope.
    */
   public boolean nodeCreated() {
@@ -81,7 +81,7 @@ public class JJT${PARSER_NAME}State {
     ++sp;
   }
 
-  /** Returns the node on the top of the stack, and remove it from the stack.  */
+  /** Returns the node on the top of the stack, and remove it from the stack. */
   public Node popNode() {
     if (--sp < mk) {
       mk = marks.remove(marks.size()-1);
@@ -99,17 +99,17 @@ public class JJT${PARSER_NAME}State {
     return sp - mk;
   }
 
-  public void openNodeScope(Node n) {
-    marks.add(mk);
-    mk = sp;
-    n.jjtOpen();
-  }
-
   public void clearNodeScope(Node n) {
     while (sp > mk) {
       popNode();
     }
     mk = marks.remove(marks.size()-1);
+  }
+
+  public void openNodeScope(Node n) {
+    marks.add(mk);
+    mk = sp;
+    n.jjtOpen();
   }
 
   /**

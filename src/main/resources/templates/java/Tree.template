@@ -51,26 +51,31 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}interface Tree {
   public Node jjtGetParent();
 
   /** Setter of node's parent. */
-  public void jjtSetParent(Node n);
+  public void jjtSetParent(final Node n);
+
+  /** Getter of node's children. */
+  public Node[] jjtGetChildren();
 
   /** This method tells the node to add its argument to the node's list of children.  */
-  public void jjtAddChild(Node n, int i);
+  public void jjtAddChild(final Node n, final int i);
 
   /** This method returns a child node. The children are numbered from zero, left to right. */
-  public Node jjtGetChild(int i);
+  public Node jjtGetChild(final int i);
 
   /** Return the number of children the node has. */
   public int jjtGetNumChildren();
 
+  /** Getter of node's (jjtree) id. */
   public int getId();
-#if VISITOR
 
-  /** Accept the visitor. **/
+#if VISITOR
+  /** Accept the visitor. */
 #if VISITOR_EXCEPTION
-  public ${VISITOR_RETURN_TYPE} jjtAccept(${PARSER_NAME}Visitor visitor, ${VISITOR_DATA_TYPE:-Object} data)
+  public ${VISITOR_RETURN_TYPE} jjtAccept(final ${PARSER_NAME}Visitor visitor, ${VISITOR_DATA_TYPE:-Object} data)
       throws ${VISITOR_EXCEPTION};
 #else
-  public ${VISITOR_RETURN_TYPE} jjtAccept(${PARSER_NAME}Visitor visitor, ${VISITOR_DATA_TYPE:-Object} data);
+  public ${VISITOR_RETURN_TYPE} jjtAccept(final ${PARSER_NAME}Visitor visitor, ${VISITOR_DATA_TYPE:-Object} data);
 #fi
+
 #fi
 }

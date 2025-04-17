@@ -63,7 +63,7 @@ public class ASTMyOtherID extends Node {
     return "Identifier: " + name;
   }
 
-  /** Accept the visitor. * */
+  /** Accept the visitor. */
   public Object jjtAccept(Eg4Visitor visitor, Object data) {
     return visitor.visit(this, data);
   }

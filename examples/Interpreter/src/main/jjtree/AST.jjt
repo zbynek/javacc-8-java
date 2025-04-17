@@ -1,4 +1,6 @@
-/* Copyright (c) 2006, Sun Microsystems, Inc.
+/*
+ * Copyright (c) 2020-2025, Sreeni Viswanadha <sreeni@viswanadha.net>.
+ * Copyright (c) 2024-2025, Marc Mazas <mazas.marc@gmail.com>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +11,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Sun Microsystems, Inc. nor the names of its
+ *     * Neither the names of the copyright holders nor the names of its
  *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  *
@@ -25,19 +27,22 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 options {
-    MULTI=true;
-    NODE_EXTENDS="MyNode";
-    TRACK_TOKENS=true;
-    NODE_PACKAGE="ast";
+    MULTI = true;
+//    NODE_DEFAULT_VOID = false; // (JJTree - default false)
+    NODE_EXTENDS = "MyNode";
+    NODE_PACKAGE = "ast";
+    NODE_PREFIX = "ST";
+    TRACK_TOKENS = true;
 }
 
 PARSER_BEGIN(SPLParser)
 package ast;
 
-class SPLParser {
+class SPLParser
+{
 }
+
 PARSER_END(SPLParser)
 
 
@@ -52,32 +57,26 @@ SKIP : /* WHITE SPACE */
 
 TOKEN : /* Types */
 {
-   < INT: "int" >
+   < INT : "int" >
  |
-   < BOOL: "boolean" >
+   < BOOL : "boolean" >
 }
 
 TOKEN : /* LITERALS */
 {
-  < INTEGER_LITERAL: (<DIGIT>)+ >
+  < INTEGER_LITERAL : (<DIGIT>)+ >
 }
-
-/*
- * Program structuring syntax follows.
- */
 
 /** Compilation unit. */
 void CompilationUnit() :
+{}
 {
-   String name;
-}
-{
-   (
-       VarDeclaration() ";"
-     |
-       Statement()
-   )*
-   <EOF>
+  (
+     VarDeclaration() ";"
+  |
+     Statement()
+  )*
+  <EOF>
 }
 
 /** Variable declaration. */
@@ -85,20 +84,18 @@ void VarDeclaration() :
 { Token t; }
 {
   (
-    "boolean" { jjtThis.type = BOOL; }
-   |
-    "int" { jjtThis.type = INT; }
+    "boolean"
+    { jjtThis.type = BOOL; }
+  |
+    "int"
+    { jjtThis.type = INT; }
   )
-  t = <IDENTIFIER> 
+  t = <IDENTIFIER>
   { jjtThis.name = t.image; }
 }
 
-/*
- * Expression syntax follows.
- */
-
 /** Expression. */
-void Expression() #void:
+void Expression() #void :
 {}
 {
   LOOKAHEAD( PrimaryExpression() "=" )
@@ -160,9 +157,9 @@ void EqualityExpression() #void :
 {
   RelationalExpression()
   (
-     "==" RelationalExpression() #EQNode(2)
-   |
-     "!=" RelationalExpression() #NENode(2)
+    "==" RelationalExpression() #EQNode(2)
+  |
+    "!=" RelationalExpression() #NENode(2)
   )*
 }
 
@@ -173,11 +170,11 @@ void RelationalExpression() #void :
   AdditiveExpression()
   (
     "<" AdditiveExpression() #LTNode(2)
-   |
+  |
     ">" AdditiveExpression() #GTNode(2)
-   |
+  |
     "<=" AdditiveExpression() #LENode(2)
-   |
+  |
     ">=" AdditiveExpression() #GENode(2)
   )*
 }
@@ -189,7 +186,7 @@ void AdditiveExpression() #void :
   MultiplicativeExpression()
   (
     "+" MultiplicativeExpression() #AddNode(2)
-   |
+  |
     "-" MultiplicativeExpression() #SubtractNode(2)
   )*
 }
@@ -201,9 +198,9 @@ void MultiplicativeExpression() #void :
   UnaryExpression()
   (
     "*" UnaryExpression() #MulNode(2)
-   |
+  |
     "/" UnaryExpression() #DivNode(2)
-   |
+  |
     "%" UnaryExpression() #ModNode(2)
   )*
 }
@@ -221,9 +218,7 @@ void UnaryExpression() #void :
 
 /** Primary expression. */
 void PrimaryExpression() #void :
-{
-   String name;
-}
+{}
 {
   Literal()
 |
@@ -234,25 +229,20 @@ void PrimaryExpression() #void :
 
 /** An Id. */
 void Id() :
+{ Token t; }
 {
-   Token t;
-}
-{
-   t = <IDENTIFIER>  { jjtThis.name = t.image; }
+   t = <IDENTIFIER>
+   { jjtThis.name = t.image; }
 }
 
 /** A literal. */
 void Literal() #void :
+{ Token t; }
 {
-   Token t;
-}
-{
- (
-  t=<INTEGER_LITERAL>
-    {
-       jjtThis.val = Integer.parseInt(t.image);
-    }
- )#IntConstNode
+  (
+    t = <INTEGER_LITERAL>
+    { jjtThis.val = Integer.parseInt(t.image); }
+  ) #IntConstNode
 |
   BooleanLiteral()
 }
@@ -265,10 +255,6 @@ void BooleanLiteral() #void :
 |
   "false" #FalseNode
 }
-
-/*
- * Statement syntax follows.
- */
 
 /** A statement. */
 void Statement() #void :
@@ -336,34 +322,34 @@ void WhileStatement() :
 
 /** An IO statement. */
 void IOStatement() #void :
-{ String name; }
+{}
 {
-   ReadStatement()
- |
-   WriteStatement()
+  ReadStatement()
+|
+  WriteStatement()
 }
 
 /** A read statement. */
 void ReadStatement() :
 { Token t; }
 {
-   "read" t = <IDENTIFIER>
-   { jjtThis.name = t.image; }
+  "read" t = <IDENTIFIER>
+  { jjtThis.name = t.image; }
 }
 
 /** A write statement. */
 void WriteStatement() :
 { Token t; }
 {
-   "write" t = <IDENTIFIER>
-   { jjtThis.name = t.image; }
+  "write" t = <IDENTIFIER>
+  { jjtThis.name = t.image; }
 }
 
 TOKEN : /* IDENTIFIERS */
 {
-  < IDENTIFIER: <LETTER> (<LETTER>|<DIGIT>)* >
+  < IDENTIFIER : <LETTER> ( <LETTER> | <DIGIT> )* >
 |
-  < #LETTER: [ "a"-"z", "A"-"Z" ] >
+  < #LETTER : [ "a"-"z", "A"-"Z" ] >
 |
-  < #DIGIT: [ "0"-"9"] >
+  < #DIGIT : [ "0"-"9"] >
 }

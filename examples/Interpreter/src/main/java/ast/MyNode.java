@@ -1,5 +1,6 @@
-package ast;
-/* Copyright (c) 2006, Sreenivasa Viswanadha <sreeni@viswanadha.net>
+/*
+ * Copyright (c) 2020-2025, Sreeni Viswanadha <sreeni@viswanadha.net>.
+ * Copyright (c) 2024-2025, Marc Mazas <mazas.marc@gmail.com>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -10,7 +11,7 @@ package ast;
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Sun Microsystems, Inc. nor the names of its
+ *     * Neither the names of the copyright holders nor the names of its
  *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  *
@@ -26,28 +27,32 @@ package ast;
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
+package ast;
 
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.Hashtable;
 
-/**
- * Specialised node.
- */
-public abstract class MyNode
-{
-  /** Symbol table */
-  protected static java.util.Hashtable symtab = new java.util.Hashtable();
+/** Specialised node. */
+public abstract class MyNode {
 
-  /** Stack for calculations. */
+  /** Symbol table: key = name, val = type */
+  protected static Hashtable<String, Object> symtab = new Hashtable<>();
+
+  /** "Stack" for calculations. */
   protected static Object[] stack = new Object[1024];
+
+  /** Top of the "stack". */
   protected static int top = -1;
 
-  /** @throws UnsupportedOperationException if called */
-  public void interpret()
-  {
-     throw new UnsupportedOperationException(); // It better not come here.
+  /**
+   * @throws UnsupportedOperationException if called
+   */
+  public void interpret() {
+    // It better not come here. (well, we did!)
+    throw new UnsupportedOperationException("UOE in " + this.getClass().getSimpleName());
   }
 
   protected static Writer out = new PrintWriter(System.out);
