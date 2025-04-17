@@ -51,21 +51,23 @@ public class ParseException extends Exception {
   /**
    * This constructor is used by the method "generateParseException" in the generated parser.<br>
    * Calling this constructor generates a new object of this type with the fields "currentToken",
-   *  "expectedTokenSequences", "tokenImage, "tokenImage, "expectedExpansionLineVal"
-   *  and "expectedExpansionColumnVal" set.
+   *  "expectedTokenSequences", "expectedTokenSequencesLoc", "tokenImage and "locationVal" set.
    */
   public ParseException(   Token currentTokenVal,
                          int[][] expectedTokenSequencesVal,
+                      String[][] expectedTokenSequencesLocVal,
                         String[] tokenImageVal,
-                             int expectedExpansionLineVal,
-                             int expectedExpansionColumnVal) {
-    super(initialise(currentTokenVal, expectedTokenSequencesVal, tokenImageVal, 
-                     expectedExpansionLineVal, expectedExpansionColumnVal));
-    currentToken = currentTokenVal;
-    expectedTokenSequences = expectedTokenSequencesVal;
-    tokenImage = tokenImageVal;
-    expectedExpansionLine = expectedExpansionLineVal;
-    expectedTokenSequences = expectedTokenSequencesVal;
+                          String locationVal) {
+    super(initialise(currentTokenVal,
+                     expectedTokenSequencesVal,
+                     expectedTokenSequencesLocVal, 
+                     tokenImageVal,
+                     locationVal));
+    currentToken              = currentTokenVal;
+    expectedTokenSequences    = expectedTokenSequencesVal;
+    expectedTokenSequencesLoc = expectedTokenSequencesLocVal;
+    tokenImage                = tokenImageVal;
+    location                  = locationVal;
   }
 
   /*
@@ -97,9 +99,16 @@ public class ParseException extends Exception {
   /**
    * Each entry in this array is an array of integers.<br>
    * Each array of integers represents a sequence of tokens (by their ordinal values)
-   *  that is expected at this point of the parse.
+   *  that are expected at this point of the parse.
    */
   public int[][] expectedTokenSequences;
+
+  /**
+   * Each entry in this array is an array of strings.<br>
+   * Each array of strings represents a sequence of tokens images (by their ordinal values)
+   *  that are expected at this point of the parse.
+   */
+  public String[][] expectedTokenSequencesLoc;
 
   /**
    * This is a reference to the "tokenImage" array of the generated parser within which
@@ -109,37 +118,32 @@ public class ParseException extends Exception {
   public String[] tokenImage;
 
   /**
-   * The beginning line of the expansion where the exception arose.
+   * The location of the expansion where the exception arose.
    */
-  public int expectedExpansionLine;
-
-  /**
-   * The beginning column of the expansion where the exception arose.
-   */
-  public int expectedExpansionColumn;
+  public String location;
 
   /**
    * Generate a parse error message and returns it.<br>
    * If this object has been created due to a parse error and you do not catch it
    *  (i.e. it gets thrown from the parser), the correct error message gets displayed.
    */
-  private static String initialise(   Token currentToken,
-                                    int[][] expectedTokenSequences,
-                                   String[] tokenImage,
-                                        int expectedExpansionLine,
-                                        int expectedExpansionColumn) {
+  private static String initialise(   Token currToken,
+                                    int[][] expTokenSequences,
+                                 String[][] expTokenSequencesLoc,
+                                   String[] tokImage,
+                                     String loc) {
 
     final StringBuilder expected = new StringBuilder(32);
     int maxSize = 0;
 
     // outer:
-    for (int i = 0; i < expectedTokenSequences.length; i++) {
-      final int[] expTkSeq = expectedTokenSequences[i];
+    for (int i = 0; i < expTokenSequences.length; i++) {
+      final int[] expTkSeq = expTokenSequences[i];
       // for the moment we prefer to keep printing duplicated sequences,
       //  hoping we can find a way to print their (different) locations in the grammar
       // for (int k = 0; k < i; k++) {
         // // don't print duplicated sequences
-        // if (java.util.Arrays.equals(expTkSeq, expectedTokenSequences[k])) {
+        // if (java.util.Arrays.equals(expTkSeq, expTokenSequences[k])) {
         //   continue outer;
         // }
       // }
@@ -152,7 +156,8 @@ public class ParseException extends Exception {
         } else {
           expected.append("    ");
         }
-        expected.append(tokenImage[expTkSeq[j]]);
+        expected.append(tokImage[expTkSeq[j]]).append(' ');
+        expected.append("(inside ").append(expTokenSequencesLoc[i][j]).append(") ");
       }
       if (expTkSeq[expTkSeq.length - 1] != 0) {
         expected.append("...");
@@ -164,43 +169,41 @@ public class ParseException extends Exception {
 
     // temp debug
     /*
-    sb.append("currentToken = " + currentToken).append(EOL);
-    for (int i = 0; i < expectedTokenSequences.length; i++) {
-      sb.append("expectedTokenSequences[" + i + "] = " + java.util.Arrays.toString(expectedTokenSequences[i])).append(EOL);
+    sb.append("currToken = " + currToken).append(EOL);
+    for (int i = 0; i < expTokenSequences.length; i++) {
+      sb.append("expTokenSequences[" + i + "] = " + java.util.Arrays.toString(expTokenSequences[i])).append(EOL);
     }
-    sb.append("tokenImage = " + java.util.Arrays.toString(tokenImage)).append(EOL);
-    sb.append("expectedExpansionLine = " + expectedExpansionLine).append(EOL);
-    sb.append("expectedExpansionColumn = " + expectedExpansionColumn).append(EOL);
+    sb.append("tokImage = " + java.util.Arrays.toString(tokImage)).append(EOL);
+    sb.append("loc = " + loc).append(EOL);
     */
 
     sb.append("Encountered:");
-    Token tok = currentToken.next;
+    Token tok = currToken.next;
     for (int i = 0; i < maxSize; i++) {
       sb.append(' ');
       if (tok.kind == 0) {
-        sb.append(tokenImage[0]);
+        sb.append(tokImage[0]);
         break;
       }
-      sb.append(tokenImage[tok.kind]).append(" / \"").append(add_escapes(tok.image)).append('"');
+      sb.append(tokImage[tok.kind]).append(" / \"").append(add_escapes(tok.image)).append('"');
       tok = tok.next;
     }
 #if KEEP_LINE_COLUMN
-    sb.append(", at line ").append(currentToken.next.beginLine)
-      .append(", column ").append(currentToken.next.beginColumn);
+    sb.append(", at line ").append(currToken.next.beginLine)
+      .append(", column ").append(currToken.next.beginColumn);
 #fi
     sb.append('.').append(EOL);
     
-    if (expectedTokenSequences.length == 0) {
+    if (expTokenSequences.length == 0) {
       // Nothing to add here
     } else {
-      if (expectedTokenSequences.length == 1) {
+      if (expTokenSequences.length == 1) {
         sb.append("Was expecting this terminal");
       } else {
         sb.append("Was expecting one of these terminals");
       }
 #if KEEP_LINE_COLUMN
-      sb.append(" within expansion starting at line ").append(expectedExpansionLine);
-      sb.append(", column ").append(expectedExpansionColumn);
+      sb.append(" within expansion starting at ").append(loc);
 #fi
       sb.append(':').append(EOL).append(expected.toString());
     }

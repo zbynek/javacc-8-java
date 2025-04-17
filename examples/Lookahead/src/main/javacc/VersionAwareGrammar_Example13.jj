@@ -307,8 +307,8 @@ void Try1() :
   "try" 
   Block1() 
   (
-  "catch" "(" "mod" "type"
-  "var" ")"
+    "catch" "(" "mod" "type"
+    "var" ")"
   )*
   [
     "finally" Block1()

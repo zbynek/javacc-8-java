@@ -37,7 +37,7 @@ options
 //  DEBUG_TOKEN_MANAGER = true;
 //  JAVA_UNICODE_ESCAPE = true;
   KEEP_LINE_COLUMN = false;
-  NO_DFA=true;
+  NO_DFA = true;
 //  PARSER_INCLUDE = "stdio.h";
 //  TOKEN_INCLUDE = "<stdio.h>";
 //  TOKEN_MANAGER_INCLUDE = "<stdio.h>";
@@ -132,11 +132,11 @@ TOKEN :
 TOKEN :
 {
   < IDENTIFIANT : < LOWERCASEFIRST > >
-| < VALUEREFERENCE : < LOWERCASEFIRST > > // strange; why same as above and not UPPERCASEFIRST?
+| < VALUEREFERENCE : < UPPERCASEFIRST > >
 }
-// e
-/* ee */
-/** eee */
+// special 1, 0 leading spaces; to be copied
+/* special 2, 0 leading spaces; to be copied */
+/** special 3, 0 leading spaces; to be copied */
 void EnumerationItem() :
 {}
 {
@@ -144,29 +144,31 @@ void EnumerationItem() :
   (
     LOOKAHEAD(2)
     NamedNumber()
-  | identifier()
+  |
+    identifier()
   )
   < RBRACE >
 }
 
-// n
-
-/** nnn */
+  // special 4, 2 leading spaces; to be copied; and 5 spaces in the next line
+     
+     /** special 5, 5 leading spaces; to be copied */
 void NamedNumber() :
 {}
 {
   (
     identifier()
-  | valuereference()
+  |
+    valuereference()
   )
   < LPAREN > < NUMBER > < RPAREN >
 }
-// i
+// special 6, 0 leading spaces, next to last rbrace, to be copied
 void identifier() :
 {}
 {
   < IDENTIFIANT >
-}
+} /* special 7, same line as last rbrace with 1 space, to be copied */
 
 void valuereference() :
 {}

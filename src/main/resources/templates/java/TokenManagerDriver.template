@@ -140,7 +140,7 @@ ${decls}
         if (trace_enabled()) System.err.println(
               "Read 1st char for any kind: " + disp_char(curChar) + 
 #if KEEP_LINE_COLUMN
-              ", at L:C: " + input_stream.getBeginLine() + ":" + input_stream.getBeginColumn() +
+              ", @ " + input_stream.getBeginLine() + ":" + input_stream.getBeginColumn() +
 #fi
               " (tm)");
 #fi
@@ -153,7 +153,7 @@ ${decls}
               disp_state(curLexState, lexStateNames) +
               " Reached EOF (1st)" +
 #if KEEP_LINE_COLUMN
-              ", at L:C: " + input_stream.getBeginLine() + ":" + input_stream.getBeginColumn() +
+              ", @ " + input_stream.getBeginLine() + ":" + input_stream.getBeginColumn() +
 #fi
               " (tm)");
 #fi
@@ -169,7 +169,7 @@ ${decls}
             disp_state(curLexState, lexStateNames) +
             " Current input char: " + disp_char(curChar) +
 #if KEEP_LINE_COLUMN
-            ", at L:C: " +
+            ", @ " +
             input_stream.getBeginLine() + ":" + input_stream.getBeginColumn() +
 #fi
             " (tm)");
@@ -276,7 +276,7 @@ ${decls}
                   disp_state(curLexState, lexStateNames) +
                   " Reached EOF (in a MORE)" +
 #if KEEP_LINE_COLUMN
-                  ", at L:C: " +
+                  ", @ " +
                   input_stream.getBeginLine() + ":" + input_stream.getBeginColumn() +
 #fi
                   " (tm)");
@@ -350,8 +350,8 @@ ${decls}
         int ignoreCase = stringLiterals[index++];
 #if DEBUG_TOKEN_MANAGER
         if (trace_enabled()) System.err.println(
-              "  Looking for string literal match of kind: " + stringLiterals[index + len] +
-              ", token image: " + tokenImage[stringLiterals[index + len]] + " (tm)");
+              "  Looking for string literal match of token: <" + stringLiterals[index + len] +
+              " / " + tokenImage[stringLiterals[index + len]] + "> (tm)");
 #fi
         do {
 #if DEBUG_TOKEN_MANAGER
@@ -372,13 +372,13 @@ ${decls}
         } while (curPos < len);
         if (curPos == len) {
           jjmatchedKind = stringLiterals[index + len + (ignoreCase * len)];
-          jjmatchedPos = curPos;
-          startState = stringLiterals[index + len + (ignoreCase * len) + 1];
+          jjmatchedPos  = curPos;
+          startState    = stringLiterals[index + len + (ignoreCase * len) + 1];
 #if DEBUG_TOKEN_MANAGER
           if (trace_enabled()) System.err.println(
                 "  Currently matched the first: " + jjmatchedPos +
-                " chars as kind: " + stringLiterals[index + len] +
-                ", token image: " + tokenImage[jjmatchedKind] + " (tm)");
+                " chars as token: <" + jjmatchedKind +
+                " / " + tokenImage[jjmatchedKind] + "> (tm)");
 #fi
           if (!moveToNextChar()) {
             return curPos;
@@ -500,11 +500,11 @@ ${decls}
         // TODO(sreeni) : Fix it to give better error message instead of UNKNOWN.
         if (trace_enabled()) System.err.println(
               "    Looking to move from state: " + disp_state(state, lexStateNames) +
-              ", for token: " +
+              ", for token: <" +
               (jjmatchKinds[state] != Integer.MAX_VALUE
-                    ? tokenImage[jjmatchKinds[state]]
-                    : "<UNKNOWN>") +
-              " (tm)");
+                    ? (jjmatchKinds[state] + " / " + tokenImage[jjmatchKinds[state]])
+                    : "UNKNOWN") +
+              "> (tm)");
 #fi
         if ((jjChars[state][vectorIndex] & bitpattern) != 0L) {
           // Current input character can move this NFA state.
@@ -632,7 +632,7 @@ ${decls}
   }
 
   static String disp_char(final int ic) {
-    return String.valueOf(ic) + " / '" + add_escapes(ic) + "'";
+    return "`" + String.valueOf(ic) + " / '" + add_escapes(ic) + "'´";
   }
 
   /**

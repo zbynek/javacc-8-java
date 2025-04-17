@@ -33,7 +33,7 @@ options
 {
   static = false;
   FORCE_LA_CHECK = true; // (JavaCC - default false)
-//  DEBUG_PARSER = true; // (JavaCC - default false)
+  DEBUG_PARSER = true; // (JavaCC - default false)
   DEBUG_LOOKAHEAD = true; // (JavaCC - default false)
   OUTPUT_DIRECTORY = "rldt8";
 }
@@ -59,7 +59,7 @@ public class ReadingLookaheadDebugTrace_Example8 {
     }
   }
 
-  void report(final String aStr) { System.out.println("swallowed " + aStr); }
+  void report(final String aStr) { System.out.println("Main swallowing a " + aStr); }
 
   static String input [] = new String [] { //
     "new cd",       // -> choice 3
