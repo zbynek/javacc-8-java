@@ -72,10 +72,9 @@ public class ParseException extends Exception {
 
   /*
    * The following constructors are for use by you for whatever purpose you can think of.
-   * Constructing the exception in this manner makes the exception behave in the normal way
-   *  - i.e., as documented in the class "Throwable".<br>
-   * The fields "errorToken", "expectedTokenSequences", "tokenImage, "expectedExpansionLineVal" and
-   *  "expectedExpansionColumnVal" do not contain relevant information.<br>
+   * Constructing the exception in this manner makes the exception behave in the normal way.
+   * The fields "errorToken", "expectedTokenSequences", "tokenImage and "location"
+   *  will not contain relevant information.
    * The JavaCC generated code does not use these constructors.
    */
 
@@ -202,10 +201,8 @@ public class ParseException extends Exception {
       } else {
         sb.append("Was expecting one of these terminals");
       }
-#if KEEP_LINE_COLUMN
-      sb.append(" within expansion starting at ").append(loc);
-#fi
-      sb.append(':').append(EOL).append(expected.toString());
+      sb.append(" within expansion starting at ").append(loc).append(':').append(EOL);
+      sb.append(expected.toString());
     }
     return sb.toString();
     

@@ -112,6 +112,22 @@ THE POSSIBILITY OF SUCH DAMAGE.
               </arguments>
             </configuration>
           </execution>
+          <execution>
+            <id>exec-test-3</id>
+            <phase>test</phase>
+            <goals>
+              <goal>java</goal>
+            </goals>
+            <configuration>
+              <skip>${skip.test.java.issues.bas02}</skip> <!-- default false -->
+              <mainClass>Bug</mainClass>
+              <arguments>
+                <argument>${project.basedir}/files/bug3.in</argument>
+                <argument>${project.basedir}/files/bug3.out</argument>
+                <argument>${project.basedir}/files/bug3.err</argument>
+              </arguments>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
 
@@ -162,6 +178,29 @@ THE POSSIBILITY OF SUCH DAMAGE.
                 <ant antfile="${project.basedir}/../../it/build-utils.xml" target="compare-err">
                   <property name="dir" value="${project.basedir}" />
                   <property name="file" value="bug2" />
+                </ant>
+              </target>
+            </configuration>
+          </execution>
+          <execution>
+            <id>check-res-test-3</id>
+            <phase>test</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <skip>${skip.test.java.issues.bas02}</skip> <!-- default false -->
+              <failOnError>${failOnError.check.java.issues.bas02}</failOnError> <!-- default true -->
+              <target>
+                <!-- out -->
+                <ant antfile="${project.basedir}/../../it/build-utils.xml" target="compare-out">
+                  <property name="dir" value="${project.basedir}" />
+                  <property name="file" value="bug3" />
+                </ant>
+                <!-- err -->
+                <ant antfile="${project.basedir}/../../it/build-utils.xml" target="compare-err">
+                  <property name="dir" value="${project.basedir}" />
+                  <property name="file" value="bug3" />
                 </ant>
               </target>
             </configuration>

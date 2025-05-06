@@ -136,13 +136,15 @@ abstract class JavaHelperFiles {
         jcb.println();
       }
 
-      jcb.println("  /** Literal token values. */");
+      jcb.println("  /**");
+      jcb.println("   * Tokens labels (if any) or images (if string literal) or named kinds<br>");
+      jcb.println("   * (for non labeled non string literals).");
+      jcb.println("   */");
       jcb.println("  String[] tokenImage = {");
       jcb.println("    \"<EOF>\",");
       for (final TokenProduction tp : context.globals().rexprlist) {
         for (final RegExprSpec res : tp.respecs) {
           jcb.print("    ");
-          // prefer labels to literals
           if (!res.rexp.label.equals("")) {
             jcb.println("\"<" + res.rexp.label + ">\",");
           } else if (res.rexp instanceof RStringLiteral) {
@@ -157,25 +159,12 @@ abstract class JavaHelperFiles {
                   .errors()
                   .warning(
                       res.rexp,
-                      "Consider giving this non-string token a label for better error reporting.");
+                      "Consider giving this (non string literal) token a label for better error reporting.");
             }
             jcb.println("\"<token of kind " + res.rexp.ordinal + ">\",");
           }
         }
       }
-      //      jcb.println("  };");
-      //      jcb.println();
-      // this refers to where the expansion is defined, not referenced
-      //      jcb.println("  /** Literal token lines & columns. */");
-      //      jcb.println("  String[] tokenLineCol = {");
-      //      jcb.println("    \"-1,-1\",");
-      //      for (final TokenProduction tp : context.globals().rexprlist) {
-      //        for (final RegExprSpec res : tp.respecs) {
-      //          jcb.print("    \"");
-      //          jcb.print(res.rexp.getLine() + ":" + res.rexp.getColumn());
-      //          jcb.println("\",");
-      //        }
-      //      }
       jcb.println("  };");
       jcb.println("}");
       jcb.println();
