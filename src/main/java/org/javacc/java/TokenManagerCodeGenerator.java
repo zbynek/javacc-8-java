@@ -597,6 +597,10 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
       //        jcb.println("        lengthOfMatch = jjstrLiteralImages[" + i + "].length();");
       //      }
       // TODO check (MMa end added)
+      // MMa start added (cf. JSqlParser)
+      jcb.println("        lengthOfMatch = jjmatchedPos + 1;");
+      jcb.println("        image.append(input_stream.GetSuffix(jjimageLen + lengthOfMatch));");
+      // MMa end added (cf. JSqlParser)
       jcb.println("        " + matchInfo.action.trim());
       jcb.println("        break;");
       jcb.println("      }");
