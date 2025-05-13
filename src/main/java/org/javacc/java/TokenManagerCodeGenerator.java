@@ -42,6 +42,7 @@ import org.javacc.parser.JavaCCParserConstants;
 import org.javacc.parser.Options;
 import org.javacc.parser.Token;
 import org.javacc.parser.TokenizerData;
+import org.javacc.parser.TokenizerData.MatchType;
 import org.javacc.utils.CodeBuilder;
 
 /** Class that implements a table driven code generator for the token manager in Java. */
@@ -548,7 +549,8 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
     // Token actions.
     jcb.println(staticString + "void TokenLexicalActions(Token matchedToken) {");
     jcb.println("  // TOKEN lexical actions");
-    dumpLexicalActions(jcb, allMatches, TokenizerData.MatchType.TOKEN, "matchedToken.kind");
+    //    dumpLexicalActions(jcb, allMatches, TokenizerData.MatchType.TOKEN, "matchedToken.kind");
+    dumpLexicalActions(jcb, allMatches, TokenizerData.MatchType.TOKEN, "jjmatchedKind");
     jcb.println("  }");
     jcb.println();
 
@@ -557,14 +559,15 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
     jcb.println(staticString + "void SkipLexicalActions(Token matchedToken) {");
     jcb.println("  // SKIP lexical actions");
     dumpLexicalActions(jcb, allMatches, TokenizerData.MatchType.SKIP, "jjmatchedKind");
-    jcb.println("  // SPECIAL_TOKEN lexical actions");
-    dumpLexicalActions(jcb, allMatches, TokenizerData.MatchType.SPECIAL_TOKEN, "jjmatchedKind");
+    //    jcb.println("  // SPECIAL_TOKEN lexical actions");
+    //    dumpLexicalActions(jcb, allMatches, TokenizerData.MatchType.SPECIAL_TOKEN,
+    // "jjmatchedKind");
     jcb.println("  }");
     jcb.println();
 
     // More actions.
     jcb.println(staticString + "void MoreLexicalActions() {");
-    jcb.println("    jjimageLen += (lengthOfMatch = jjmatchedPos + 1);");
+    //    jcb.println("    jjimageLen += (lengthOfMatch = jjmatchedPos + 1);");
     jcb.println("  // MORE lexical actions");
     dumpLexicalActions(jcb, allMatches, TokenizerData.MatchType.MORE, "jjmatchedKind");
     jcb.println("  }");
@@ -584,23 +587,15 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
         continue;
       }
       jcb.println("      case " + i + ": {");
-      // TODO check (MMa start added)
-      //      if (matchInfo.matchType == MatchType.SKIP) {
-      //        jcb.println("        lengthOfMatch = jjmatchedPos + 1;");
-      //        jcb.println("        image.append(input_stream.GetSuffix(jjimageLen +
-      // lengthOfMatch));");
-      //      } else if (matchInfo.matchType == MatchType.MORE) {
-      //        jcb.println("        image.append(input_stream.GetSuffix(jjimageLen));");
-      //        jcb.println("        jjimageLen = 0;");
-      //      } else if (matchInfo.matchType == MatchType.TOKEN) {
-      //        jcb.println("        image.append(jjstrLiteralImages[" + i + "]);");
-      //        jcb.println("        lengthOfMatch = jjstrLiteralImages[" + i + "].length();");
-      //      }
+      // TODO check (MMa start added) comes from v7 output cf. JSqlParser
+      if (matchInfo.matchType == MatchType.SKIP) {
+      } else if (matchInfo.matchType == MatchType.MORE) {
+        jcb.println("        jjimageLen += (lengthOfMatch = jjmatchedPos);");
+      } else if (matchInfo.matchType == MatchType.TOKEN) {
+        jcb.println(
+            "        image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos)));");
+      }
       // TODO check (MMa end added)
-      // MMa start added (cf. JSqlParser)
-      jcb.println("        lengthOfMatch = jjmatchedPos + 1;");
-      jcb.println("        image.append(input_stream.GetSuffix(jjimageLen + lengthOfMatch));");
-      // MMa end added (cf. JSqlParser)
       jcb.println("        " + matchInfo.action.trim());
       jcb.println("        break;");
       jcb.println("      }");
