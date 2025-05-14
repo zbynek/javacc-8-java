@@ -111,51 +111,51 @@ TOKEN : /* OPERATORS, DELIMITERS, KEYWORDS */
 
 void A() : {}
 {
-  // A() has no lookahead and is truncated (no choices after)
+  // (if uncommented) A() has no lookahead and is truncated (no choices after)
 //  LOOKAHEAD(0)
 //  B() "v_1"
 //|
-  LOOKAHEAD(1)  // jj_2_1, jj_3_1, jj_3R_B_141_3_1
+  LOOKAHEAD(1)  // jj_2_1, jj_3_1, jj_3R_B_170_3_1
   B() "v_2"
 |
-  LOOKAHEAD(2)  // jj_2_2, jj_3_2, jj_3R_B_141_3_1
+  LOOKAHEAD(2)  // jj_2_2, jj_3_2, jj_3R_B_170_3_1
   B() "v_3"
 |
-  LOOKAHEAD(B())  // jj_2_3, jj_3_3, jj_3R_B_141_3_1
+  LOOKAHEAD(B())  // jj_2_3, jj_3_3, jj_3R_B_170_3_1
   B() "v_4"
 |
   LOOKAHEAD({ a5 }) // a5
   B() "v_5"
 |
-  // A() has no lookahead and is truncated (no choices after)
+  // (if uncommented) A() has no lookahead and is truncated (no choices after)
 //  LOOKAHEAD(0, B())
 //  B() "v_6"
 //|
-  LOOKAHEAD(1, B())  // jj_2_4, jj_3_4, jj_3R_B_141_3_1
+  LOOKAHEAD(1, B())  // jj_2_4, jj_3_4, jj_3R_B_170_3_1
   B() "v_7"
 |
-  LOOKAHEAD(2, B())  // jj_2_5, jj_3_5, jj_3R_B_141_3_1
+  LOOKAHEAD(2, B())  // jj_2_5, jj_3_5, jj_3R_B_170_3_1
   B() "v_8"
 |
-  LOOKAHEAD(B(), { a9 })  // jj_2_6 && a9, jj_3_6, jj_3R_B_141_3_1
+  LOOKAHEAD(B(), { a9 })  // jj_2_6 && a9, jj_3_6, jj_3R_B_170_3_1
   B() "v_9"
 |
   LOOKAHEAD(0, { a10 })  // a10
   B() "v_10"
 |
-  LOOKAHEAD(1, { a11 })  // jj_2_7 && a11, jj_3_7, jj_3R_B_141_3_1
+  LOOKAHEAD(1, { a11 })  // jj_2_7 && a11, jj_3_7, jj_3R_B_170_3_1
   B() "v_11"
 |
-  LOOKAHEAD(2, { a12 })  // jj_2_8 && a12, jj_3_8, jj_3R_B_141_3_1
+  LOOKAHEAD(2, { a12 })  // jj_2_8 && a12, jj_3_8, jj_3R_B_170_3_1
   B() "v_12"
 |
   LOOKAHEAD(0, B(), { a13 }) // b13
   B() "v_13"
 |
-  LOOKAHEAD(1, B(), { a14 })  // jj_2_9 && a14, jj_3_9, jj_3R_B_141_3_1
+  LOOKAHEAD(1, B(), { a14 })  // jj_2_9 && a14, jj_3_9, jj_3R_B_170_3_1
   B() "v_14"
 |
-  LOOKAHEAD(2, B(), { a15 })  // jj_2_10 && a15, jj_3_10, jj_3R_B_141_3_1
+  LOOKAHEAD(2, B(), { a15 })  // jj_2_10 && a15, jj_3_10, jj_3R_B_170_3_1
   B() "v_15"
 |
   C() "_w"
@@ -163,58 +163,58 @@ void A() : {}
   
 void B() : {}
 {
-  // B() has no lookahead and is truncated (no choices after) (but this does not affect A-lookahead)
-  LOOKAHEAD(0)
-  C() "x_1"  // jj_3R_B_138_3_2
-|
+  // (if uncommented) B() has no lookahead and is truncated (no choices after) (but this does not affect A-lookahead)
+//  LOOKAHEAD(0)
+//  C() "x_1"  // jj_3R_B_138_3_2
+//|
   LOOKAHEAD(1)
-  C() "x_2"  // jj_3R_B_141_3_3
+  C() "x_2"  // (la jj_3R_B_170_3_1 ->) jj_3R_B_170_3_3, jj_3R_C_218_3_2
 |
   LOOKAHEAD(2)
-  C() "x_3"  // jj_3R_B_144_3_4
+  C() "x_3"  // (la jj_3R_B_170_3_1 ->) jj_3_11, jj_3R_C_218_3_2
 |
   LOOKAHEAD(C())
-  C() "x_4"  // jj_3R_B_147_3_5
+  C() "x_4"  // (la jj_3R_B_170_3_1 ->) jj_3R_B_176_3_4, jj_3R_C_218_3_2
 |
   LOOKAHEAD({ b5 })
-  C() "x_5"  // b5 && jj_3R_B_150_3_6
+  C() "x_5"  // (la jj_3R_B_170_3_1 ->) b5 && jj_3R_B_179_3_5, jj_3R_C_218_3_2
 |
-  // B() has no lookahead and is truncated (no choices after) (but this does not affect A-lookahead)
-  LOOKAHEAD(0, C())
-  C() "x_6"  // jj_3R_B_154_3_7
-|
+  // (if uncommented) B() has no lookahead and is truncated (no choices after) (but this does not affect A-lookahead)
+//  LOOKAHEAD(0, C())
+//  C() "x_6"  // jj_3R_B_189_3_7
+//|
   LOOKAHEAD(1, C()  "x_7" )
-  C() "x_7"  // jj_3R_B_157_3_8
+  C() "x_7"  // (la jj_3R_B_170_3_1 ->) jj_3R_B_186_3_6, jj_3R_C_218_3_2
 |
   LOOKAHEAD(2, C())
-  C() "x_8"  // jj_3R_B_160_3_9
+  C() "x_8"  // (la jj_3R_B_170_3_1 ->) jj_3R_B_189_3_7, jj_3R_C_218_3_2
 |
   LOOKAHEAD(C(), { b9 })
-  C() "x_9"  // b9 && jj_3R_B_163_3_10
+  C() "x_9"  // (la jj_3R_B_170_3_1 ->) b9 && jj_3R_B_192_3_8, jj_3R_C_218_3_2
 |
   LOOKAHEAD(0, { b10 })
-  C() "x_10"  // b10 && jj_3R_B_166_3_11
+  C() "x_10"  // (la jj_3R_B_170_3_1 ->) b10 && jj_3R_B_195_3_9, jj_3R_C_218_3_2
 |
   LOOKAHEAD(1, { b11 })
-  C() "x_11"  // b11 && jj_3R_B_169_3_12
+  C() "x_11"  // (la jj_3R_B_170_3_1 ->) b11 && jj_3_15 (why not a 3R as in v7?), jj_3R_C_218_3_2
 |
   LOOKAHEAD(2, { b12 })
-  C() "x_12"  // b12 && jj_3R_B_172_3_13
+  C() "x_12"  // (la jj_3R_B_170_3_1 ->) b12 && jj_3_16 (why not a 3R as in v7?), jj_3R_C_218_3_2
 |
   LOOKAHEAD(0, C(), { b13 })
-  C() "x_13"  // b13 && jj_3R_B_175_3_14
+  C() "x_13"  // (la jj_3R_B_170_3_1 ->) b13 && jj_3R_B_204_3_10, jj_3R_C_218_3_2
 |
   LOOKAHEAD(1, C(), { b14 })
-  C() "x_14"  // b14 && jj_3R_B_178_3_15
+  C() "x_14"  // (la jj_3R_B_170_3_1 ->) b14 && jj_3R_B_207_3_11, jj_3R_C_218_3_2
 |
   LOOKAHEAD(2, C(), { b15 })
-  C() "x_15"  // b15 && jj_3R_B_181_3_16
+  C() "x_15"  // (la jj_3R_B_170_3_1 ->) b15 && jj_3R_B_210_3_12, jj_3R_C_218_3_2
 |
-  "_t" "_y"  // jj_3R_B_184_3_17
+  "_t" "_y"  // (la jj_3R_B_170_3_1 ->) jj_3R_B_213_3_13, jj_3R_C_218_3_2
 }
   
 void C() : {}
 {
-  "_t" "_z"  // jj_3R_C_189_3_2 in jj_3R_B_lll_ccc_n and some jj_3_n
+  "_t" "_z"  // jj_3R_C_218_3_18 in jj_3R_B_lll_ccc_n and some jj_3_n
 }
 
