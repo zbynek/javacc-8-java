@@ -216,7 +216,7 @@ ${decls}
 #fi
 #if DEBUG_TOKEN_MANAGER
             if (trace_enabled()) System.err.println(
-                  "Returning token: \"" + matchedToken.image + "\" (tm)");
+                  "Found a MATCH ***; returning token: \"" + matchedToken.image + "\" (tm)");
 #fi
             return matchedToken;
           } else if (isSkip(jjmatchedKind)) {
@@ -458,14 +458,14 @@ ${decls}
     }
 
     // We initialize the kind to MAX value so that when a match is found, we can
-    // simply check if it's less than the current match and store it in that
-    // case. This helps implement the 'first occurring' rule properly.
+    // simply check if it's less than the current match and store it in that case.
+    // This helps implement the 'first occurring' rule properly.
     int cnt = 0;
     stateSet[cnt++] = startState;
     moved[startState] = moveIndex;
 
-    // Some NFA states have epsilon transitions (move on empty string). So we
-    // just start with all of them. Note that the nextStates array already adds
+    // Some NFA states have epsilon transitions (move on empty string).
+    // So we just start with all of them. Note that the nextStates array already adds
     // the epsilon closure. Only the initial state needs to do this explicitly.
     for (int s : jjcompositeState[startState]) {
       if (moved[s] != moveIndex) {
