@@ -180,7 +180,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 
     <profile>
       <!-- Relays activating a profile in the invoked tests; needs explicit activation -->
-      <id>failOnError-check-java-issues</id>
+      <id>doNotFailOnError-check-java-issues</id>
       <build>
         <plugins>
           <plugin>
@@ -193,7 +193,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
                   <goal>run</goal>
                 </goals>
                 <configuration>
-                  <profiles>failOnError-check-java-issues</profiles>
+                  <profiles>doNotFailOnError-check-java-issues</profiles>
                 </configuration>
               </execution>
             </executions>
@@ -214,7 +214,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 
     <profile>
       <!-- Relays activating a profile in the invoked tests; needs explicit activation -->
-      <id>failOnError-check-java-examples</id>
+      <id>doNotFailOnError-check-java-examples</id>
       <build>
         <plugins>
           <plugin>
@@ -227,7 +227,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
                   <goal>run</goal>
                 </goals>
                 <configuration>
-                  <profiles>failOnError-check-java-examples</profiles>
+                  <profiles>doNotFailOnError-check-java-examples</profiles>
                 </configuration>
               </execution>
             </executions>
@@ -248,7 +248,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 
     <profile>
       <!-- Relays activating a profile in the invoked tests; needs explicit activation -->
-      <id>failOnError-check-java-grammars</id>
+      <id>doNotFailOnError-check-java-grammars</id>
       <build>
         <plugins>
           <plugin>
@@ -261,7 +261,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
                   <goal>run</goal>
                 </goals>
                 <configuration>
-                  <profiles>failOnError-check-java-grammars</profiles>
+                  <profiles>doNotFailOnError-check-java-grammars</profiles>
                 </configuration>
               </execution>
             </executions>

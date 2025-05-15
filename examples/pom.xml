@@ -75,7 +75,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
     <profile>
       <!-- Sets a set of properties for not failing on error in checking results in submodules;
            needs explicit activation -->
-      <id>failOnError-check-java-examples</id>
+      <id>doNotFailOnError-check-java-examples</id>
       <properties>
         <failOnError.check.java.examples.CORBA-IDL>false</failOnError.check.java.examples.CORBA-IDL>
         <failOnError.check.java.examples.MailProcessing.Digest>false</failOnError.check.java.examples.MailProcessing.Digest>
