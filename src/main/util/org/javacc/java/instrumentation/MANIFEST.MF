@@ -1,0 +1,3 @@
+Comment-1: Used to load the instrumentation agent (premain)
+Comment-2: Last line must be terminated by an end of line!
+Premain-Class: org.javacc.java.instrumentation.Agent
