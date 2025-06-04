@@ -441,9 +441,9 @@ ${decls}
       int ind = 0;
       // We originally generate something like RLE for the static arrays and
       // we actually expand them here.
-      for (int j = 0; j < jjCharData[i].length; j += 2) {
-        for (int k = 0; k < (int) jjCharData[i][j]; k++) {
-          jjChars[i][ind++] = jjCharData[i][j + 1];
+      for (int j = 0; j < CharDataConsts.jjCharData[i].length; j += 2) {
+        for (int k = 0; k < (int) CharDataConsts.jjCharData[i][j]; k++) {
+          jjChars[i][ind++] = CharDataConsts.jjCharData[i][j + 1];
         }
       }
     }

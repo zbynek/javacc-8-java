@@ -52,6 +52,7 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
 
   private final Context context;
   private JavaCodeBuilder jcb;
+  private static final String EOL = System.getProperty("line.separator");
 
   TokenManagerCodeGenerator(final Context context) {
     this.context = context;
@@ -269,24 +270,30 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
     jcb.println("  private static final long[] EMPTY_CHAR_DATA = new long[] {};");
     jcb.println();
 
-    /* jjCharData. */
-    jcb.print("  private static final long[][] jjCharData = {");
+    /* CharDataConsts. */
+    jcb.println("  private static final class CharDataConsts {");
+    jcb.println();
+
+    /* jjCharData into a buffer. */
+    final Map<Integer, TokenizerData.NfaState> nfa = tokenizerData.nfa;
     final Map<String, String> charDataVars = new HashMap<String, String>();
     final Map<String, String> charDataCdbs = new HashMap<String, String>();
+
+    final StringBuilder sb = new StringBuilder(64 + 18 * nfa.size());
+    sb.append("    private static final long[][] jjCharData = {");
     final String charDataVarPrefix = "CHAR_DATA";
-    final Map<Integer, TokenizerData.NfaState> nfa = tokenizerData.nfa;
     final StringBuilder charDataBuilder = new StringBuilder(64);
     for (int i = 0; i < nfa.size(); i++) {
       if (i > 0) {
-        jcb.println(",");
+        sb.append(',').append(EOL);
       } else {
-        jcb.println();
+        sb.append(EOL);
       }
       charDataBuilder.setLength(0);
       // We have a lot of similar states. So factor them so we don't get "Code too large" errors.
       final TokenizerData.NfaState tmp = nfa.get(i);
       if (tmp == null) {
-        jcb.println("    EMPTY_CHAR_DATA");
+        sb.append("      EMPTY_CHAR_DATA").append(EOL);
       } else {
         charDataBuilder.append("new long[] {");
         final BitSet bits = new BitSet();
@@ -314,24 +321,26 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
           charDataVars.put(cdb, var);
           charDataCdbs.put(var, cdb);
         }
-        jcb.print("    CharDataConsts." + var);
+        sb.append("      " + var);
       }
     }
     if (!nfa.isEmpty()) {
-      jcb.println();
-      jcb.println("  };");
+      sb.append(EOL).append("    };").append(EOL);
     } else {
-      jcb.println("};");
+      sb.append("  };").append(EOL);
     }
-    jcb.println();
 
-    /* CharDataConsts. */
-    jcb.println("  private static final class CharDataConsts {");
     // in order, for easier comparison with C# & C++
     for (int k = 1; k <= charDataCdbs.size(); k++) {
       final String key = charDataVarPrefix + Integer.toString(k);
       jcb.println("    private static final long[] " + key + " = " + charDataCdbs.get(key) + ";");
     }
+    jcb.println();
+
+    // now print jjCharData buffer
+    jcb.println(sb);
+
+    /* end class CharDataConsts. */
     jcb.println("  }");
     jcb.println();
 
