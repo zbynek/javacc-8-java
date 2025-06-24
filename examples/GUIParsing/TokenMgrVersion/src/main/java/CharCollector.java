@@ -192,11 +192,11 @@ public class CharCollector implements CharStream {
     return 0;
   }
 
-  boolean getTrackLineColumn() {
+  public boolean getTrackLineColumn() {
     return trackLineColumn;
   }
 
-  void setTrackLineColumn(boolean tlc) {
+  public void setTrackLineColumn(boolean tlc) {
     trackLineColumn = tlc;
   }
 
