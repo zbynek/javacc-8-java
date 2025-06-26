@@ -199,7 +199,19 @@ ${decls}
 #fi
         }
 
+        if (jjmatchedKind == Integer.MAX_VALUE) {
+          jjmatchedKind = jjInitialMatchForLexState[curLexState];
+          jjmatchedPos = -1;
+#if DEBUG_TOKEN_MANAGER
+          if (trace_enabled()) System.err.println(
+                "Matched empty string as kind: " + jjmatchedKind + " (tm)");
+#fi
+	}
         if (jjmatchedKind != Integer.MAX_VALUE) {
+#if DEBUG_TOKEN_MANAGER
+          if (trace_enabled()) System.err.println(
+                "Putting back: " + (lastReadPosition - jjmatchedPos) + " chars(tm)");
+#fi
           // We have a match!
           // Put back any characters looked ahead.
           input_stream.backup(lastReadPosition - jjmatchedPos);
@@ -226,21 +238,27 @@ ${decls}
           
           if (isSkip(jjmatchedKind)) {
             // Matched kind is a SKIP.
-            SkipLexicalActions(null);
-            if (jjnewLexState[jjmatchedKind] != -1) {
-              curLexState = jjnewLexState[jjmatchedKind];
-            }
 #if DEBUG_TOKEN_MANAGER
             if (trace_enabled()) System.err.println(
                   "Found a SKIP match: <" + jjmatchedKind  +
                   "> at lexical state: " + curLexState + "; continuing (tm)");
 #fi
+            SkipLexicalActions(null);
+            if (jjnewLexState[jjmatchedKind] != -1) {
+              curLexState = jjnewLexState[jjmatchedKind];
+            }
             continue EOFLoop;
           }
           
           if (isSpecial(jjmatchedKind)) {
             // Matched kind is a SPECIAL_TOKEN.
             matchedToken = jjFillToken();
+#if DEBUG_TOKEN_MANAGER
+            if (trace_enabled()) System.err.println(
+                  "Found a SPECIAL_TOKEN match: <" + jjmatchedKind +
+                  " / \"" + ParseException.add_escapes(matchedToken.image) +
+                  "\"> at lexical state: " + curLexState + "; continuing (tm)");
+#fi
             if (specialToken == null) {
               specialToken = matchedToken;
             } else {
@@ -251,12 +269,6 @@ ${decls}
             if (jjnewLexState[jjmatchedKind] != -1) {
               curLexState = jjnewLexState[jjmatchedKind];
             }
-#if DEBUG_TOKEN_MANAGER
-            if (trace_enabled()) System.err.println(
-                  "Found a SPECIAL_TOKEN match: <" + jjmatchedKind +
-                  " / \"" + ParseException.add_escapes(matchedToken.image) +
-                  "\"> at lexical state: " + curLexState + "; continuing (tm)");
-#fi
             continue EOFLoop;
           }
           
@@ -392,7 +404,7 @@ ${decls}
                 " chars as token: <" + jjmatchedKind +
                 " / " + tokenImage[jjmatchedKind] + "> (tm)");
 #fi
-          if (!moveToNextChar()) {
+          if (startState < 0 || !moveToNextChar()) {
             return curPos;
           }
           curPos++;

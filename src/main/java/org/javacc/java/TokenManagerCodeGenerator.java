@@ -76,6 +76,7 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
     settings.put("defaultLexState", tokenizerData.lexStateNames[tokenizerData.defaultLexState]);
     settings.put("decls", tokenizerData.decls);
     settings.put("generatedStates", tokenizerData.nfa.size());
+    settings.put("initMatch", tokenizerData.initialMatchForLexState);
 
     final String tmSuperClass = (String) settings.get(Options.UO__TOKEN_MANAGER_SUPER_CLASS);
     settings.put(
@@ -262,6 +263,23 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
       jcb.println("};");
     }
     jcb.println();
+
+    /* jjInitStates. */
+    jcb.print("  private static final int[] jjInitialMatchForLexState = {");
+    v = 0;
+    for (int i = 0; i < tokenizerData.lexStateNames.length; i++) {
+      if (v++ > 0) {
+        jcb.print(", ");
+      } else {
+        jcb.println();
+        jcb.print("    ");
+      }
+      jcb.print(tokenizerData.initialMatchForLexState[i]);
+    }
+
+    jcb.println("};");
+    jcb.println();
+
 
     // We do the following for Java so that the generated code is reasonable
     // size and can be compiled. May not be needed for other languages.
