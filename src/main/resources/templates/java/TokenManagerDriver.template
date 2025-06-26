@@ -206,13 +206,13 @@ ${decls}
           if (trace_enabled()) System.err.println(
                 "Matched empty string as kind: " + jjmatchedKind + " (tm)");
 #fi
-	}
+        }
         if (jjmatchedKind != Integer.MAX_VALUE) {
+          // We have a match!
 #if DEBUG_TOKEN_MANAGER
           if (trace_enabled()) System.err.println(
-                "Putting back: " + (lastReadPosition - jjmatchedPos) + " chars(tm)");
+                "Put back: " + (lastReadPosition - jjmatchedPos) + " looked ahead chars (tm)");
 #fi
-          // We have a match!
           // Put back any characters looked ahead.
           input_stream.backup(lastReadPosition - jjmatchedPos);
           

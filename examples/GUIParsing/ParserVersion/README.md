@@ -24,5 +24,5 @@ Then run the GUI:
 - command line:
 
 ```
-  Java -cp target/classes/ Main
+  java -cp target/classes/ Main
 ```

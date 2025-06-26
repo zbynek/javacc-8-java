@@ -100,7 +100,7 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class Node ${NODE_EXTENDS?extends ${N
 #if VISITOR
   /** Accept the visitor. */
 #if VISITOR_EXCEPTION
-  public ${VISITOR_RETURN_TYPE} jjtAccept(${final PARSER_NAME}Visitor visitor, ${VISITOR_DATA_TYPE:-Object} data)
+  public ${VISITOR_RETURN_TYPE} jjtAccept(final ${PARSER_NAME}Visitor visitor, ${VISITOR_DATA_TYPE:-Object} data)
       throws ${VISITOR_EXCEPTION} {
 #else
   public ${VISITOR_RETURN_TYPE} jjtAccept(final ${PARSER_NAME}Visitor visitor, ${VISITOR_DATA_TYPE:-Object} data) {
@@ -114,7 +114,7 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class Node ${NODE_EXTENDS?extends ${N
 
   /** Visit accepted. **/
 #if VISITOR_EXCEPTION
-  public Object childrenAcceptfinal (${PARSER_NAME}Visitor visitor, ${VISITOR_DATA_TYPE:-Object} data)
+  public Object childrenAccept(final ${PARSER_NAME}Visitor visitor, ${VISITOR_DATA_TYPE:-Object} data)
       throws ${VISITOR_EXCEPTION} {
 #else
   public ${VISITOR_RETURN_TYPE} childrenAccept(final ${PARSER_NAME}Visitor visitor, ${VISITOR_DATA_TYPE:-Object} data) {

@@ -78,186 +78,6 @@ class JJTreeCodeGenerator extends DefaultJJTreeVisitor {
     return null;
   }
 
-  @Override
-  public Object visit(final ASTGrammar node, final Object data) {
-    final IO io = (IO) data;
-    io.println(
-        "/*@bgen(jjtree) "
-            + JavaCCGlobals.getIdString("JJTree", new File(io.getOutputFileName()).getName())
-            + " */");
-    io.print("/*@egen*/");
-    return node.childrenAccept(this, io);
-  }
-
-  @Override
-  public Object visit(final ASTBNFAction node, final Object data) {
-    /*
-     * Assume that this action requires an early node close,
-     *  and then try to decide whether this assumption is false.
-     * Do this by looking outwards through the enclosing expansion units.
-     * If we ever find that we are enclosed in a unit which is not the final unit in a sequence
-     *  we know that an early close is not required.
-     */
-    final IO io = (IO) data;
-    final NodeScope ns = NodeScope.getEnclosingNodeScope(node);
-    if ((ns != null) && !ns.isVoid()) {
-      boolean needClose = true;
-      final Node sp = node.getScopingParent(ns);
-      JJTreeNode n = node;
-
-      while (true) {
-        final Node p = n.jjtGetParent();
-        if ((p instanceof ASTBNFSequence) || (p instanceof ASTBNFTryBlock)) {
-          if (n.getOrdinal() != (p.jjtGetNumChildren() - 1)) {
-            /* We're not the final unit in the sequence. */
-            needClose = false;
-            break;
-          }
-        } else if ((p instanceof ASTBNFZeroOrOne)
-            || (p instanceof ASTBNFZeroOrMore)
-            || (p instanceof ASTBNFOneOrMore)) {
-          needClose = false;
-          break;
-        }
-        if (p == sp) {
-          /* No more parents to look at. */
-          break;
-        }
-        n = (JJTreeNode) p;
-      }
-
-      if (needClose) {
-        JJTreeCodeGenerator.openJJTreeComment(io, null);
-        io.println();
-        insertCloseNodeAction(ns, io, getIndentation(node));
-        JJTreeCodeGenerator.closeJJTreeComment(io);
-      }
-    }
-    return visit((JJTreeNode) node, io);
-  }
-
-  @Override
-  public Object visit(final ASTBNFDeclaration node, final Object data) {
-    final IO io = (IO) data;
-    if (!node.node_scope.isVoid()) {
-      String indent = "";
-      if (TokenUtils.hasTokens(node)) {
-        for (int i = 1; i < node.getFirstToken().beginColumn; ++i) {
-          indent += " ";
-        }
-      } else {
-        indent = "  ";
-      }
-      JJTreeCodeGenerator.openJJTreeComment(io, node.node_scope.getNodeDescriptorText());
-      io.println();
-      insertOpenNodeCode(node.node_scope, io, indent);
-      JJTreeCodeGenerator.closeJJTreeComment(io);
-    }
-    return visit((JJTreeNode) node, io);
-  }
-
-  @Override
-  public Object visit(final ASTBNFNodeScope node, final Object data) {
-    final IO io = (IO) data;
-    if (node.node_scope.isVoid()) {
-      return visit((JJTreeNode) node, io);
-    }
-
-    final String indent = getIndentation(node.expansion_unit);
-    JJTreeCodeGenerator.openJJTreeComment(io, node.node_scope.getNodeDescriptor().getDescriptor());
-    io.println();
-    tryExpansionUnit(node.node_scope, io, indent, node.expansion_unit);
-    return null;
-  }
-
-  @Override
-  public Object visit(final ASTCompilationUnit node, final Object data) {
-    final IO io = (IO) data;
-    Token t = node.getFirstToken();
-    while (true) {
-      if (t == JJTreeGlobals.parserImports) {
-
-        // If the parser and nodes are in separate packages (NODE_PACKAGE specified in OPTIONS),
-        //  then generate an import for the node package.
-        if (!JJTreeGlobals.nodePackageName.equals("")
-            && !JJTreeGlobals.nodePackageName.equals(JJTreeGlobals.packageName)) {
-          io.getOut().println("");
-          io.getOut().println("import " + JJTreeGlobals.nodePackageName + ".*;");
-        }
-      }
-
-      if (t == JJTreeGlobals.parserImplements) {
-        if (t.image.equals("implements")) {
-          node.print(t, io);
-          JJTreeCodeGenerator.openJJTreeComment(io, null);
-          io.getOut().print(" " + JavaTemplates.nodeConstants() + ", ");
-          JJTreeCodeGenerator.closeJJTreeComment(io);
-        } else {
-          // Token t is pointing at the opening brace of the class body.
-          JJTreeCodeGenerator.openJJTreeComment(io, null);
-          io.getOut().print("implements " + JavaTemplates.nodeConstants());
-          JJTreeCodeGenerator.closeJJTreeComment(io);
-          node.print(t, io);
-        }
-      } else {
-        node.print(t, io);
-      }
-
-      if (t == JJTreeGlobals.parserClassBodyStart) {
-        final String treeClazzName = "JJT" + JJTreeGlobals.parserName + "State";
-        JJTreeCodeGenerator.openJJTreeComment(io, null);
-        io.println();
-        io.println(
-            "  protected "
-                + JavaUtil.getStatic()
-                + treeClazzName
-                + " jjtree = new "
-                + treeClazzName
-                + "();");
-        io.println();
-        JJTreeCodeGenerator.closeJJTreeComment(io);
-      }
-
-      if (t == node.getLastToken()) {
-        return null;
-      }
-      t = t.next;
-    }
-  }
-
-  @Override
-  public Object visit(final ASTExpansionNodeScope node, final Object data) {
-    final IO io = (IO) data;
-    final String indent = getIndentation(node.expansion_unit);
-    JJTreeCodeGenerator.openJJTreeComment(io, node.node_scope.getNodeDescriptor().getDescriptor());
-    io.println();
-    insertOpenNodeAction(node.node_scope, io, indent);
-    tryExpansionUnit(node.node_scope, io, indent, node.expansion_unit);
-    // Print the "whiteOut" equivalent of the Node descriptor to preserve
-    //  line numbers in the generated file.
-    ((ASTNodeDescriptor) node.jjtGetChild(1)).jjtAccept(this, io);
-    return null;
-  }
-
-  @Override
-  public Object visit(final ASTJavacodeBody node, final Object data) {
-    final IO io = (IO) data;
-    if (node.node_scope.isVoid()) {
-      return visit((JJTreeNode) node, io);
-    }
-
-    final Token first = node.getFirstToken();
-    String indent = "";
-    for (int i = 4; i < first.beginColumn; ++i) {
-      indent += " ";
-    }
-    JJTreeCodeGenerator.openJJTreeComment(io, node.node_scope.getNodeDescriptorText());
-    io.println();
-    insertOpenNodeCode(node.node_scope, io, indent);
-    tryTokenSequence(node.node_scope, io, indent, first, node.getLastToken());
-    return null;
-  }
-
   /**
    * This method prints the tokens corresponding to this node recursively calling the print methods
    * of its children. Overriding this print method in appropriate nodes gives the output the added
@@ -299,6 +119,194 @@ class JJTreeCodeGenerator extends DefaultJJTreeVisitor {
     return null;
   }
 
+  @Override
+  public Object visit(final ASTGrammar node, final Object data) {
+    final IO io = (IO) data;
+    io.println(
+        "/*@bgen(jjtree) "
+            + JavaCCGlobals.getIdString("JJTree", new File(io.getOutputFileName()).getName())
+            + " */");
+    io.println("/*@egen*/");
+    return node.childrenAccept(this, io);
+  }
+
+  @Override
+  public Object visit(final ASTCompilationUnit node, final Object data) {
+    final IO io = (IO) data;
+    Token t = node.getFirstToken();
+    while (true) {
+      if (t == JJTreeGlobals.parserImports) {
+
+        // If the parser and nodes are in separate packages (NODE_PACKAGE specified in OPTIONS),
+        //  then generate an import for the node package.
+        if (!JJTreeGlobals.nodePackageName.equals("")
+            && !JJTreeGlobals.nodePackageName.equals(JJTreeGlobals.packageName)) {
+          io.getOut().println("");
+          io.getOut().println("import " + JJTreeGlobals.nodePackageName + ".*;");
+        }
+      }
+
+      if (t == JJTreeGlobals.parserImplements) {
+        if (t.image.equals("implements")) {
+          node.print(t, io);
+          JJTreeCodeGenerator.openJJTreeComment(io, null);
+          io.getOut().print(" " + JavaTemplates.nodeConstants() + ", ");
+          JJTreeCodeGenerator.closeJJTreeComment(io);
+        } else {
+          // Token t is pointing at the opening brace of the class body.
+          io.getOut().print(" ");
+          JJTreeCodeGenerator.openJJTreeComment(io, null);
+          io.getOut().print(" implements " + JavaTemplates.nodeConstants() + " ");
+          JJTreeCodeGenerator.closeJJTreeComment(io);
+          node.print(t, io);
+        }
+      } else {
+        node.print(t, io);
+      }
+
+      if (t == JJTreeGlobals.parserClassBodyStart) {
+        final String treeClazzName = "JJT" + JJTreeGlobals.parserName + "State";
+        io.println();
+        io.print("  ");
+        JJTreeCodeGenerator.openJJTreeComment(io, "state");
+        io.println();
+        io.println(
+            "  protected "
+                + JavaUtil.getStatic()
+                + treeClazzName
+                + " jjtree = new "
+                + treeClazzName
+                + "();");
+        io.print("  ");
+        JJTreeCodeGenerator.closeJJTreeComment(io);
+      }
+
+      if (t == node.getLastToken()) {
+        return null;
+      }
+      t = t.next;
+    }
+  }
+
+  @Override
+  public Object visit(final ASTBNFDeclaration node, final Object data) {
+    final IO io = (IO) data;
+    if (!node.node_scope.isVoid()) {
+      String indent = "";
+      if (TokenUtils.hasTokens(node)) {
+        for (int i = 1; i < node.getFirstToken().beginColumn; ++i) {
+          indent += " ";
+        }
+      } else {
+        indent = "  ";
+      }
+      io.println();
+      JJTreeCodeGenerator.openJJTreeComment(io, node.node_scope.getNodeDescriptorText());
+      io.println();
+      insertOpenNodeCode(node.node_scope, io, indent);
+      JJTreeCodeGenerator.closeJJTreeComment(io);
+    }
+    return visit((JJTreeNode) node, io);
+  }
+
+  @Override
+  public Object visit(final ASTBNFNodeScope node, final Object data) {
+    final IO io = (IO) data;
+    if (node.node_scope.isVoid()) {
+      return visit((JJTreeNode) node, io);
+    }
+    final String indent = getIndentation(node.expansion_unit);
+    io.println();
+    JJTreeCodeGenerator.openJJTreeComment(
+        io, node.node_scope.getNodeDescriptor().getDescriptor() + " (bns)");
+    io.println();
+    tryExpansionUnit(node.node_scope, io, indent, node.expansion_unit);
+    return null;
+  }
+
+  @Override
+  public Object visit(final ASTExpansionNodeScope node, final Object data) {
+    final IO io = (IO) data;
+    final String indent = getIndentation(node.expansion_unit);
+    io.println();
+    JJTreeCodeGenerator.openJJTreeComment(
+        io, node.node_scope.getNodeDescriptor().getDescriptor() + " (ens)");
+    insertOpenNodeAction(node.node_scope, io, indent);
+    tryExpansionUnit(node.node_scope, io, indent, node.expansion_unit);
+    // Print the "whiteOut" equivalent of the Node descriptor to preserve
+    //  line numbers in the generated file.
+    ((ASTNodeDescriptor) node.jjtGetChild(1)).jjtAccept(this, io);
+    return null;
+  }
+
+  @Override
+  public Object visit(final ASTBNFAction node, final Object data) {
+    /*
+     * Assume that this action requires an early node close,
+     *  and then try to decide whether this assumption is false.
+     * Do this by looking outwards through the enclosing expansion units.
+     * If we ever find that we are enclosed in a unit which is not the final unit in a sequence
+     *  we know that an early close is not required.
+     */
+    final IO io = (IO) data;
+    final NodeScope ns = NodeScope.getEnclosingNodeScope(node);
+    if ((ns != null) && !ns.isVoid()) {
+      boolean needClose = true;
+      final Node sp = node.getScopingParent(ns);
+      JJTreeNode n = node;
+
+      while (true) {
+        final Node p = n.jjtGetParent();
+        if ((p instanceof ASTBNFSequence) || (p instanceof ASTBNFTryBlock)) {
+          if (n.getOrdinal() != (p.jjtGetNumChildren() - 1)) {
+            /* We're not the final unit in the sequence. */
+            needClose = false;
+            break;
+          }
+        } else if ((p instanceof ASTBNFZeroOrOne)
+            || (p instanceof ASTBNFZeroOrMore)
+            || (p instanceof ASTBNFOneOrMore)) {
+          needClose = false;
+          break;
+        }
+        if (p == sp) {
+          /* No more parents to look at. */
+          break;
+        }
+        n = (JJTreeNode) p;
+      }
+
+      if (needClose) {
+        io.println();
+        JJTreeCodeGenerator.openJJTreeComment(io, "BNFAction");
+        io.println();
+        insertCloseNodeAction(ns, io, getIndentation(node));
+        JJTreeCodeGenerator.closeJJTreeComment(io);
+      }
+    }
+    return visit((JJTreeNode) node, io);
+  }
+
+  @Override
+  public Object visit(final ASTJavacodeBody node, final Object data) {
+    final IO io = (IO) data;
+    if (node.node_scope.isVoid()) {
+      return visit((JJTreeNode) node, io);
+    }
+
+    final Token first = node.getFirstToken();
+    String indent = "";
+    for (int i = 4; i < first.beginColumn; ++i) {
+      indent += " ";
+    }
+    io.println();
+    JJTreeCodeGenerator.openJJTreeComment(io, node.node_scope.getNodeDescriptorText());
+    io.println();
+    insertOpenNodeCode(node.node_scope, io, indent);
+    tryTokenSequence(node.node_scope, io, indent, first, node.getLastToken());
+    return null;
+  }
+
   private static void openJJTreeComment(final IO io, final String arg) {
     if (arg != null) {
       io.print("/*@bgen(jjtree) " + arg + " */");
@@ -333,7 +341,6 @@ class JJTreeCodeGenerator extends DefaultJJTreeVisitor {
     }
     // Ensure that there is a template definition file for the node type.
     nodeFiles.generateNodeType(type);
-
     io.print(indent + nodeClass + " " + ns.nodeVar + " = ");
     final String p = Options.getStatic() ? "null" : "this";
     final String parserArg = context.treeOptions().getNodeUsesParser() ? (p + ", ") : "";
@@ -437,22 +444,20 @@ class JJTreeCodeGenerator extends DefaultJJTreeVisitor {
     }
   }
 
-  private void tryTokenSequence(
-      final NodeScope ns, final IO io, final String indent, final Token first, final Token last) {
+  private void tryExpansionUnit(
+      final NodeScope ns, final IO io, final String indent, final JJTreeNode expansion_unit) {
     io.println(indent + "try {");
     JJTreeCodeGenerator.closeJJTreeComment(io);
 
-    /*
-     * Print out all the tokens, converting all references to `jjtThis' into the current node variable.
-     */
-    for (Token t = first; t != last.next; t = t.next) {
-      TokenUtils.print(t, io, "jjtThis", ns.nodeVar);
-    }
+    expansion_unit.jjtAccept(this, io);
 
-    JJTreeCodeGenerator.openJJTreeComment(io, null);
+    io.println();
+    JJTreeCodeGenerator.openJJTreeComment(io, "catch (bns)");
     io.println();
 
-    final Enumeration<String> thrown_names = ns.production.throws_list.elements();
+    final Hashtable<String, String> thrown_set = new Hashtable<>();
+    JJTreeCodeGenerator.findThrown(ns, thrown_set, expansion_unit);
+    final Enumeration<String> thrown_names = thrown_set.elements();
     insertCatchBlocks(ns, io, thrown_names, indent);
 
     io.println(indent + "} finally {");
@@ -488,19 +493,22 @@ class JJTreeCodeGenerator extends DefaultJJTreeVisitor {
     }
   }
 
-  private void tryExpansionUnit(
-      final NodeScope ns, final IO io, final String indent, final JJTreeNode expansion_unit) {
+  private void tryTokenSequence(
+      final NodeScope ns, final IO io, final String indent, final Token first, final Token last) {
+    io.println();
     io.println(indent + "try {");
     JJTreeCodeGenerator.closeJJTreeComment(io);
 
-    expansion_unit.jjtAccept(this, io);
+    // Print out all the tokens, converting references to `jjtThis' into the current node variable.
+    for (Token t = first; t != last.next; t = t.next) {
+      TokenUtils.print(t, io, "jjtThis", ns.nodeVar);
+    }
 
-    JJTreeCodeGenerator.openJJTreeComment(io, null);
+    io.println();
+    JJTreeCodeGenerator.openJJTreeComment(io, "catch (ens)");
     io.println();
 
-    final Hashtable<String, String> thrown_set = new Hashtable<>();
-    JJTreeCodeGenerator.findThrown(ns, thrown_set, expansion_unit);
-    final Enumeration<String> thrown_names = thrown_set.elements();
+    final Enumeration<String> thrown_names = ns.production.throws_list.elements();
     insertCatchBlocks(ns, io, thrown_names, indent);
 
     io.println(indent + "} finally {");

@@ -54,14 +54,14 @@ final class NodeFiles {
   }
 
   void generateOutputFiles(final JJTreeContext context) throws IOException {
-    NodeFiles.generateDefaultNode(context);
+    generateBaseNodes(context);
     generateTreeNodes(context);
     generateTreeConstants(context);
     generateVisitor(context);
     generateDefaultVisitor(context);
   }
 
-  private static void generateDefaultNode(final JJTreeContext context) throws IOException {
+  private static void generateBaseNodes(final JJTreeContext context) throws IOException {
     final CodeGeneratorSettings options = CodeGeneratorSettings.of(Options.getOptions());
     options.set(Options.NUO__PARSER_NAME, JJTreeGlobals.parserName);
     options.set(
@@ -78,7 +78,7 @@ final class NodeFiles {
           "VISITOR_DATA_TYPE",
           "VISITOR_EXCEPTION",
           "VISITOR_RETURN_TYPE");
-      NodeFiles.generateProlog(jcb);
+      generateProlog(jcb);
       jcb.printTemplate("/templates/java/Tree.template");
     }
 
@@ -96,7 +96,7 @@ final class NodeFiles {
           "VISITOR_EXCEPTION",
           "VISITOR_RETURN_TYPE",
           "VISITOR_RETURN_TYPE_VOID");
-      NodeFiles.generateProlog(jcb);
+      generateProlog(jcb);
       jcb.printTemplate("/templates/java/Node.template");
     }
   }
@@ -130,7 +130,7 @@ final class NodeFiles {
           "VISITOR_METHOD_NAME_INCLUDES_TYPE_NAME",
           "VISITOR_RETURN_TYPE");
 
-      NodeFiles.generateProlog(jcb);
+      generateProlog(jcb);
       jcb.println("/* ");
       jcb.println(
           " * Option MULTI set to true produces this file containing the set of all generated node classes");
@@ -161,7 +161,7 @@ final class NodeFiles {
           new File(
               context.treeOptions().getJJTreeOutputDirectory(),
               JavaTemplates.nodeConstants() + ".java"));
-      NodeFiles.generateProlog(jcb);
+      generateProlog(jcb);
 
       jcb.println("public interface " + JavaTemplates.nodeConstants(), " {");
       jcb.println("");
@@ -187,7 +187,7 @@ final class NodeFiles {
     }
 
     final List<String> nodeNames = ASTNodeDescriptor.getNodeNames();
-    final String ve = NodeFiles.mergeVisitorException(context);
+    final String ve = mergeVisitorException(context);
     String argumentType = "Object";
     if (!context.treeOptions().getVisitorDataType().equals("")) {
       argumentType = context.treeOptions().getVisitorDataType();
@@ -199,7 +199,7 @@ final class NodeFiles {
           new File(
               context.treeOptions().getJJTreeOutputDirectory(),
               JavaTemplates.visitorClass() + ".java"));
-      NodeFiles.generateProlog(jcb);
+      generateProlog(jcb);
       jcb.println("public interface " + JavaTemplates.visitorClass() + " {");
       jcb.println(
           "  public ",
@@ -218,7 +218,7 @@ final class NodeFiles {
                 "  public ",
                 context.treeOptions().getVisitorReturnType(),
                 " ",
-                NodeFiles.getVisitMethodName(nodeType),
+                getVisitMethodName(nodeType),
                 "(final ",
                 nodeType,
                 " node, ",
@@ -240,7 +240,7 @@ final class NodeFiles {
       return;
     }
 
-    final String ve = NodeFiles.mergeVisitorException(context);
+    final String ve = mergeVisitorException(context);
     final String ret = context.treeOptions().getVisitorReturnType();
     String argumentType = "Object";
     if (!context.treeOptions().getVisitorDataType().equals("")) {
@@ -253,7 +253,7 @@ final class NodeFiles {
           new File(
               context.treeOptions().getJJTreeOutputDirectory(),
               JavaTemplates.defaultVisitorClass() + ".java"));
-      NodeFiles.generateProlog(jcb);
+      generateProlog(jcb);
 
       jcb.println(
           "public class ",
@@ -290,7 +290,7 @@ final class NodeFiles {
               "  public ",
               ret,
               " ",
-              NodeFiles.getVisitMethodName(nodeType),
+              getVisitMethodName(nodeType),
               "(final ",
               nodeType,
               " node, ",
