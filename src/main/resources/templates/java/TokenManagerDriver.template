@@ -287,11 +287,15 @@ ${decls}
           try {
             curChar = input_stream.readChar();
 #if DEBUG_TOKEN_MANAGER
-            if (trace_enabled()) System.err.print(
-                 "Read next char for a MORE: " + disp_char(curChar) + " (tm)");
+            if (trace_enabled()) System.err.println(
+                  "Read next char for a MORE: " + disp_char(curChar) +
+#if KEEP_LINE_COLUMN
+                  ", @ " + input_stream.getBeginLine() + ":" + input_stream.getBeginColumn() +
+#fi
+                  " (tm)");
 #fi
 #if IGNORE_CASE
-            curChar = (int)Character.toLowerCase((char) curChar);
+            curChar = (int) Character.toLowerCase((char) curChar);
 #fi
             continue;
           } catch (java.io.IOException e1) {

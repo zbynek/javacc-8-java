@@ -5,16 +5,16 @@
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the names of the copyright holders nor the names of its
+ *     * Neither the name of the Sun Microsystems, Inc. nor the names of its
  *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -31,7 +31,7 @@ options
 {
   BUILD_PARSER = false;
   USER_CHAR_STREAM = true;
-  DEBUG_TOKEN_MANAGER = true; // (JavaCC - default false)
+//  DEBUG_TOKEN_MANAGER = true; // (JavaCC - default false)
 }
 
 PARSER_BEGIN(CalcInputParser)
@@ -44,256 +44,177 @@ PARSER_END(CalcInputParser)
  * This example shows an elaborate example to construct a Finite Automaton,
  * where for every character there is a move.
  */
-TOKEN_MGR_DECLS :
+TOKEN_MGR_DECLS:
 {
   /** A pointer to the GUI object. */
-  static CalcGUI gui;
-  
-  /** Holds the current value of the current operand. */
-  static double value = 0.0;
-  
+   static CalcGUI gui;
+
   /** Holds the result of the expression evaluation so far. */
-  static double result = 0.0;
-  
+   static double result = 0.0;
+
   /** Flag to indicate the very first operand so that the correct result is displayed in this case. */
-  static boolean firstOperand = true;
-  
-  private static void setValue()
-  {
-    dumpInfo();
-    value = image.length() > 0 ? Double.valueOf(image.toString()).doubleValue() : 0.0;
-    image.setLength(0);
-    jjimageLen = 0;
-    System.out.println("--> value = " + value + ", firstOperand = " + firstOperand);
-  }
-  
-  private static void showValue()
-  {
-    System.out.println("==> value = " + value + ", result = " + result + ", firstOperand = " + firstOperand);
-    dumpInfo();
-    gui.print(value);
-  }
-  
+   static boolean firstOperand = true;
+
   /** Shows the result. */
   private static void ShowResult()
   {
-    System.out.println("==> result = " + result + ", value = " + value + ", firstOperand = " + firstOperand);
-    dumpInfo();
+    if (firstOperand)
+    {
+      String s = input_stream.GetImage();
+//      System.err.println("first operand; s = <" + s + ">");
+      if (s.length() > 0)
+      {
+        if (s.length() > 1)
+        {
+          // remove the operator character
+          s = s.substring(0, s.length() - 1);
+        }
+        result = Double.valueOf(s).doubleValue();
+      }
+      else
+      {
+        result = 0.0;
+      }
+      firstOperand = false;
+//    } el m.err.println("not first operand");
+    }
     gui.print(result);
-  }
-  
-  private static void dumpInfo()
-  {
-    System.out.println(">>> buffer = <" + String.valueOf(((CharCollector) input_stream).buffer) +">");
-    System.out.println(">>> lengthOfMatch = " + lengthOfMatch + ", jjmatchedPos = " + jjmatchedPos + ", jjimageLen = " + jjimageLen);
-    System.out.println(">>> image = <" + image +">");
-    System.out.println(">>> input_stream.GetSuffix(jjimageLen) = <" + String.valueOf(input_stream.GetSuffix(jjimageLen)) +">");
   }
 }
 
 /**
  * The first operand
  */
-< OPERAND > MORE :
+<OPERAND> MORE :
 {
-  < DIGIT_OPE : ["0" - "9"] > 
-  {
-    System.out.println("... < OPERAND > MORE : < [0 - 9] >");
-    setValue();
-  }
-| 
-  < DOT_OPE : "." >
-  : REQUIRED_DIGIT
+  < ["0"-"9"] >
+|
+  "." : REQUIRED_DIGIT
 }
 
 /**
  * This state is entered when we need to get at least one digit (after a .)
  */
-< REQUIRED_DIGIT > MORE :
+<REQUIRED_DIGIT> MORE :
 {
-  < DIGIT_REQ : ["0" - "9"] >
-  {
-    System.out.println("... < REQUIRED_DIGIT > MORE : < [0 - 9] >");
-    setValue();
-  }
-  : OPTIONAL_DIGIT
+  < ["0"-"9"] > : OPTIONAL_DIGIT
 }
 
 /**
  * FA for (["0"-"9"])*.
  */
-< OPTIONAL_DIGIT > MORE :
+<OPTIONAL_DIGIT> MORE :
 {
-  < DIGIT_OPT : ["0" - "9"] >
-  {
-    System.out.println("... < OPTIONAL_DIGIT > MORE : < [0 - 9] >");
-    setValue();
-  }
+  < ["0"-"9"] >
 }
 
 /**
  * You can get an operator at any time (in any lexical state), except when a digit is required (after a .).
  * Then just go to a state where the next operand is scanned (for that particular operator).
  */
-< OP_OR_OPERAND, OPERAND, OPTIONAL_DIGIT, OP_LOOP > SKIP :
+<OP_OR_OPERAND, OPERAND, OPTIONAL_DIGIT, OP_LOOP> SKIP :
 {
-  < PLUS : "+" >
-  {
-    System.out.println("+++ < OP_OR_OPERAND, OPERAND, OPTIONAL_DIGIT, OP_LOOP > SKIP : < + >");
-    showValue();
-  }
-  : SEEN_PLUS 
-| 
-  < MINUS : "-" >
-  { showValue(); }
-  : SEEN_MINUS 
-| 
-  < STAR : "*" >
-  { showValue(); }
-  : SEEN_STAR 
-| 
-  < SLASH : "/" >
-  { showValue(); }
-  : SEEN_SLASH
+  < PLUS : "+" >  { ShowResult(); } : SEEN_PLUS
+|
+  < MINUS : "-" > { ShowResult(); } : SEEN_MINUS
+|
+  < STAR : "*" >  { ShowResult(); } : SEEN_STAR
+|
+  < SLASH : "/" > { ShowResult(); } : SEEN_SLASH
 }
 
 /**
  * If you get a = in any state, just display the current result.
  */
-< OPERAND, OPTIONAL_DIGIT, OP_LOOP > SKIP :
-//< SEEN_PLUS, ADD_RIGHT_OPERAND, DO_ADD, OPERAND, OPTIONAL_DIGIT, OP_LOOP > SKIP :
+<OPERAND, OPTIONAL_DIGIT, OP_LOOP> SKIP :
 {
-  < EQ1 : "=" >
-  {
-    System.out.println("=== < OPERAND, OPTIONAL_DIGIT, OP_LOOP > SKIP : < EQ >");
-//    System.out.println("=== < SEEN_PLUS, ADD_RIGHT_OPERAND, DO_ADD, OPERAND, OPTIONAL_DIGIT, OP_LOOP > SKIP : < = >");
-    ShowResult();
-  }
-  : OP_OR_OPERAND
+  < EQ : "=" > { ShowResult(); } : OP_OR_OPERAND
 }
 
 /**
  * Here you can either give an operand (to start a new expression)
  * or give an operator that works on the current result.
  */
-< OP_OR_OPERAND > SKIP :
+<OP_OR_OPERAND> SKIP :
 {
-  < EQ2 : "=" >
-  {
-    System.out.println("=2= < OP_OR_OPERAND > SKIP : < = >");
-    dumpInfo();
-  }
+  "="
 }
 
-< OP_OR_OPERAND > MORE :
+<OP_OR_OPERAND> MORE :
 {
-  < DIGIT_OOO : ["0" - "9"] >
-  {
-    System.out.println("0-9 < OP_OR_OPERAND > MORE : < [0 - 9] >");
-    dumpInfo();
-    firstOperand = true;
-  }
-  : OPERAND 
-| 
-  < DOT_OOO : "." >
-  { firstOperand = true; }
-  : REQUIRED_DIGIT
+  < ["0"-"9"] > { firstOperand = true; } : OPERAND
+|
+  "." { firstOperand = true; } : REQUIRED_DIGIT
 }
 
-< SEEN_PLUS, ADD_RIGHT_OPERAND > MORE :
+<SEEN_PLUS, ADD_RIGHT_OPERAND> MORE :
 {
-  < DIGIT_ADD1 : ["0" - "9"] >
-  {
-    System.out.println("0-9 < SEEN_PLUS, ADD_RIGHT_OPERAND > MORE : < [0 - 9] >");
-    firstOperand = true;
-    setValue();
-  }
-  : ADD_RIGHT_OPERAND 
-| 
-  < DOT_ADD : "." >
-  : ADD_REQUIRED_DIGIT
+  < ["0"-"9"] > : ADD_RIGHT_OPERAND
+|
+  "." : ADD_REQUIRED_DIGIT
 }
 
-< DO_ADD, ADD_REQUIRED_DIGIT > MORE :
+<DO_ADD, ADD_REQUIRED_DIGIT> MORE :
 {
-  < DIGIT_ADD2 : ["0" - "9"] >
-  : DO_ADD
+  < ["0"-"9"] > : DO_ADD
 }
 
-< DO_ADD, ADD_RIGHT_OPERAND > SKIP :
+<DO_ADD, ADD_RIGHT_OPERAND> SKIP :
 {
-  < EMPTY_ADD : "" >
-  {
-    System.out.println("+++. < DO_ADD, ADD_RIGHT_OPERAND > SKIP : < >");
-    dumpInfo();
-//    result += Double.valueOf(image.toString()).doubleValue();
-    result += value;
-  }
-  : OP_LOOP
+  ""
+  { result += Double.valueOf(input_stream.GetImage()).doubleValue(); } : OP_LOOP
 }
 
-< SEEN_MINUS, SUB_RIGHT_OPERAND > MORE :
+<SEEN_MINUS, SUB_RIGHT_OPERAND> MORE :
 {
-  < DIGIT_SUB1 : ["0" - "9"] >
-  : SUB_RIGHT_OPERAND 
-| 
-  < DOT_SUB : "." >
-  : SUB_REQUIRED_DIGIT
+  < ["0"-"9"] > : SUB_RIGHT_OPERAND
+|
+  "." : SUB_REQUIRED_DIGIT
 }
 
-< DO_SUB, SUB_REQUIRED_DIGIT > MORE :
+<DO_SUB, SUB_REQUIRED_DIGIT> MORE :
 {
-  < DIGIT_SUB2 : ["0" - "9"] >
-  : DO_SUB
+  < ["0"-"9"] > : DO_SUB
 }
 
-< DO_SUB, SUB_RIGHT_OPERAND > SKIP :
+<DO_SUB, SUB_RIGHT_OPERAND> SKIP :
 {
-  < EMPTY_SUB : "" >
-  { result -= Double.valueOf(image.toString()).doubleValue(); }
-  : OP_LOOP
+  ""
+  { result -= Double.valueOf(input_stream.GetImage()).doubleValue(); } : OP_LOOP
 }
 
-< SEEN_STAR, MUL_RIGHT_OPERAND > MORE :
+<SEEN_STAR, MUL_RIGHT_OPERAND> MORE :
 {
-  < DIGIT_MUL1 : ["0" - "9"] >
-  : MUL_RIGHT_OPERAND 
-| 
-  < DOT_MUL : "." >
-  : MUL_REQUIRED_DIGIT
+  < ["0"-"9"] > : MUL_RIGHT_OPERAND
+|
+  "." : MUL_REQUIRED_DIGIT
 }
 
-< DO_MUL, MUL_REQUIRED_DIGIT > MORE :
+<DO_MUL, MUL_REQUIRED_DIGIT> MORE :
 {
-  < DIGIT_MUL2 : ["0" - "9"] >
-  : DO_MUL
+  < ["0"-"9"] > : DO_MUL
 }
 
-< DO_MUL, MUL_RIGHT_OPERAND > SKIP :
+<DO_MUL, MUL_RIGHT_OPERAND> SKIP :
 {
-  < EMPTY_MUL : "" >
-  { result *= Double.valueOf(image.toString()).doubleValue(); }
-  : OP_LOOP
+  ""
+  { result *= Double.valueOf(input_stream.GetImage()).doubleValue(); } : OP_LOOP
 }
 
-< SEEN_SLASH, DIV_RIGHT_OPERAND > MORE :
+<SEEN_SLASH, DIV_RIGHT_OPERAND> MORE :
 {
-  < DIGIT_DIV1 : ["0" - "9"] >
-  : DIV_RIGHT_OPERAND 
-| 
-  < DOT_DIV : "." >
-  : DIV_REQUIRED_DIGIT
+  < ["0"-"9"] > : DIV_RIGHT_OPERAND
+|
+  "." : DIV_REQUIRED_DIGIT
 }
 
-< DO_DIV, DIV_REQUIRED_DIGIT > MORE :
+<DO_DIV, DIV_REQUIRED_DIGIT> MORE :
 {
-  < DIGIT_DIV2 : ["0" - "9"] >
-  : DO_DIV
+  < ["0"-"9"] > : DO_DIV
 }
 
-< DO_DIV, DIV_RIGHT_OPERAND > SKIP :
+<DO_DIV, DIV_RIGHT_OPERAND> SKIP :
 {
-  < EMPTY_DIV : "" >
-  { result /= Double.valueOf(image.toString()).doubleValue(); }
-  : OP_LOOP
+  ""
+  { result /= Double.valueOf(input_stream.GetImage()).doubleValue(); } : OP_LOOP
 }
