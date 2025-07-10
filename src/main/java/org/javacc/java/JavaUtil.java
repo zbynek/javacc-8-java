@@ -42,6 +42,8 @@ abstract class JavaUtil {
 
   /**
    * The compiled regex to find the package name.<br>
+   * Allows invalid package names (like <code>a-b.0.*</code>), but allows valid ones with non ASCII
+   * characters (like <code>org.j_b.ßπ6</code>).<br>
    * It constrains that there is a line starting with the word <code>package</code> but it does not
    * ensure that it is not inside a block comment like:
    *
@@ -54,8 +56,8 @@ abstract class JavaUtil {
    */
   private static final Pattern PACKAGE_PATTERN =
       Pattern.compile(
-          //          "^package[^a-z]+([^;]+)", Pattern.CASE_INSENSITIVE
-          "^package\\s+(\\w+(\\.\\w+)*)\\s*;", Pattern.MULTILINE //
+          //          "package[^a-z]+([^;]+)", Pattern.CASE_INSENSITIVE
+          "^package\\s+([^\\.;]+(\\.[^\\.;]+)*)\\s*;", Pattern.MULTILINE //
           );
 
   private JavaUtil() {}
