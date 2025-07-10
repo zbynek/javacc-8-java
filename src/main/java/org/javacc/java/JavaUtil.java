@@ -40,8 +40,23 @@ import org.javacc.parser.Token;
 
 abstract class JavaUtil {
 
+  /**
+   * The compiled regex to find the package name.<br>
+   * It constrains that there is a line starting with the word <code>package</code> but it does not
+   * ensure that it is not inside a block comment like:
+   *
+   * <pre>
+   * &#47;&#42;
+   * package a.b.c;
+   * &#42;&#47;
+   * package d.e.f;
+   * </pre>
+   */
   private static final Pattern PACKAGE_PATTERN =
-      Pattern.compile("package[^a-z]+([^;]+)", Pattern.CASE_INSENSITIVE);
+      Pattern.compile(
+          //          "^package[^a-z]+([^;]+)", Pattern.CASE_INSENSITIVE
+          "^package\\s+(\\w+(\\.\\w+)*)\\s*;", Pattern.MULTILINE //
+          );
 
   private JavaUtil() {}
 
