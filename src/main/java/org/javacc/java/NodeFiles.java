@@ -110,45 +110,80 @@ final class NodeFiles {
     options.set(
         "VISITOR_RETURN_TYPE_VOID",
         Boolean.valueOf(context.treeOptions().getVisitorReturnType().equals("void")));
+    final File dir =
+        new File(
+            context.treeOptions().getNodeDirectory(),
+            context.treeOptions().getNodePackage().replace('.', File.separatorChar));
 
-    try (JavaCodeBuilder jcb = JavaCodeBuilder.of(context, options)) {
-      jcb.setFile(
-          new File(
-              context.treeOptions().getJJTreeOutputDirectory(),
-              JJTreeGlobals.parserName + "Tree.java"));
-      jcb.setVersion(Version.version).addTools(JJTreeGlobals.toolName);
-      jcb.addOption(
-          "NODE_CLASS",
-          "NODE_EXTENDS",
-          "NODE_FACTORY",
-          "NODE_PREFIX",
-          "NODE_USES_PARSER",
-          "TRACK_TOKENS",
-          "VISITOR",
-          "VISITOR_DATA_TYPE",
-          "VISITOR_EXCEPTION",
-          "VISITOR_METHOD_NAME_INCLUDES_TYPE_NAME",
-          "VISITOR_RETURN_TYPE");
+    if (context.treeOptions().getSingleTreeFile()) {
+      // one xxxTree.java file for all node classes, but they cannot be public
+      try (JavaCodeBuilder jcb = JavaCodeBuilder.of(context, options)) {
+        jcb.setVersion(Version.version).addTools(JJTreeGlobals.toolName);
+        jcb.addOption(
+            "NODE_CLASS",
+            "NODE_EXTENDS",
+            "NODE_FACTORY",
+            "NODE_PREFIX",
+            "NODE_USES_PARSER",
+            "TRACK_TOKENS",
+            "VISITOR",
+            "VISITOR_DATA_TYPE",
+            "VISITOR_EXCEPTION",
+            "VISITOR_METHOD_NAME_INCLUDES_TYPE_NAME",
+            "VISITOR_RETURN_TYPE");
+        jcb.setFile(
+            new File(
+                context.treeOptions().getJJTreeOutputDirectory(),
+                JJTreeGlobals.parserName + "Tree.java"));
+        generateProlog(jcb);
+        jcb.println("/* ");
+        jcb.println(
+            " * Option SINGLE_TREE_FILE set to true produces this file containing the set of all generated node classes");
+        jcb.println(" *  (those that are not user defined); it may be empty.");
+        jcb.println(" */");
+        jcb.println();
+        for (final String node : nodesToBuild) {
+          if (!new File(dir, node + ".java").exists()) {
+            options.set("NODE_TYPE", node);
+            jcb.printTemplate("/templates/java/MultiNode.template", options);
+            jcb.println();
+          } else {
+            jcb.println("/* Node class " + node + " not generated as custom node class found. */");
+            jcb.println();
+          }
+        }
+      } catch (final IOException e) {
+        throw new Error(e.toString());
+      }
 
-      generateProlog(jcb);
-      jcb.println("/* ");
-      jcb.println(
-          " * Option MULTI set to true produces this file containing the set of all generated node classes");
-      jcb.println(" *  (those that are not user defined); it may be empty.");
-      jcb.println(" */");
-      jcb.println();
-
-      final File path =
-          new File(
-              context.treeOptions().getNodeDirectory(), context.treeOptions().getNodePackage());
+    } else {
+      // one file per node class
       for (final String node : nodesToBuild) {
-        if (!new File(path, node + ".java").exists()) {
-          options.set("NODE_TYPE", node);
-          jcb.printTemplate("/templates/java/MultiNode.template", options);
+        if (!new File(dir, node + ".java").exists()) {
+          try (JavaCodeBuilder jcb = JavaCodeBuilder.of(context, options)) {
+            jcb.setVersion(Version.version).addTools(JJTreeGlobals.toolName);
+            jcb.addOption(
+                "NODE_CLASS",
+                "NODE_EXTENDS",
+                "NODE_FACTORY",
+                "NODE_PREFIX",
+                "NODE_USES_PARSER",
+                "TRACK_TOKENS",
+                "VISITOR",
+                "VISITOR_DATA_TYPE",
+                "VISITOR_EXCEPTION",
+                "VISITOR_METHOD_NAME_INCLUDES_TYPE_NAME",
+                "VISITOR_RETURN_TYPE");
+            options.set("NODE_TYPE", node);
+            jcb.setFile(new File(context.treeOptions().getJJTreeOutputDirectory(), node + ".java"));
+            generateProlog(jcb);
+            jcb.printTemplate("/templates/java/SingleNode.template", options);
+            jcb.println();
+          } catch (final IOException e) {
+            throw new Error(e.toString());
+          }
         }
       }
-    } catch (final IOException e) {
-      throw new Error(e.toString());
     }
   }
 
