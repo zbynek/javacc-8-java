@@ -309,7 +309,8 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
       // We have a lot of similar states. So factor them so we don't get "Code too large" errors.
       final TokenizerData.NfaState tmp = nfa.get(i);
       if (tmp == null) {
-        sb.append("      EMPTY_CHAR_DATA").append(EOL);
+        //        sb.append("      EMPTY_CHAR_DATA").append(EOL);
+        sb.append("      /* ").append(i).append(" */ EMPTY_CHAR_DATA").append(EOL);
       } else {
         charDataBuilder.append("new long[] {");
         final BitSet bits = new BitSet();
@@ -337,7 +338,8 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
           charDataVars.put(cdb, var);
           charDataCdbs.put(var, cdb);
         }
-        sb.append("      " + var);
+        //        sb.append("      " + var);
+        sb.append("      /* ").append(i).append(" */ ").append(var);
       }
     }
     if (!nfa.isEmpty()) {
@@ -374,9 +376,11 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
         jcb.println();
       }
       if (tmp == null || tmp.compositeStates.isEmpty()) {
-        jcb.print("    EMPTY_STATE_SET");
+        //        jcb.print("    EMPTY_STATE_SET");
+        jcb.print("    /* " + i + " */ EMPTY_STATE_SET");
       } else {
-        jcb.print("    new int[] { ");
+        //        jcb.print("    new int[] { ");
+        jcb.print("    /* " + i + " */ new int[] { ");
         int k = 0;
         for (final int st : tmp.compositeStates) {
           if (k++ > 0) {
@@ -404,7 +408,8 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
       } else {
         jcb.println();
       }
-      jcb.print("    ");
+      //      jcb.print("    ");
+      jcb.print("    /* " + i + " */ ");
       // TODO(sreeni) : Fix this mess.
       jcb.print(tmp == null ? Integer.MAX_VALUE : tmp.kind);
     }
@@ -426,10 +431,12 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
         jcb.println();
       }
       if (tmp == null || tmp.nextStates.isEmpty()) {
-        jcb.print("    EMPTY_STATE_SET");
+        //        jcb.print("    EMPTY_STATE_SET");
+        jcb.print("    /* " + i + " */ EMPTY_STATE_SET");
       } else {
         int k = 0;
-        jcb.print("    new int[] { ");
+        //        jcb.print("    new int[] { ");
+        jcb.print("    /* " + i + " */ new int[] { ");
         for (final int s : tmp.nextStates) {
           if (k++ > 0) {
             jcb.print(", ");

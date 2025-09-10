@@ -230,7 +230,8 @@ ${decls}
 #if DEBUG_TOKEN_MANAGER
             if (trace_enabled()) System.err.println(
                   "Found a TOKEN MATCH ***: <" + jjmatchedKind +
-                  " / \"" + ParseException.add_escapes(matchedToken.image) +
+                  " / " + tokenImage[jjmatchedKind] +
+                  " / \"" + add_escapes(matchedToken.image) +
                   "\"> at lexical state: " + curLexState + "; returning (tm)");
 #fi
             return matchedToken;
@@ -256,7 +257,7 @@ ${decls}
 #if DEBUG_TOKEN_MANAGER
             if (trace_enabled()) System.err.println(
                   "Found a SPECIAL_TOKEN match: <" + jjmatchedKind +
-                  " / \"" + ParseException.add_escapes(matchedToken.image) +
+                  " / \"" + add_escapes(matchedToken.image) +
                   "\"> at lexical state: " + curLexState + "; continuing (tm)");
 #fi
             if (specialToken == null) {
@@ -661,6 +662,51 @@ ${decls}
 
   static String disp_char(final int ic) {
     return "`" + String.valueOf(ic) + " / '" + add_escapes(ic) + "'´";
+  }
+
+  /**
+   * Used to convert raw characters to their escaped version when these raw version
+   *  cannot be used as part of an ASCII string literal.
+   */
+  static String add_escapes(String str) {
+    final StringBuilder retval = new StringBuilder();
+    char ch;
+    for (int i = 0; i < str.length(); i++) {
+      switch (str.charAt(i)) {
+        case '\b':
+          retval.append("\\b");
+          continue;
+        case '\t':
+          retval.append("\\t");
+          continue;
+        case '\n':
+          retval.append("\\n");
+          continue;
+        case '\f':
+          retval.append("\\f");
+          continue;
+        case '\r':
+          retval.append("\\r");
+          continue;
+        case '\"':
+          retval.append("\\\"");
+          continue;
+        case '\'':
+          retval.append("\\\'");
+          continue;
+        case '\\':
+          retval.append("\\\\");
+          continue;
+        default:
+          if ((ch = str.charAt(i)) < 0x20 || ch > 0x7e) {
+            String s = "0000" + Integer.toString(ch, 16);
+            retval.append("\\u" + s.substring(s.length() - 4, s.length()));
+          } else {
+            retval.append(ch);
+          }
+      }
+    }
+    return retval.toString();
   }
 
   /**

@@ -141,10 +141,13 @@ abstract class JavaHelperFiles {
       jcb.println("   * (for non labeled non string literals).");
       jcb.println("   */");
       jcb.println("  String[] tokenImage = {");
-      jcb.println("    \"<EOF>\",");
+      jcb.println("    /* 0 */ \"<EOF>\",");
+      int n = 1;
       for (final TokenProduction tp : context.globals().rexprlist) {
         for (final RegExprSpec res : tp.respecs) {
-          jcb.print("    ");
+          jcb.print("    /* ");
+          jcb.print(n++);
+          jcb.print(" */ ");
           if (!res.rexp.label.equals("")) {
             jcb.println("\"<" + res.rexp.label + ">\",");
           } else if (res.rexp instanceof RStringLiteral) {
