@@ -860,7 +860,9 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
         cb.println("    jj_nt = token;");
       }
       if (Options.getDebugLookahead()) {
-        cb.println("    if (kind >= 0) trace_expected(kind, token, loc);");
+        cb.print("    if (kind >= 0) trace_expected(kind, token");
+        if (Options.getErrorReporting()) cb.println(", loc");
+        cb.println(");");
       }
       cb.println("    token = oldToken;");
       if (Options.getErrorReporting()) {
@@ -1323,10 +1325,14 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
         cb.println();
 
         cb.println("  /** Parser trace for an expected but not matched token. */");
-        cb.println(
+        cb.print(
             "  protected "
                 + pStatic
-                + "void trace_expected(final int k1, final Token t2, final String loc) {");
+                + "void trace_expected(final int k1, final Token t2");
+        if (Options.getErrorReporting()) {
+          cb.print(", final String loc");
+        }
+        cb.println(") {");
         cb.println("    if (trace_enabled) {");
         cb.println("      for (int i = 0; i < trace_indent; i++) { System.out.print(\" \"); }");
         cb.println("      System.out.print(\"Expected token: <\" + k1);");
@@ -1334,7 +1340,7 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
         cb.println("        System.out.print(\" / \" + tokenImage[k1]);");
         cb.println("      }");
         cb.println("      System.out.print(\">\");");
-        if (Options.getKeepLineColumn()) {
+        if (Options.getErrorReporting()) {
           cb.println("      System.out.print(\", @ \" + loc + \",\");");
         }
         cb.println(
@@ -2865,10 +2871,13 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
         if (Options.getErrorReporting()) {
           cb.print("if (!jj_rescan) { ");
         }
-        cb.println(
+        cb.print(
             "trace_la_return(\""
                 + fmtProd((NormalProduction) jj3_expansion.parent)
-                + ": look ahead SUCCESSFUL\"); }");
+                + ": look ahead SUCCESSFUL\");");
+        if (Options.getErrorReporting()) {
+          cb.print(" }");
+        }
         cb.println("      throw ls;");
         cb.print("    }");
         if (DCT) {
