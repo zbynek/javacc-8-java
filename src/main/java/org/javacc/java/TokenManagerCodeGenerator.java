@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 import org.javacc.parser.CodeGeneratorSettings;
 import org.javacc.parser.Context;
+import org.javacc.parser.JavaCCGlobals;
 import org.javacc.parser.JavaCCParserConstants;
 import org.javacc.parser.Options;
 import org.javacc.parser.Token;
@@ -161,6 +162,12 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
   private static void dumpDfaTables(final JavaCodeBuilder jcb, final TokenizerData tokenizerData) {
 
     /* stringLiterals. */
+    jcb.println("  // pairs of comment line & data line; format of comment line: // k, s");
+    jcb.println(
+        "  // k: key of map of lists of literals starting by char 'c', indexed by ((LexicalState << 16 | (int) c)");
+    jcb.println("  // s: each string of the literals list for key k");
+    jcb.println(
+        "  // data line: len, ign_case (t/f=1/0), charAt(0..len-1), UCcharAt(0..len) if ic=true, kind, nfaStartState");
     jcb.println("  private static final int[] stringLiterals = {");
     int i = 0;
     final Map<Integer, int[]> startAndSize = new HashMap<>();
@@ -180,6 +187,7 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
         }
         final int kind = kinds.get(j);
         final boolean ignoreCase = tokenizerData.ignoreCaseKinds.contains(kind);
+        jcb.println("    // " + key + ", \"" + JavaCCGlobals.add_escapes(s) + "\"");
         jcb.print("    ");
         jcb.print(s.length());
         jcb.print(", ");
@@ -213,6 +221,11 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
     jcb.println();
 
     /* InitStartAndSize. */
+    jcb.println("  // format of \"startAndSize.put(k, new int[] {ix, sz})\":");
+    jcb.println(
+        "  // k: key of map of lists of literals starting by char 'c', indexed by ((LexicalState << 16 | (int) c)");
+    jcb.println("  // ix: index (list's start in stringLiterals)");
+    jcb.println("  // sz: list's size");
     jcb.println("  private static void InitStartAndSize() {");
     for (final int key : tokenizerData.literalSequence.keySet()) {
       final int[] arr = startAndSize.get(key);
