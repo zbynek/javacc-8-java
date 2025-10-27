@@ -163,11 +163,11 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
 
     /* stringLiterals. */
     jcb.println("  // pairs of comment line & data line; format of comment line: // k, s");
-    jcb.println(
-        "  // k: key of map of lists of literals starting by char 'c', indexed by ((LexicalState << 16 | (int) c)");
+    jcb.println("  // k: key of map of lists of literals starting by char 'c',");
+    jcb.println("  //   indexed by ((LexicalState << 16 | (int) c)");
     jcb.println("  // s: each string of the literals list for key k");
-    jcb.println(
-        "  // data line: len, ign_case (t/f=1/0), charAt(0..len-1), UCcharAt(0..len) if ic=true, kind, nfaStartState");
+    jcb.println("  // data line: len, ign_case (t/f=1/0), charAt(0..len-1),");
+    jcb.println("  //   UCcharAt(0..len) if ic=true, kind, nfaStartState");
     jcb.println("  private static final int[] stringLiterals = {");
     int i = 0;
     final Map<Integer, int[]> startAndSize = new HashMap<>();
@@ -222,8 +222,8 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
 
     /* InitStartAndSize. */
     jcb.println("  // format of \"startAndSize.put(k, new int[] {ix, sz})\":");
-    jcb.println(
-        "  // k: key of map of lists of literals starting by char 'c', indexed by ((LexicalState << 16 | (int) c)");
+    jcb.println("  // k: key of map of lists of literals starting by char 'c',");
+    jcb.println("  //   indexed by ((LexicalState << 16 | (int) c)");
     jcb.println("  // ix: index (list's start in stringLiterals)");
     jcb.println("  // sz: list's size");
     jcb.println("  private static void InitStartAndSize() {");
@@ -484,6 +484,7 @@ class TokenManagerCodeGenerator implements org.javacc.parser.TokenManagerCodeGen
     toSpecial.set(allMatches.size() + 1, true);
 
     /* jjstrLiteralImages. */
+    jcb.println("  /** String literal images. */");
     jcb.println("  public static final String[] jjstrLiteralImages = {");
     int k = 0;
     for (int i = 0; i < allMatches.size(); i++) {

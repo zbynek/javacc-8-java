@@ -49,15 +49,19 @@ public class ParseException extends Exception {
   protected static String EOL = System.getProperty("line.separator", "\n");
 
   /**
-   * This constructor is used by the method "generateParseException" in the generated parser.<br>
-   * Calling this constructor generates a new object of this type with the fields "currentToken",
-   *  "expectedTokenSequences", "expectedTokenSequencesLoc", "tokenImage and "locationVal" set.
+   * This constructor is used by the method "generateParseException" in the generated parser.
+   *
+   * @param currentTokenVal current token
+   * @param expectedTokenSequencesVal expected sequences
+   * @param expectedTokenSequencesLocVal expected sequences
+   * @param tokenImageVal token image
+   * @param locationVal location in input
    */
-  public ParseException(   Token currentTokenVal,
-                         int[][] expectedTokenSequencesVal,
-                      String[][] expectedTokenSequencesLocVal,
-                        String[] tokenImageVal,
-                          String locationVal) {
+  public ParseException(Token currentTokenVal,
+                      int[][] expectedTokenSequencesVal,
+                   String[][] expectedTokenSequencesLocVal,
+                     String[] tokenImageVal,
+                       String locationVal) {
     super(initialise(currentTokenVal,
                      expectedTokenSequencesVal,
                      expectedTokenSequencesLocVal, 
@@ -83,7 +87,11 @@ public class ParseException extends Exception {
     super();
   }
 
-  /** Constructor with message. */
+  /**
+   * Constructor with message.
+   *
+   * @param message exception message
+   */
   public ParseException(String message) {
     super(message);
   }
@@ -126,11 +134,11 @@ public class ParseException extends Exception {
    * If this object has been created due to a parse error and you do not catch it
    *  (i.e. it gets thrown from the parser), the correct error message gets displayed.
    */
-  private static String initialise(   Token currToken,
-                                    int[][] expTokenSequences,
-                                 String[][] expTokenSequencesLoc,
-                                   String[] tokImage,
-                                     String loc) {
+  private static String initialise(Token currToken,
+                                 int[][] expTokenSequences,
+                              String[][] expTokenSequencesLoc,
+                                String[] tokImage,
+                                  String loc) {
 
     final StringBuilder expected = new StringBuilder(32);
     int maxSize = 0;
@@ -141,10 +149,10 @@ public class ParseException extends Exception {
       // for the moment we prefer to keep printing duplicated sequences,
       //  hoping we can find a way to print their (different) locations in the grammar
       // for (int k = 0; k < i; k++) {
-        // // don't print duplicated sequences
-        // if (java.util.Arrays.equals(expTkSeq, expTokenSequences[k])) {
-        //   continue outer;
-        // }
+      // // don't print duplicated sequences
+      //   if (java.util.Arrays.equals(expTkSeq, expTokenSequences[k])) {
+      //     continue outer;
+      //   }
       // }
       if (maxSize < expTkSeq.length) {
         maxSize = expTkSeq.length;
@@ -165,16 +173,6 @@ public class ParseException extends Exception {
     }
 
     final StringBuilder sb = new StringBuilder(64);
-
-    // temp debug
-    /*
-    sb.append("currToken = " + currToken).append(EOL);
-    for (int i = 0; i < expTokenSequences.length; i++) {
-      sb.append("expTokenSequences[" + i + "] = " + java.util.Arrays.toString(expTokenSequences[i])).append(EOL);
-    }
-    sb.append("tokImage = " + java.util.Arrays.toString(tokImage)).append(EOL);
-    sb.append("loc = " + loc).append(EOL);
-    */
 
     sb.append("Encountered:");
     Token tok = currToken.next;

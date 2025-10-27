@@ -40,7 +40,12 @@ public class StringProvider implements Provider {
   String string;
   int position = 0;
   int size;
-  
+
+  /**
+   * Wrap a string as a provider.
+   *
+   * @param string string to wrap
+   */
   public StringProvider(String string) {
     this.string = string;
     this.size = string.length();

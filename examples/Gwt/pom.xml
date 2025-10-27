@@ -187,7 +187,28 @@ THE POSSIBILITY OF SUCH DAMAGE.
           </execution>
         </executions>
       </plugin>
-      
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.6.3</version>
+        <configuration>
+          <debug>true</debug>
+          <failOnWarnings>true</failOnWarnings>
+          <doclint>missing</doclint>
+          <show>public</show>
+        </configuration>
+
+        <executions>
+          <execution>
+            <id>javadoc</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>javadoc</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 </project>
