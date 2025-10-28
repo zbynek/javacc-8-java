@@ -36,12 +36,12 @@ THE POSSIBILITY OF SUCH DAMAGE.
   <parent>
     <groupId>org</groupId>
     <artifactId>javacc</artifactId>
-    <version>8.1.0-SNAPSHOT</version>
+    <version>8.0.3-GGB</version>
   </parent>
 
   <groupId>org.javacc.generator</groupId>
   <artifactId>java</artifactId>
-  <!--  <version>8.1.0-SNAPSHOT</version>-->
+  <version>8.0.5-GGB</version>
   <packaging>jar</packaging>
 
   <name>JavaCC Java code generator</name>
@@ -76,7 +76,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
       <dependency>
         <groupId>org.javacc</groupId>
         <artifactId>core</artifactId>
-        <version>${javacc.core.version}</version>
+        <version>8.0.3-GGB</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
