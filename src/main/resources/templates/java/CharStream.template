@@ -52,11 +52,26 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}interface CharStream {
   char BeginToken() throws java.io.IOException;
 
   /**
-   * Returns the next character from the selected input.<br>
-   * The method of selecting the input is the responsibility of the class implementing
-   *  this interface. Can throw any java.io.IOException.
+   * Returns the next character from the selected input.  The method
+   * of selecting the input is the responsibility of the class
+   * implementing this interface. Can throw IndexOutOfBoundsException
+   * if there are no more characters.
    */
-  char readChar() throws java.io.IOException;
+  char getNextChar();
+
+  /**
+   * Checks whether there are unread characters in the input.
+   *
+   * @return whether next character exists
+   */
+  boolean hasNextChar();
+
+  /**
+   * Similar to hasNextCharacter, but may have additional side effects.
+   *
+   * @return whether next character exists
+   */
+  boolean hasNextToken();
 
   /**
    * Backs up the input stream by amount steps.<br>
