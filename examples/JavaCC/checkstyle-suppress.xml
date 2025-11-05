@@ -38,5 +38,5 @@ THE POSSIBILITY OF SUCH DAMAGE.
     <suppress checks="MethodName" files="." />
 
     <suppress checks="Indentation|LineLength" files=".*JavaCC.*TokenManager.java"/>
-    <suppress checks="Indentation|MissingJavadocMethod|LineLength" files=".*JavaCC.*Parser.java"/>
+    <suppress checks="Indentation|MissingJavadocMethod|LineLength|EmptyBlock" files=".*JavaCC.*Parser.java"/>
 </suppressions>

@@ -46,14 +46,32 @@ public class StreamProvider implements Provider {
 
   Reader reader;
 
+  /**
+   * Provider wrapping a reader.
+   *
+   * @param reader reader to wrap
+   */
   public StreamProvider(Reader reader) {
     this.reader = reader;
   }
-  
+
+  /**
+   * Provider wrapping an input stream.
+   *
+   * @param stream input stream to wrap
+   * @throws IOException if an I/O error occurs
+   */
   public StreamProvider(InputStream stream) throws IOException {
     reader = new BufferedReader(new InputStreamReader(stream));
   }
-  
+
+  /**
+   * Provider wrapping an input stream.
+   *
+   * @param stream input stream to wrap
+   * @param charsetName charset name
+   * @throws IOException if an I/O error occurs
+   */
   public StreamProvider(InputStream stream, String charsetName) throws IOException {
     reader = new BufferedReader(new InputStreamReader(stream, charsetName));
   }

@@ -38,6 +38,11 @@ PARSER_BEGIN(JavaCCParser)
  */
 public class JavaCCParser {
 
+  /**
+   * Program entry point.
+   *
+   * @param args command line arguments
+   */
   public static void main(String[] args) {
     JavaCCParser parser;
     if (args.length == 0) {
@@ -374,6 +379,11 @@ TOKEN :
  * THE JAVACC GRAMMAR SPECIFICATION STARTS HERE
  *----------------------------------------------*/
 
+/**
+ * JavaCC input.
+ *
+ * @throws ParseException if parsing fails
+ */
 void javacc_input() :
 {}
 {
@@ -385,12 +395,22 @@ void javacc_input() :
   <EOF>
 }
 
+/**
+ * JavaCC options.
+ *
+ * @throws ParseException if parsing fails
+ */
 void javacc_options() :
 {}
 {
   [ "options" "{" ( option_binding() )+ "}" ]
 }
 
+/**
+ * Option binding.
+ *
+ * @throws ParseException if parsing fails
+ */
 void option_binding() :
 {}
 {
@@ -400,6 +420,11 @@ void option_binding() :
   ";"
 }
 
+/**
+ * Any production.
+ *
+ * @throws ParseException if parsing fails
+ */
 void production() :
 {}
 {
@@ -430,6 +455,11 @@ void production() :
   bnf_production()
 }
 
+/**
+ * Java code production.
+ *
+ * @throws ParseException if parsing fails
+ */
 void javacode_production() :
 {}
 {
@@ -440,6 +470,11 @@ void javacode_production() :
   Block()
 }
 
+/**
+ * BNF production.
+ *
+ * @throws ParseException if parsing fails
+ */
 void bnf_production() :
 {}
 {
@@ -451,6 +486,11 @@ void bnf_production() :
   "{" expansion_choices() "}"
 }
 
+/**
+ * Regular expression production.
+ *
+ * @throws ParseException if parsing fails
+ */
 void regular_expr_production() :
 {}
 {
@@ -463,12 +503,22 @@ void regular_expr_production() :
   "{" regexpr_spec() ( "|" regexpr_spec() )* "}"
 }
 
+/**
+ * Token manager declarations.
+ *
+ * @throws ParseException if parsing fails
+ */
 void token_manager_decls() :
 {}
 {
   "TOKEN_MGR_DECLS" ":" ClassBody()
 }
 
+/**
+ * Regular expression kind.
+ *
+ * @throws ParseException if parsing fails
+ */
 void regexpr_kind() :
 {}
 {
@@ -481,18 +531,33 @@ void regexpr_kind() :
   "MORE"
 }
 
+/**
+ * Regular expression spec.
+ *
+ * @throws ParseException if parsing fails
+ */
 void regexpr_spec() :
 {}
 {
   regular_expression() [ Block() ] [ ":" <IDENTIFIER> ]
 }
 
+/**
+ * Expansion choices.
+ *
+ * @throws ParseException if parsing fails
+ */
 void expansion_choices() :
 {}
 {
   expansion() ( "|" expansion() )*
 }
 
+/**
+ * Expansion.
+ *
+ * @throws ParseException if parsing fails
+ */
 void expansion() :
 {}
 {
@@ -505,6 +570,11 @@ void expansion() :
   )+
 }
 
+/**
+ * Local lookahead.
+ *
+ * @throws ParseException if parsing fails
+ */
 void local_lookahead() :
   {
     boolean commaAtEnd = false, emptyLA = true;
@@ -547,6 +617,11 @@ void local_lookahead() :
   ]
 }
 
+/**
+ * Expansion unit.
+ *
+ * @throws ParseException if parsing fails
+ */
 void expansion_unit() :
 {}
 {
@@ -575,6 +650,11 @@ void expansion_unit() :
   "(" expansion_choices() ")" ( "+" | "*" | "?" )?
 }
 
+/**
+ * Regular expression.
+ *
+ * @throws ParseException if parsing fails
+ */
 void regular_expression() :
 {}
 {
@@ -589,18 +669,33 @@ void regular_expression() :
   "<" "EOF" ">"
 }
 
+/**
+ * Complex regular expression choices.
+ *
+ * @throws ParseException if parsing fails
+ */
 void complex_regular_expression_choices() :
 {}
 {
   complex_regular_expression() ( "|" complex_regular_expression() )*
 }
 
+/**
+ * Complex regular expression.
+ *
+ * @throws ParseException if parsing fails
+ */
 void complex_regular_expression() :
 {}
 {
   ( complex_regular_expression_unit() )+
 }
 
+/**
+ * Complex regular expression unit.
+ *
+ * @throws ParseException if parsing fails
+ */
 void complex_regular_expression_unit() :
 {}
 {
@@ -613,18 +708,33 @@ void complex_regular_expression_unit() :
   "(" complex_regular_expression_choices() ")" ( "+" | "*" | "?" )?
 }
 
+/**
+ * Character list.
+ *
+ * @throws ParseException if parsing fails
+ */
 void character_list() :
 {}
 {
   [ "~" ] "[" [ character_descriptor() ( "," character_descriptor() )* ] "]"
 }
 
+/**
+ * Character descriptor.
+ *
+ * @throws ParseException if parsing fails
+ */
 void character_descriptor() :
 {}
 {
   StringLiteral() [ "-" StringLiteral() ]
 }
 
+/**
+ * Identifier.
+ *
+ * @throws ParseException if parsing fails
+ */
 void identifier() :
 {}
 {
@@ -636,6 +746,11 @@ void identifier() :
  * THE JJTREE PRODUCTIONS START HERE
  *-----------------------------------*/
 
+/**
+ * Node descriptor.
+ *
+ * @throws ParseException if parsing fails
+ */
 void node_descriptor() :
 {}
 {
@@ -684,6 +799,11 @@ void node_descriptor_expression()
  * includes the reserved words of JavaCC also.
  */
 
+/**
+ * Java identifier.
+ *
+ * @throws ParseException if parsing fails
+ */
 void JavaIdentifier() :
 {}
 {
@@ -708,6 +828,11 @@ void JavaIdentifier() :
  * but that is OK for our purposes.
  */
 
+/**
+ * Shift operations.
+ *
+ * @throws ParseException if parsing fails
+ */
 void ShiftOps() :
 {}
 {
@@ -716,6 +841,11 @@ void ShiftOps() :
   ">" ">" [ ">" ]
 }
 
+/**
+ * Comparison operations.
+ *
+ * @throws ParseException if parsing fails
+ */
 void OtherAssignmentOps() :
 {}
 {
@@ -728,6 +858,11 @@ void OtherAssignmentOps() :
  * Program structuring syntax follows.
  */
 
+/**
+ * Compilation unit.
+ *
+ * @throws ParseException if parsing fails
+ */
 void CompilationUnit() :
 /*
  * The <EOF> is deleted since the compilation unit is embedded
@@ -741,6 +876,11 @@ void CompilationUnit() :
   ( TypeDeclaration() )*
 }
 
+/**
+ * Java compilation unit.
+ *
+ * @throws ParseException if parsing fails
+ */
 void JavaCompilationUnit() :
 /*
  * Use this to parse a Java compilation unit.
@@ -750,18 +890,33 @@ void JavaCompilationUnit() :
   CompilationUnit() <EOF>
 }
 
+/**
+ * Package declaration.
+ *
+ * @throws ParseException if parsing fails
+ */
 void PackageDeclaration() :
 {}
 {
   "package" Name() ";"
 }
 
+/**
+ * Import declaration.
+ *
+ * @throws ParseException if parsing fails
+ */
 void ImportDeclaration() :
 {}
 {
   "import" Name() [ "." "*" ] ";"
 }
 
+/**
+ * Type declaration.
+ *
+ * @throws ParseException if parsing fails
+ */
 void TypeDeclaration() :
 {}
 {
@@ -778,6 +933,11 @@ void TypeDeclaration() :
  * Declaration syntax follows.
  */
 
+/**
+ * Class declaration.
+ *
+ * @throws ParseException if parsing fails
+ */
 void ClassDeclaration() :
 {}
 {
@@ -785,6 +945,11 @@ void ClassDeclaration() :
   UnmodifiedClassDeclaration()
 }
 
+/**
+ * Unmodified class declaration.
+ *
+ * @throws ParseException if parsing fails
+ */
 void UnmodifiedClassDeclaration() :
 {}
 {
@@ -792,12 +957,22 @@ void UnmodifiedClassDeclaration() :
   ClassBody()
 }
 
+/**
+ * Class body.
+ *
+ * @throws ParseException if parsing fails
+ */
 void ClassBody() :
 {}
 {
   "{" ( ClassBodyDeclaration() )* "}"
 }
 
+/**
+ * Nested class declaration.
+ *
+ * @throws ParseException if parsing fails
+ */
 void NestedClassDeclaration() :
 {}
 {
@@ -805,6 +980,11 @@ void NestedClassDeclaration() :
   UnmodifiedClassDeclaration()
 }
 
+/**
+ * Class body declaration.
+ *
+ * @throws ParseException if parsing fails
+ */
 void ClassBodyDeclaration() :
 {}
 {
@@ -826,7 +1006,11 @@ void ClassBodyDeclaration() :
   FieldDeclaration()
 }
 
-// This production is to determine lookahead only.
+/**
+ * Method declaration. This production is to determine lookahead only.
+ *
+ * @throws ParseException if parsing fails
+ */
 void MethodDeclarationLookahead() :
 {}
 {
@@ -834,6 +1018,11 @@ void MethodDeclarationLookahead() :
   ResultType() JavaIdentifier() "("
 }
 
+/**
+ * Interface declaration.
+ *
+ * @throws ParseException if parsing fails
+ */
 void InterfaceDeclaration() :
 {}
 {
@@ -841,6 +1030,11 @@ void InterfaceDeclaration() :
   UnmodifiedInterfaceDeclaration()
 }
 
+/**
+ * Nested interface declaration.
+ *
+ * @throws ParseException if parsing fails
+ */
 void NestedInterfaceDeclaration() :
 {}
 {
@@ -848,6 +1042,11 @@ void NestedInterfaceDeclaration() :
   UnmodifiedInterfaceDeclaration()
 }
 
+/**
+ * Unmodified interface delcaration.
+ *
+ * @throws ParseException if parsing fails
+ */
 void UnmodifiedInterfaceDeclaration() :
 {}
 {
@@ -855,6 +1054,11 @@ void UnmodifiedInterfaceDeclaration() :
   "{" ( InterfaceMemberDeclaration() )* "}"
 }
 
+/**
+ * Interface member declaration.
+ *
+ * @throws ParseException if parsing fails
+ */
 void InterfaceMemberDeclaration() :
 {}
 {
@@ -870,6 +1074,11 @@ void InterfaceMemberDeclaration() :
   FieldDeclaration()
 }
 
+/**
+ * Fild declaration.
+ *
+ * @throws ParseException if parsing fails
+ */
 void FieldDeclaration() :
 {}
 {
@@ -877,18 +1086,33 @@ void FieldDeclaration() :
   Type() VariableDeclarator() ( "," VariableDeclarator() )* ";"
 }
 
+/**
+ * Variable declarator.
+ *
+ * @throws ParseException if parsing fails
+ */
 void VariableDeclarator() :
 {}
 {
   VariableDeclaratorId() [ "=" VariableInitializer() ]
 }
 
+/**
+ * Variable declarator ID.
+ *
+ * @throws ParseException if parsing fails
+ */
 void VariableDeclaratorId() :
 {}
 {
   JavaIdentifier() ( "[" "]" )*
 }
 
+/**
+ * Variable initializer.
+ *
+ * @throws ParseException if parsing fails
+ */
 void VariableInitializer() :
 {}
 {
@@ -897,12 +1121,22 @@ void VariableInitializer() :
   Expression()
 }
 
+/**
+ * Array initializer.
+ *
+ * @throws ParseException if parsing fails
+ */
 void ArrayInitializer() :
 {}
 {
   "{" [ VariableInitializer() ( LOOKAHEAD(2) "," VariableInitializer() )* ] [ "," ] "}"
 }
 
+/**
+ * Method declaration.
+ *
+ * @throws ParseException if parsing fails
+ */
 void MethodDeclaration() :
 {}
 {
@@ -911,24 +1145,44 @@ void MethodDeclaration() :
   ( Block() | ";" )
 }
 
+/**
+ * Method declarator.
+ *
+ * @throws ParseException if parsing fails
+ */
 void MethodDeclarator() :
 {}
 {
   JavaIdentifier() FormalParameters() ( "[" "]" )*
 }
 
+/**
+ * List of formal parameters.
+ *
+ * @throws ParseException if parsing fails
+ */
 void FormalParameters() :
 {}
 {
   "(" [ FormalParameter() ( "," FormalParameter() )* ] ")"
 }
 
+/**
+ * Formal parameter.
+ *
+ * @throws ParseException if parsing fails
+ */
 void FormalParameter() :
 {}
 {
   [ "final" ] Type() VariableDeclaratorId()
 }
 
+/**
+ * Constructor declaration.
+ *
+ * @throws ParseException if parsing fails
+ */
 void ConstructorDeclaration() :
 {}
 {
@@ -940,6 +1194,11 @@ void ConstructorDeclaration() :
   "}"
 }
 
+/**
+ * Explicit constructor invocation.
+ *
+ * @throws ParseException if parsing fails
+ */
 void ExplicitConstructorInvocation() :
 {}
 {
@@ -949,6 +1208,11 @@ void ExplicitConstructorInvocation() :
   [ LOOKAHEAD(2) PrimaryExpression() "." ] "super" Arguments() ";"
 }
 
+/**
+ * Initializer.
+ *
+ * @throws ParseException if parsing fails
+ */
 void Initializer() :
 {}
 {
@@ -960,12 +1224,22 @@ void Initializer() :
  * Type, name and expression syntax follows.
  */
 
+/**
+ * Type.
+ *
+ * @throws ParseException if parsing fails
+ */
 void Type() :
 {}
 {
   ( PrimitiveType() | Name() ) ( "[" "]" )*
 }
 
+/**
+ * Primitive type.
+ *
+ * @throws ParseException if parsing fails
+ */
 void PrimitiveType() :
 {}
 {
@@ -986,6 +1260,11 @@ void PrimitiveType() :
   "double"
 }
 
+/**
+ * Result type.
+ *
+ * @throws ParseException if parsing fails
+ */
 void ResultType() :
 {}
 {
@@ -994,6 +1273,11 @@ void ResultType() :
   Type()
 }
 
+/**
+ * Identifier name.
+ *
+ * @throws ParseException if parsing fails
+ */
 void Name() :
 /*
  * A lookahead of 2 is required below since "Name" can be followed
@@ -1005,6 +1289,11 @@ void Name() :
   ( LOOKAHEAD(2) "." JavaIdentifier() )*
 }
 
+/**
+ * Name list.
+ *
+ * @throws ParseException if parsing fails
+ */
 void NameList() :
 {}
 {
@@ -1016,6 +1305,11 @@ void NameList() :
  * Expression syntax follows.
  */
 
+/**
+ * Expression.
+ *
+ * @throws ParseException if parsing fails
+ */
 void Expression() :
 /*
  * This expansion has been written this way instead of:
@@ -1031,6 +1325,11 @@ void Expression() :
   ConditionalExpression() [ AssignmentOperator() Expression() ]
 }
 
+/**
+ * Assignment operator.
+ *
+ * @throws ParseException if parsing fails
+ */
 void AssignmentOperator() :
 {}
 {
@@ -1039,54 +1338,99 @@ void AssignmentOperator() :
   OtherAssignmentOps()
 }
 
+/**
+ * Conditional expression.
+ *
+ * @throws ParseException if parsing fails
+ */
 void ConditionalExpression() :
 {}
 {
   ConditionalOrExpression() [ "?" Expression() ":" ConditionalExpression() ]
 }
 
+/**
+ * Conditional OR expression.
+ *
+ * @throws ParseException if parsing fails
+ */
 void ConditionalOrExpression() :
 {}
 {
   ConditionalAndExpression() ( "||" ConditionalAndExpression() )*
 }
 
+/**
+ * Conditional AND expression.
+ *
+ * @throws ParseException if parsing fails
+ */
 void ConditionalAndExpression() :
 {}
 {
   InclusiveOrExpression() ( "&&" InclusiveOrExpression() )*
 }
 
+/**
+ * Binary OR expression.
+ *
+ * @throws ParseException if parsing fails
+ */
 void InclusiveOrExpression() :
 {}
 {
   ExclusiveOrExpression() ( "|" ExclusiveOrExpression() )*
 }
 
+/**
+ * XOR expression.
+ *
+ * @throws ParseException if parsing fails
+ */
 void ExclusiveOrExpression() :
 {}
 {
   AndExpression() ( "^" AndExpression() )*
 }
 
+/**
+ * Binary AND expression.
+ *
+ * @throws ParseException if parsing fails
+ */
 void AndExpression() :
 {}
 {
   EqualityExpression() ( "&" EqualityExpression() )*
 }
 
+/**
+ * Equality expression.
+ *
+ * @throws ParseException if parsing fails
+ */
 void EqualityExpression() :
 {}
 {
   InstanceOfExpression() ( ( "==" | "!=" ) InstanceOfExpression() )*
 }
 
+/**
+ * Instanceof expression.
+ *
+ * @throws ParseException if parsing fails
+ */
 void InstanceOfExpression() :
 {}
 {
   RelationalExpression() [ "instanceof" Type() ]
 }
 
+/**
+ * Relational expression.
+ *
+ * @throws ParseException if parsing fails
+ */
 void RelationalExpression() :
 {}
 {
@@ -1098,6 +1442,11 @@ void RelationalExpression() :
   ShiftExpression() ( LOOKAHEAD(2) ( "<" | ">" | "<=" | ">=" ) ShiftExpression() )*
 }
 
+/**
+ * Bit shit expression.
+ *
+ * @throws ParseException if parsing fails
+ */
 void ShiftExpression() :
 {}
 {
@@ -1109,18 +1458,33 @@ void ShiftExpression() :
   AdditiveExpression() ( LOOKAHEAD(3) ( ShiftOps() ) AdditiveExpression() )*
 }
 
+/**
+ * Additive expression.
+ *
+ * @throws ParseException if parsing fails
+ */
 void AdditiveExpression() :
 {}
 {
   MultiplicativeExpression() ( ( "+" | "-" ) MultiplicativeExpression() )*
 }
 
+/**
+ * Multiplicative expression.
+ *
+ * @throws ParseException if parsing fails
+ */
 void MultiplicativeExpression() :
 {}
 {
   UnaryExpression() ( ( "*" | "/" | "%" ) UnaryExpression() )*
 }
 
+/**
+ * Unary expression.
+ *
+ * @throws ParseException if parsing fails
+ */
 void UnaryExpression() :
 {}
 {
@@ -1133,18 +1497,33 @@ void UnaryExpression() :
   UnaryExpressionNotPlusMinus()
 }
 
+/**
+ * Pre-increment expression.
+ *
+ * @throws ParseException if parsing fails
+ */
 void PreIncrementExpression() :
 {}
 {
   "++" PrimaryExpression()
 }
 
+/**
+ * Pre-decrement expression.
+ *
+ * @throws ParseException if parsing fails
+ */
 void PreDecrementExpression() :
 {}
 {
   "--" PrimaryExpression()
 }
 
+/**
+ * Cast or posttfix expression.
+ *
+ * @throws ParseException if parsing fails
+ */
 void UnaryExpressionNotPlusMinus() :
 {}
 {
@@ -1159,6 +1538,12 @@ void UnaryExpressionNotPlusMinus() :
 // This production is to determine lookahead only.  The LOOKAHEAD specifications
 // below are not used, but they are there just to indicate that we know about
 // this.
+
+/**
+ * Cast lookahead.
+ *
+ * @throws ParseException if parsing fails
+ */
 void CastLookahead() :
 {}
 {
@@ -1171,12 +1556,22 @@ void CastLookahead() :
   "(" Name() ")" ( "~" | "!" | "(" | JavaIdentifier() | "this" | "super" | "new" | Literal() )
 }
 
+/**
+ * Postfix expression.
+ *
+ * @throws ParseException if parsing fails
+ */
 void PostfixExpression() :
 {}
 {
   PrimaryExpression() [ "++" | "--" ]
 }
 
+/**
+ * Cast expression.
+ *
+ * @throws ParseException if parsing fails
+ */
 void CastExpression() :
 {}
 {
@@ -1187,12 +1582,22 @@ void CastExpression() :
   "(" Type() ")" UnaryExpressionNotPlusMinus()
 }
 
+/**
+ * Primary expression.
+ *
+ * @throws ParseException if parsing fails
+ */
 void PrimaryExpression() :
 {}
 {
   PrimaryPrefix() ( LOOKAHEAD(2) PrimarySuffix() )*
 }
 
+/**
+ * Primary prefix.
+ *
+ * @throws ParseException if parsing fails
+ */
 void PrimaryPrefix() :
 {}
 {
@@ -1212,6 +1617,11 @@ void PrimaryPrefix() :
   Name()
 }
 
+/**
+ * Primary suffix.
+ *
+ * @throws ParseException if parsing fails
+ */
 void PrimarySuffix() :
 {}
 {
@@ -1228,6 +1638,11 @@ void PrimarySuffix() :
   Arguments()
 }
 
+/**
+ * String or primitive literal.
+ *
+ * @throws ParseException if parsing fails
+ */
 void Literal() :
 {}
 {
@@ -1244,12 +1659,22 @@ void Literal() :
   NullLiteral()
 }
 
+/**
+ * Integer literal.
+ *
+ * @throws ParseException if parsing fails
+ */
 void IntegerLiteral() :
 {}
 {
   <INTEGER_LITERAL>
 }
 
+/**
+ * Boolean literal.
+ *
+ * @throws ParseException if parsing fails
+ */
 void BooleanLiteral() :
 {}
 {
@@ -1258,30 +1683,55 @@ void BooleanLiteral() :
   "false"
 }
 
+/**
+ * String literal.
+ *
+ * @throws ParseException if parsing fails
+ */
 void StringLiteral() :
 {}
 {
   <STRING_LITERAL>
 }
 
+/**
+ * Null literal.
+ *
+ * @throws ParseException if parsing fails
+ */
 void NullLiteral() :
 {}
 {
   "null"
 }
 
+/**
+ * Argument list in parentheses.
+ *
+ * @throws ParseException if parsing fails
+ */
 void Arguments() :
 {}
 {
   "(" [ ArgumentList() ] ")"
 }
 
+/**
+ * Argument list.
+ *
+ * @throws ParseException if parsing fails
+ */
 void ArgumentList() :
 {}
 {
   Expression() ( "," Expression() )*
 }
 
+/**
+ * Allocation expression.
+ *
+ * @throws ParseException if parsing fails
+ */
 void AllocationExpression() :
 {}
 {
@@ -1296,9 +1746,12 @@ void AllocationExpression() :
     )
 }
 
-/*
+/**
+ * Array initializer.
  * The second LOOKAHEAD specification below is to parse to PrimarySuffix
  * if there is an expression between the "[...]".
+ *
+ * @throws ParseException if parsing fails
  */
 void ArrayDimsAndInits() :
 {}
@@ -1314,6 +1767,11 @@ void ArrayDimsAndInits() :
  * Statement syntax follows.
  */
 
+/**
+ * Statement.
+ *
+ * @throws ParseException if parsing fails
+ */
 void Statement() :
 {}
 {
@@ -1349,18 +1807,33 @@ void Statement() :
   TryStatement()
 }
 
+/**
+ * Labeled statement.
+ *
+ * @throws ParseException if parsing fails
+ */
 void LabeledStatement() :
 {}
 {
   JavaIdentifier() ":" Statement()
 }
 
+/**
+ * Block.
+ *
+ * @throws ParseException if parsing fails
+ */
 void Block() :
 {}
 {
   "{" ( BlockStatement() )* "}"
 }
 
+/**
+ * Bloack statement.
+ *
+ * @throws ParseException if parsing fails
+ */
 void BlockStatement() :
 {}
 {
@@ -1374,18 +1847,33 @@ void BlockStatement() :
   UnmodifiedInterfaceDeclaration()
 }
 
+/**
+ * Local variable declaration.
+ *
+ * @throws ParseException if parsing fails
+ */
 void LocalVariableDeclaration() :
 {}
 {
   [ "final" ] Type() VariableDeclarator() ( "," VariableDeclarator() )*
 }
 
+/**
+ * Empty statement.
+ *
+ * @throws ParseException if parsing fails
+ */
 void EmptyStatement() :
 {}
 {
   ";"
 }
 
+/**
+ * Statement expression.
+ *
+ * @throws ParseException if parsing fails
+ */
 void StatementExpression() :
 /*
  * The last expansion of this production accepts more than the legal
@@ -1408,6 +1896,11 @@ void StatementExpression() :
   ]
 }
 
+/**
+ * Switch statement.
+ *
+ * @throws ParseException if parsing fails
+ */
 void SwitchStatement() :
 {}
 {
@@ -1416,6 +1909,11 @@ void SwitchStatement() :
   "}"
 }
 
+/**
+ * Switch branch label.
+ *
+ * @throws ParseException if parsing fails
+ */
 void SwitchLabel() :
 {}
 {
@@ -1424,6 +1922,11 @@ void SwitchLabel() :
   "default" ":"
 }
 
+/**
+ * An if statement.
+ *
+ * @throws ParseException if parsing fails
+ */
 void IfStatement() :
 /*
  * The disambiguating algorithm of JavaCC automatically binds dangling
@@ -1435,24 +1938,44 @@ void IfStatement() :
   "if" "(" Expression() ")" Statement() [ LOOKAHEAD(1) "else" Statement() ]
 }
 
+/**
+ * A while statement.
+ *
+ * @throws ParseException if parsing fails
+ */
 void WhileStatement() :
 {}
 {
   "while" "(" Expression() ")" Statement()
 }
 
+/**
+ * A do statement.
+ *
+ * @throws ParseException if parsing fails
+ */
 void DoStatement() :
 {}
 {
   "do" Statement() "while" "(" Expression() ")" ";"
 }
 
+/**
+ * A for statement.
+ *
+ * @throws ParseException if parsing fails
+ */
 void ForStatement() :
 {}
 {
   "for" "(" [ ForInit() ] ";" [ Expression() ] ";" [ ForUpdate() ] ")" Statement()
 }
 
+/**
+ * For loop initialization.
+ *
+ * @throws ParseException if parsing fails
+ */
 void ForInit() :
 {}
 {
@@ -1462,48 +1985,88 @@ void ForInit() :
   StatementExpressionList()
 }
 
+/**
+ * Statement expression list.
+ *
+ * @throws ParseException if parsing fails
+ */
 void StatementExpressionList() :
 {}
 {
   StatementExpression() ( "," StatementExpression() )*
 }
 
+/**
+ * For loop update statement.
+ *
+ * @throws ParseException if parsing fails
+ */
 void ForUpdate() :
 {}
 {
   StatementExpressionList()
 }
 
+/**
+ * Break statement.
+ *
+ * @throws ParseException if parsing fails
+ */
 void BreakStatement() :
 {}
 {
   "break" [ JavaIdentifier() ] ";"
 }
 
+/**
+ * Continue statement.
+ *
+ * @throws ParseException if parsing fails
+ */
 void ContinueStatement() :
 {}
 {
   "continue" [ JavaIdentifier() ] ";"
 }
 
+/**
+ * Return statement.
+ *
+ * @throws ParseException if parsing fails
+ */
 void ReturnStatement() :
 {}
 {
   "return" [ Expression() ] ";"
 }
 
+/**
+ * Throw statement.
+ *
+ * @throws ParseException if parsing fails
+ */
 void ThrowStatement() :
 {}
 {
   "throw" Expression() ";"
 }
 
+/**
+ * Synchronized statement.
+ *
+ * @throws ParseException if parsing fails
+ */
 void SynchronizedStatement() :
 {}
 {
   "synchronized" "(" Expression() ")" Block()
 }
 
+/**
+ * Try statement.
+ *
+ * @throws ParseException if parsing fails
+ */
 void TryStatement() :
 /*
  * Semantic check required here to make sure that at least one

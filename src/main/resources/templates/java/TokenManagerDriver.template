@@ -58,11 +58,20 @@ ${decls}
 
 #fi
 #if TOKEN_MANAGER_USES_PARSER && !STATIC
-  /** Constructor with parser. */
+  /**
+   * Constructor with parser.
+   *
+   * @param parserArg parser
+   * @param stream input stream
+   */
   public ${parserName}TokenManager(${parserName} parserArg, ${charStreamName} stream) {
     parser = parserArg;
 #else
-  /** Constructor. */
+  /**
+   * Constructor.
+   *
+   * @param stream input stream
+   */
   public ${parserName}TokenManager(${charStreamName} stream) {
 #fi
 #if STATIC && !USER_CHAR_STREAM
@@ -80,22 +89,40 @@ ${decls}
   }
 
 #if TOKEN_MANAGER_USES_PARSER && !STATIC
-  /** Constructor with parser. */
+  /**
+   * Constructor with parser.
+   *
+   * @param parserArg parser
+   * @param stream character stream
+   * @param lexState lexical state
+   */
   public ${parserName}TokenManager(${parserName} parserArg, ${charStreamName} stream, int lexState) {
     ReInit(parserArg, stream);
   }
 #else
-  /** Constructor. */
+  /**
+   * Constructor with stream.
+   *
+   * @param stream character stream
+   * @param lexState lexical state
+   */
   public ${parserName}TokenManager(${charStreamName} stream, int lexState) {
     ReInit(stream);
     SwitchTo(lexState);
   }
 #fi
 
-  /** Reinitialise parser. */
+  /**
+   * Reinitialise parser.
+   *
 #if TOKEN_MANAGER_USES_PARSER && !STATIC
+   * @param parserArg parser
+   * @param stream character stream
+   */
   public void ReInit(${parserName} parserArg, ${charStreamName} stream) {
 #else
+   * @param stream character stream
+   */
   public ${STATIC?static :}void ReInit(${charStreamName} stream) {
 #fi
 #if TOKEN_MANAGER_USES_PARSER && !STATIC
@@ -106,10 +133,19 @@ ${decls}
     jjmatchedPos = 0;
   }
 
-  /** Reinitialise parser. */
+  /**
+   * Reinitialise parser.
+   *
 #if TOKEN_MANAGER_USES_PARSER && !STATIC
+   * @param parserArg parser
+   * @param stream character stream
+   * @param lexState lexical state
+   */
   public void ReInit( ${parserName} parserArg, ${charStreamName} stream, int lexState) {
 #else
+   * @param stream character stream
+   * @param lexState lexical state
+   */
   public ${STATIC?static :}void ReInit(${charStreamName} stream, int lexState) {
 #fi
 #if TOKEN_MANAGER_USES_PARSER && !STATIC
@@ -120,12 +156,20 @@ ${decls}
     SwitchTo(lexState);
   }
 
-  /** Switch to specified lex state. */
+  /**
+   * Switch to specified lex state.
+   *
+   * @param lexState lexical state
+   */
   public ${STATIC?static :}void SwitchTo(int lexState) {
     curLexState = lexState;
   }
 
-  /** Get the next Token. */
+  /**
+   * Get the next Token.
+   *
+   * @return the next token
+   */
   public ${STATIC?static :}Token getNextToken() {
     Token specialToken = null;
     Token matchedToken;
@@ -593,24 +637,48 @@ ${decls}
       ++curPos;
     } while (cnt > 0);
 
-    assert false :
-        "Internal error. Please submit a bug at:https://github.com/javacc/javacc-8/issues";
+    assert false
+        : "Internal error. Please submit a bug at:https://github.com/javacc/javacc-8/issues";
 
     return curPos;
   }
 
+  /**
+   * Checks if given token kind is valid.
+   *
+   * @param kind potential token kind
+   * @return whether {@code kind} is valid
+   */
   public static final boolean isToken(int kind) {
     return (jjtoToken[kind >> 6] & (1L << (kind & 0x3f))) != 0L;
   }
 
+  /**
+   * Checks if given token kind is skip.
+   *
+   * @param kind potential token kind
+   * @return whether {@code kind} is skip
+   */
   public static final boolean isSkip(int kind) {
     return (jjtoSkip[kind >> 6] & (1L << (kind & 0x3f))) != 0L;
   }
 
+  /**
+   * Checks if given token kind is special.
+   *
+   * @param kind potential token kind
+   * @return whether {@code kind} is a special token
+   */
   public static final boolean isSpecial(int kind) {
     return (jjtoSpecial[kind >> 6] & (1L << (kind & 0x3f))) != 0L;
   }
 
+  /**
+   * Checks if given token kind is more.
+   *
+   * @param kind potential token kind
+   * @return whether {@code kind} is more
+   */
   public static final boolean isMore(int kind) {
     return (jjtoMore[kind >> 6] & (1L << (kind & 0x3f))) != 0L;
   }

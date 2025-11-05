@@ -101,7 +101,7 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
    * To be set to true to add debug comment tags in the generated code (to ease linking it with this
    * generator), false otherwise (which should be the normal case).
    */
-  private static final boolean DCT = true;
+  private static final boolean DCT = false;
 
   ParserCodeGenerator(final Context context) {
     this.context = context;
@@ -209,7 +209,7 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
       cb.println(
           "  /** Cosmetic message for ParseException throw statements just to avoid compilation errors. */");
       cb.println(
-          "  static final String SHOULD_NOT = "
+          "  static final String SHOULD_NOT =\n      "
               + "\"Should not fall up to here, ParseException should have been raised above\";");
       cb.println();
       if (Options.getUserTokenManager()) {
@@ -363,7 +363,11 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
           cb.println("  }");
           cb.println();
 
-          cb.println("  /** Reinitialise. */");
+          cb.println("  /**");
+          cb.println("   * Reinitialise.");
+          cb.println("   *");
+          cb.println("   * @param stream input stream");
+          cb.println("   */");
           cb.println("  public " + pStatic + "void ReInit(CharStream stream) {");
 
           if (Options.doesTokenManagerRequireParserAccess()) {
@@ -405,13 +409,22 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
         } else {
 
           if (!isJavaModernMode) {
-            cb.println("  /** Constructor with InputStream. */");
+            cb.println("  /**");
+            cb.println("   * Constructor with InputStream.");
+            cb.println("   *");
+            cb.println("   * @param stream input stream");
+            cb.println("   */");
             cb.println("  public " + context.globals().cu_name + "(java.io.InputStream stream) {");
             cb.println("    this(stream, null);");
             cb.println("  }");
             cb.println();
 
-            cb.println("  /** Constructor with InputStream and supplied encoding. */");
+            cb.println("  /**");
+            cb.println("   * Constructor with InputStream and supplied encoding.");
+            cb.println("   *");
+            cb.println("   * @param stream input stream");
+            cb.println("   * @param encoding character encoding");
+            cb.println("   */");
             cb.println(
                 "  public "
                     + context.globals().cu_name
@@ -490,14 +503,23 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
             cb.println("  }");
             cb.println();
 
-            cb.println("  /** Reinitialise. */");
+            cb.println("  /**");
+            cb.println("   * Reinitialise.");
+            cb.println("   *");
+            cb.println("   * @param stream input stream");
+            cb.println("   */");
             cb.println("  public " + pStatic + "void ReInit(java.io.InputStream stream) {");
             cb.println("    ReInit(stream, null);");
             cb.println("  }");
             cb.println();
 
             cb.println();
-            cb.println("  /** Reinitialise. */");
+            cb.println("  /**");
+            cb.println("   * Reinitialise.");
+            cb.println("   *");
+            cb.println("   * @param stream input stream");
+            cb.println("   * @param encoding character encoding");
+            cb.println("   */");
             cb.println(
                 "  public "
                     + pStatic
@@ -551,7 +573,11 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
           final String stringReaderClass =
               isJavaModernMode ? "StringProvider" : "java.io.StringReader";
 
-          cb.println("  /** Constructor. */");
+          cb.println("  /**");
+          cb.println("   * Constructor.");
+          cb.println("   *");
+          cb.println("   * @param stream input stream");
+          cb.println("   */");
           cb.println(
               "  public " + context.globals().cu_name + "(" + readerInterfaceName + " stream) {");
           if (Options.getStatic()) {
@@ -614,7 +640,14 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
           // Add-in a string based constructor because its convenient
           //  (modern only to prevent regressions)
           if (isJavaModernMode) {
-            cb.println("  /** Constructor (modern template). */");
+            cb.println("  /**");
+            cb.println("   * Constructor (modern template).");
+            cb.println("   *");
+            cb.println("   * @param s input string");
+            cb.println("   * @throws ParseException if parsing fails");
+            cb.println("   * @throws " + JavaTemplates.getTokenMgrErrorClass()
+                    + " if tokenization fails");
+            cb.println("   */");
             cb.println(
                 "  public "
                     + context.globals().cu_name
@@ -625,13 +658,25 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
             cb.println("  }");
             cb.println();
 
-            cb.println("  /** Reinitialise (modern template). */");
+            cb.println("  /**");
+            cb.println("   * Reinitialise (modern template).");
+            cb.println("   *");
+            cb.println("   * @param s input string");
+            cb.println("   */");
             cb.println("  public void ReInit(String s) {");
             cb.println("    ReInit(new " + stringReaderClass + "(s));");
             cb.println("  }");
             cb.println();
 
-            cb.println("  /** Constructor (modern template). */");
+            cb.println("  /**");
+            cb.println("   * Constructor (modern template).");
+            cb.println("   *");
+            cb.println("   * @param is input stream");
+            cb.println("   * @throws ParseException if parsing fails");
+            cb.println("   * @throws java.io.IOException if input reading fails");
+            cb.println("   * @throws " + JavaTemplates.getTokenMgrErrorClass()
+                    + " if tokenization fails");
+            cb.println("   */");
             cb.println(
                 "  public "
                     + context.globals().cu_name
@@ -643,14 +688,23 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
             cb.println("  }");
             cb.println();
 
-            cb.println("  /** Reinitialise (modern template). */");
+            cb.println("  /**");
+            cb.println("   * Reinitialise (modern template).");
+            cb.println("   *");
+            cb.println("   * @param is input stream");
+            cb.println("   * @throws java.io.IOException when input reading fails");
+            cb.println("   */");
             cb.println("  public void ReInit(java.io.InputStream is) throws java.io.IOException {");
             cb.println("    ReInit(new StreamProvider(is));");
             cb.println("  }");
           }
           cb.println();
 
-          cb.println("  /** Reinitialise. */");
+          cb.println("  /**");
+          cb.println("   * Reinitialise.");
+          cb.println("   *");
+          cb.println("   * @param reader input reader");
+          cb.println("   */");
           cb.println("  public " + pStatic + "void ReInit(" + readerInterfaceName + " reader) {");
           if (Options.getJavaUnicodeEscape()) {
             cb.println("    if (jj_input_stream == null) {");
@@ -720,10 +774,18 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
       cb.println();
 
       if (Options.getUserTokenManager()) {
-        cb.println("  /** Constructor with user supplied Token Manager. */");
+        cb.println("  /**");
+        cb.println("   * Constructor with user supplied Token Manager.");
+        cb.println("   *");
+        cb.println("   * @param tm token manager");
+        cb.println("   */");
         cb.println("  public " + context.globals().cu_name + "(TokenManager tm) {");
       } else {
-        cb.println("  /** Constructor with generated Token Manager. */");
+        cb.println("  /**");
+        cb.println("   * Constructor with generated Token Manager.");
+        cb.println("   *");
+        cb.println("   * @param tm token manager");
+        cb.println("   */");
         cb.println(
             "  public "
                 + context.globals().cu_name
@@ -774,10 +836,18 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
       cb.println();
 
       if (Options.getUserTokenManager()) {
-        cb.println("  /** Reinitialise. */");
+        cb.println("  /**");
+        cb.println("   * Reinitialise with user supplied Token Manager.");
+        cb.println("   *");
+        cb.println("   * @param tm token manager");
+        cb.println("   */");
         cb.println("  public void ReInit(TokenManager tm) {");
       } else {
-        cb.println("  /** Reinitialise. */");
+        cb.println("  /**");
+        cb.println("   * Reinitialise with generated Token Manager.");
+        cb.println("   *");
+        cb.println("   * @param tm token manager");
+        cb.println("   */");
         cb.println("  public void ReInit(" + context.globals().cu_name + "TokenManager tm) {");
       }
       cb.println("    token_source = tm;");
@@ -873,8 +943,9 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
       }
       cb.println("  }");
       cb.println();
-
-      cb.println("  private static final boolean DBG_EXP = false;");
+      if (Options.getDebugParser()) {
+        cb.println("  private static final boolean DBG_EXP = false;");
+      }
       cb.println();
 
       if (context.globals().jj2index != 0) {
@@ -909,17 +980,19 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
           cb.print(", final String loc");
         }
         cb.println(") {");
-        cb.println("    if (DBG_EXP) System.out.println(\"scan1: kind = \" + kind +");
-        if (Options.getErrorReporting()) {
-          cb.println("         \", loc = \" + loc +");
-        }
-        cb.println("         \", jj_la = \" + jj_la +");
-        cb.println("         \", jj_scanpos = \" + jj_scanpos + \" \" + jj_scanpos.hashCode() +");
-        if (Options.getErrorReporting()) {
-          cb.println("         \", jj_lastpos = \" + jj_lastpos + \" \" + jj_lastpos.hashCode() +");
-          cb.println("         \", jj_rescan = \" + jj_rescan);");
-        } else {
-          cb.println("         \", jj_lastpos = \" + jj_lastpos + \" \" + jj_lastpos.hashCode());");
+        if (Options.getDebugParser()) {
+          cb.println("    if (DBG_EXP) System.out.println(\"scan1: kind = \" + kind +");
+          if (Options.getErrorReporting()) {
+            cb.println("         \", loc = \" + loc +");
+          }
+          cb.println("         \", jj_la = \" + jj_la +");
+          cb.println("         \", jj_scanpos = \" + jj_scanpos + \" \" + jj_scanpos.hashCode() +");
+          if (Options.getErrorReporting()) {
+            cb.println("         \", jj_lastpos = \" + jj_lastpos + \" \" + jj_lastpos.hashCode() +");
+            cb.println("         \", jj_rescan = \" + jj_rescan);");
+          } else {
+            cb.println("         \", jj_lastpos = \" + jj_lastpos + \" \" + jj_lastpos.hashCode());");
+          }
         }
         cb.println("    if (jj_scanpos == jj_lastpos) {");
         cb.println("      jj_la--;");
@@ -951,29 +1024,37 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
         } else if (Options.getDebugLookahead()) {
           cb.println("    trace_scan(jj_scanpos, kind);");
         }
-        cb.println("    if (DBG_EXP) System.out.println(\"scan2: kind = \" + kind +");
-        cb.println("         \", jj_scanpos.kind = \" + jj_scanpos.kind +");
-        cb.println("         \", jj_la = \" + jj_la +");
-        cb.println("         \", jj_scanpos = \" + jj_scanpos + \" \" + jj_scanpos.hashCode() +");
-        cb.println("         \", jj_lastpos = \" + jj_lastpos + \" \" + jj_lastpos.hashCode());");
+        if (Options.getDebugParser()) {
+          cb.println("   if (DBG_EXP) System.out.println(\"scan2: kind = \" + kind +");
+          cb.println("         \", jj_scanpos.kind = \" + jj_scanpos.kind +");
+          cb.println("         \", jj_la = \" + jj_la +");
+          cb.println("         \", jj_scanpos = \" + jj_scanpos + \" \" + jj_scanpos.hashCode() +");
+          cb.println("         \", jj_lastpos = \" + jj_lastpos + \" \" + jj_lastpos.hashCode());");
+        }
         cb.println("    if (jj_scanpos.kind != kind) {");
         cb.println("      return LA_Scan_Token_Failure;");
         cb.println("    }");
         cb.println("    if (jj_la == 0 && jj_scanpos == jj_lastpos) {");
         cb.println("      throw jj_ls;");
         cb.println("    }");
-        cb.println("    if (DBG_EXP) System.out.println(\"scan3: kind = \" + kind +");
-        cb.println("         \", jj_scanpos.kind = \" + jj_scanpos.kind +");
-        cb.println("         \", jj_la = \" + jj_la +");
-        cb.println("         \", jj_scanpos = \" + jj_scanpos + \" \" + jj_scanpos.hashCode() +");
-        cb.println("         \", jj_lastpos = \" + jj_lastpos + \" \" + jj_lastpos.hashCode());");
+        if (Options.getDebugParser()) {
+          cb.println("    if (DBG_EXP) System.out.println(\"scan3: kind = \" + kind +");
+          cb.println("         \", jj_scanpos.kind = \" + jj_scanpos.kind +");
+          cb.println("         \", jj_la = \" + jj_la +");
+          cb.println("         \", jj_scanpos = \" + jj_scanpos + \" \" + jj_scanpos.hashCode() +");
+          cb.println("         \", jj_lastpos = \" + jj_lastpos + \" \" + jj_lastpos.hashCode());");
+        }
         cb.println("    return LA_Scan_Token_Success;");
         cb.println("  }");
         cb.println();
       } // end  if (context.globals().jj2index != 0)
 
       /* getNextToken() */
-      cb.println("  /** Get the next token. */");
+      cb.println("  /**");
+      cb.println("   * Get the next token.");
+      cb.println("   *");
+      cb.println("   * @return the next token");
+      cb.println("   */");
       cb.println("  public " + pStatic + "final Token getNextToken() {");
       if (Options.getCacheTokens()) {
         cb.println("    if ((token = jj_nt).next != null) {");
@@ -1000,7 +1081,12 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
       cb.println();
 
       /* getToken(int index) */
-      cb.println("  /** Get a specific token. */");
+      cb.println("  /**");
+      cb.println("   * Get a specific token.");
+      cb.println("   *");
+      cb.println("   * @param index token index");
+      cb.println("   * @return token at given position");
+      cb.println("   */");
       cb.println("  public " + pStatic + "final Token getToken(int index) {");
       if (context.globals().lookaheadNeeded) {
         cb.println("    Token t = jj_lookingAhead ? jj_scanpos : token;");
@@ -1054,25 +1140,29 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
           /* jj_add_error_token(int kind, int pos) */
           cb.println(
               "  private " + pStatic + "void jj_add_error_token(int kind, int pos, String loc) {");
-          cb.println(
-              "    if (DBG_EXP) System.out.println(\"aet1: jj_add_error_token: kind = \" + kind +");
-          cb.println(
-              "                                    \", pos = \" + pos + \", loc = \" + loc + \", jj_endpos = \" + jj_endpos);");
+          if (Options.getDebugParser()) {
+            cb.println(
+                    "    if (DBG_EXP) System.out.println(\"aet1: jj_add_error_token: kind = \" + kind +");
+            cb.println(
+                    "                                    \", pos = \" + pos + \", loc = \" + loc + \", jj_endpos = \" + jj_endpos);");
+          }
           cb.println("    if (pos >= MAX_NB_POS) {");
           cb.println("     return;");
           cb.println("    }");
-          cb.println(
-              "    if (DBG_EXP) System.out.println(\"aet1: jj_lasttokens = \" + java.util.Arrays.toString(jj_lasttokens));");
-          cb.println(
-              "    if (DBG_EXP) System.out.println(\"aet1: jj_lasttokens_loc = \" + java.util.Arrays.toString(jj_lasttokens_loc));");
-          cb.println(
-              "    if (DBG_EXP) System.out.println(\"aet1: jj_expentry = \" + java.util.Arrays.toString(jj_expentry));");
-          cb.println(
-              "    if (DBG_EXP) System.out.println(\"aet1: jj_expentry_loc = \" + java.util.Arrays.toString(jj_expentry_loc));");
-          cb.println(
-              "    if (DBG_EXP) System.out.println(\"aet1: jj_expentries = \" + java.util.Arrays.deepToString(jj_expentries.toArray()));");
-          cb.println(
-              "    if (DBG_EXP) System.out.println(\"aet1: jj_expentries_loc = \" + java.util.Arrays.deepToString(jj_expentries_loc.toArray()));");
+          if (Options.getDebugParser()) {
+            cb.println(
+                    "    if (DBG_EXP) System.out.println(\"aet1: jj_lasttokens = \" + java.util.Arrays.toString(jj_lasttokens));");
+            cb.println(
+                    "    if (DBG_EXP) System.out.println(\"aet1: jj_lasttokens_loc = \" + java.util.Arrays.toString(jj_lasttokens_loc));");
+            cb.println(
+                    "    if (DBG_EXP) System.out.println(\"aet1: jj_expentry = \" + java.util.Arrays.toString(jj_expentry));");
+            cb.println(
+                    "    if (DBG_EXP) System.out.println(\"aet1: jj_expentry_loc = \" + java.util.Arrays.toString(jj_expentry_loc));");
+            cb.println(
+                    "    if (DBG_EXP) System.out.println(\"aet1: jj_expentries = \" + java.util.Arrays.deepToString(jj_expentries.toArray()));");
+            cb.println(
+                    "    if (DBG_EXP) System.out.println(\"aet1: jj_expentries_loc = \" + java.util.Arrays.deepToString(jj_expentries_loc.toArray()));");
+          }
           cb.println("    if (pos == jj_endpos + 1) {");
           cb.println("      jj_lasttokens[jj_endpos]     = kind;");
           cb.println("      jj_lasttokens_loc[jj_endpos] = loc;");
@@ -1106,40 +1196,51 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
           cb.println("        jj_endpos = pos;");
           cb.println("      }");
           cb.println("    }");
-          cb.println(
+          if (Options.getDebugParser()) {
+            cb.println(
               "    if (DBG_EXP) System.out.println(\"aet2: jj_lasttokens = \" + java.util.Arrays.toString(jj_lasttokens));");
-          cb.println(
+            cb.println(
               "    if (DBG_EXP) System.out.println(\"aet2: jj_lasttokens_loc = \" + java.util.Arrays.toString(jj_lasttokens_loc));");
-          cb.println(
+            cb.println(
               "    if (DBG_EXP) System.out.println(\"aet2: jj_expentry = \" + java.util.Arrays.toString(jj_expentry));");
-          cb.println(
+            cb.println(
               "    if (DBG_EXP) System.out.println(\"aet2: jj_expentry_loc = \" + java.util.Arrays.toString(jj_expentry_loc));");
-          cb.println(
+            cb.println(
               "    if (DBG_EXP) System.out.println(\"aet2: jj_expentries = \" + java.util.Arrays.deepToString(jj_expentries.toArray()));");
-          cb.println(
-              "    if (DBG_EXP) System.out.println(\"aet2: jj_expentries_loc = \" + java.util.Arrays.deepToString(jj_expentries_loc.toArray()));");
+            cb.println(
+                    "    if (DBG_EXP) System.out.println(\"aet2: jj_expentries_loc = \" + java.util.Arrays.deepToString(jj_expentries_loc.toArray()));");
+          }
           cb.println("  }");
         }
         cb.println();
 
         /* generateParseException() */
-        cb.println("  /** Generate a ParseException. */");
+        cb.println("  /**");
+        cb.println("   * Generate a ParseException.");
+        cb.println("   *");
+        cb.println("   * @param loc location");
+        cb.println("   * @return parse exception");
+        cb.println("   */");
         cb.println(
             "  public " + pStatic + "ParseException generateParseException(final String loc) {");
-        cb.println(
-            "    if (DBG_EXP) System.out.println(\"gpe1: jj_la1 = \" + java.util.Arrays.toString(jj_la1));");
-        cb.println(
-            "    if (DBG_EXP) System.out.println(\"gpe1: jj_la1_loc = \" + java.util.Arrays.toString(jj_la1_loc));");
+        if (Options.getDebugParser()) {
+          cb.println(
+                  "    if (DBG_EXP) System.out.println(\"gpe1: jj_la1 = \" + java.util.Arrays.toString(jj_la1));");
+          cb.println(
+                  "    if (DBG_EXP) System.out.println(\"gpe1: jj_la1_loc = \" + java.util.Arrays.toString(jj_la1_loc));");
+        }
         cb.println("    jj_expentries.clear();");
         cb.println("    jj_expentries_loc.clear();");
-        cb.println(
-            "    if (DBG_EXP) System.out.println(\"gpe1: jj_expentry = \" + java.util.Arrays.toString(jj_expentry));");
-        cb.println(
-            "    if (DBG_EXP) System.out.println(\"gpe1: jj_expentry_loc = \" + java.util.Arrays.toString(jj_expentry_loc));");
-        cb.println(
-            "    if (DBG_EXP) System.out.println(\"gpe1: jj_expentries = \" + java.util.Arrays.deepToString(jj_expentries.toArray()));");
-        cb.println(
-            "    if (DBG_EXP) System.out.println(\"gpe1: jj_expentries_loc = \" + java.util.Arrays.deepToString(jj_expentries_loc.toArray()));");
+        if (Options.getDebugParser()) {
+          cb.println(
+                  "    if (DBG_EXP) System.out.println(\"gpe1: jj_expentry = \" + java.util.Arrays.toString(jj_expentry));");
+          cb.println(
+                  "    if (DBG_EXP) System.out.println(\"gpe1: jj_expentry_loc = \" + java.util.Arrays.toString(jj_expentry_loc));");
+          cb.println(
+                  "    if (DBG_EXP) System.out.println(\"gpe1: jj_expentries = \" + java.util.Arrays.deepToString(jj_expentries.toArray()));");
+          cb.println(
+                  "    if (DBG_EXP) System.out.println(\"gpe1: jj_expentries_loc = \" + java.util.Arrays.deepToString(jj_expentries_loc.toArray()));");
+        }
         cb.println(
             "    final boolean[] la1tokens    = new boolean["
                 + context.globals().tokenCount
@@ -1163,10 +1264,12 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
         cb.println("        }");
         cb.println("      }");
         cb.println("    }");
-        cb.println(
-            "    if (DBG_EXP) System.out.println(\"gpe2: la1tokens = \" + java.util.Arrays.toString(la1tokens));");
-        cb.println(
-            "    if (DBG_EXP) System.out.println(\"gpe2: la1tokens_loc = \" + java.util.Arrays.toString(la1tokens_loc));");
+        if (Options.getDebugParser()) {
+          cb.println(
+                  "    if (DBG_EXP) System.out.println(\"gpe2: la1tokens = \" + java.util.Arrays.toString(la1tokens));");
+          cb.println(
+                  "    if (DBG_EXP) System.out.println(\"gpe2: la1tokens_loc = \" + java.util.Arrays.toString(la1tokens_loc));");
+        }
         cb.println("    for (int k = 0; k < " + context.globals().tokenCount + "; k++) {");
         cb.println("      if (la1tokens[k]) {");
         cb.println("        jj_expentry     = new int[1];");
@@ -1177,14 +1280,16 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
         cb.println("        jj_expentries_loc.add(jj_expentry_loc);");
         cb.println("      }");
         cb.println("    }");
-        cb.println(
-            "    if (DBG_EXP) System.out.println(\"gpe3: jj_expentry = \" + java.util.Arrays.toString(jj_expentry));");
-        cb.println(
-            "    if (DBG_EXP) System.out.println(\"gpe3: jj_expentry_loc = \" + java.util.Arrays.toString(jj_expentry_loc));");
-        cb.println(
-            "    if (DBG_EXP) System.out.println(\"gpe3: jj_expentries = \" + java.util.Arrays.deepToString(jj_expentries.toArray()));");
-        cb.println(
-            "    if (DBG_EXP) System.out.println(\"gpe3: jj_expentries_loc = \" + java.util.Arrays.deepToString(jj_expentries_loc.toArray()));");
+        if (Options.getDebugParser()) {
+          cb.println(
+                  "    if (DBG_EXP) System.out.println(\"gpe3: jj_expentry = \" + java.util.Arrays.toString(jj_expentry));");
+          cb.println(
+                  "    if (DBG_EXP) System.out.println(\"gpe3: jj_expentry_loc = \" + java.util.Arrays.toString(jj_expentry_loc));");
+          cb.println(
+                  "    if (DBG_EXP) System.out.println(\"gpe3: jj_expentries = \" + java.util.Arrays.deepToString(jj_expentries.toArray()));");
+          cb.println(
+                  "    if (DBG_EXP) System.out.println(\"gpe3: jj_expentries_loc = \" + java.util.Arrays.deepToString(jj_expentries_loc.toArray()));");
+        }
         if (context.globals().jj2index != 0) {
           cb.println("    jj_endpos = 0;");
           cb.println("    jj_rescan_token();");
@@ -1200,13 +1305,15 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
         cb.println("      exptokseqloc[x] = jj_expentries_loc.get(x);");
         //        }
         cb.println("    }");
-        cb.println(
-            "    if (DBG_EXP) System.out.println(\"gpe4: exptokseq = \" + java.util.Arrays.deepToString(exptokseq));");
-        cb.println(
-            "    if (DBG_EXP) System.out.println(\"gpe4: exptokseqloc = \" + java.util.Arrays.deepToString(exptokseqloc));");
+        if (Options.getDebugParser()) {
+          cb.println(
+                  "    if (DBG_EXP) System.out.println(\"gpe4: exptokseq = \" + java.util.Arrays.deepToString(exptokseq));");
+          cb.println(
+                  "    if (DBG_EXP) System.out.println(\"gpe4: exptokseqloc = \" + java.util.Arrays.deepToString(exptokseqloc));");
+        }
         if (isJavaModernMode) {
           cb.println(
-              "    return new ParseException(token, exptokseq, exptokseqloc, tokenImage, loc, ");
+              "    return new ParseException(token, exptokseq, exptokseqloc, tokenImage, loc,");
           cb.println(
               "        token_source == null ? null : token_source.lexStateNames[token_source.curLexState]);");
         } else {
@@ -1217,7 +1324,11 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
       } else {
         // no error reporting
         /* generateParseException() */
-        cb.println("  /** Generate a ParseException. */");
+        cb.println("  /**");
+        cb.println("   * Generate a ParseException.");
+        cb.println("   *");
+        cb.println("   * @return parse exception");
+        cb.println("   */");
         cb.println("  public " + pStatic + "ParseException generateParseException() {");
         cb.println("    Token errortok = token.next;");
         if (Options.getKeepLineColumn()) {
@@ -1255,7 +1366,9 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
                 + JavaTemplates.getTokenMgrErrorClass()
                 + ".addEscapes(t.image) + \"\\\"\";");
         cb.println("    }");
-        cb.println("    if (DBG_EXP) s += \" / \" + t.hashCode();");
+        if (Options.getDebugParser()) {
+          cb.println("   if (DBG_EXP) s += \" / \" + t.hashCode();");
+        }
         cb.println("    s += \">\";");
         cb.println("    return s;");
         cb.println("  }");
@@ -1349,7 +1462,11 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
         cb.println("  }");
         cb.println();
       } else {
-        cb.println("  /** No parser tracing enabled. */");
+        cb.println("  /**");
+        cb.println("   * No parser tracing enabled. ");
+        cb.println("   *");
+        cb.println("   * @return false");
+        cb.println("   */");
         cb.println("  public " + pStatic + "final boolean trace_enabled() {");
         cb.println("    return false;");
         cb.println("  }");
@@ -1371,7 +1488,11 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
         cb.println("  private " + pStatic + "boolean trace_la_enabled;");
         cb.println();
 
-        cb.println("  /** Is lookahead tracing enabled. */");
+        cb.println("  /**");
+        cb.println("   * Is lookahead tracing enabled.");
+        cb.println("   *");
+        cb.println("   * @return whether lookahead tracing is enabled");
+        cb.println("   */");
         cb.println("  public " + pStatic + "final boolean trace_la_enabled() {");
         cb.println("    return trace_la_enabled;");
         cb.println("  }");
@@ -1426,7 +1547,11 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
         cb.println("  }");
         cb.println();
       } else {
-        cb.println("  /** No lookahead tracing enabled. */");
+        cb.println("  /**");
+        cb.println("   * No lookahead tracing enabled.");
+        cb.println("   *");
+        cb.println("   * @return false");
+        cb.println("   */");
         cb.println("  public " + pStatic + "final boolean trace_la_enabled() {");
         cb.println("    return false;");
         cb.println("  }");
@@ -1482,7 +1607,7 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
         cb.println("      }");
         cb.println("      p = p.next;");
         cb.println("    }");
-        cb.println("    p.gen   = jj_gen + xla - jj_la; ");
+        cb.println("    p.gen   = jj_gen + xla - jj_la;");
         cb.println("    p.first = token;");
         cb.println("    p.arg   = xla;");
         cb.println("  }");
@@ -1507,8 +1632,8 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
           cb.printToken(t);
         }
         cb.printTrailingComments(t);
+        cb.println();
       }
-      cb.println();
     }
     // codeBuilder.genCodeLine("}");
   }
@@ -2177,7 +2302,7 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
             }
             break;
           case OPENSWITCH:
-            retval += "\u0002\n" + "default: " + "\u0001";
+            retval += "\u0002\n" + "default:" + "\u0001";
             if (DCT) {
               retval += " /*jj23*/";
             }
@@ -2261,7 +2386,7 @@ class ParserCodeGenerator implements org.javacc.parser.ParserCodeGenerator {
         }
         break;
       case OPENSWITCH:
-        retval += "\u0002\n" + "default: " + "\u0001";
+        retval += "\u0002\n" + "default:" + "\u0001";
         if (DCT) {
           retval += "/*la92*/";
         }

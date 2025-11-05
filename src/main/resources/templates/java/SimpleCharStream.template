@@ -29,9 +29,9 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 #fi
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.IOException;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 
@@ -50,6 +50,7 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class SimpleCharStream {
   int bufsize;
   int available;
   int tokenBegin;
+  /** Position within the buffer. */
   public int bufpos = -1;
 
   protected char[] buffer;
@@ -238,8 +239,12 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class SimpleCharStream {
   }
 
 #fi
-  /** Backup a number of characters. */
-  public void backup(final int amount) {
+  /**
+   * Backup a number of characters.
+   *
+   * @param amount number of characters to backup
+   */
+  public void backup(int amount) {
     inBuf += amount;
     if ((bufpos -= amount) < 0) {
       bufpos += bufsize;
@@ -255,7 +260,11 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class SimpleCharStream {
 #fi
   }
 
-  /** Get token image. */
+  /**
+   * Get token image.
+   *
+   * @return image of the current token
+   */
   public String GetImage() {
     if (bufpos >= tokenBegin) {
       return new String(buffer, tokenBegin, bufpos - tokenBegin + 1);
@@ -265,8 +274,13 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class SimpleCharStream {
     }
   }
 
-  /** Get the suffix. */
-  public char[] GetSuffix(final int len) {
+  /**
+   * Get the suffix.
+   *
+   * @param len suffix length
+   * @return the suffix
+   */
+  public char[] GetSuffix(int len) {
     char[] ret = new char[len];
     if ((bufpos + 1) >= len) {
       System.arraycopy(buffer, bufpos - len + 1, ret, 0, len);
@@ -277,7 +291,14 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class SimpleCharStream {
     return ret;
   }
 
-  /** Constructor on Reader. */
+  /**
+   * Constructor on Reader.
+   *
+   * @param dstream input reader
+   * @param startline start line
+   * @param startcolumn start column
+   * @param buffersize initial buffer size
+   */
   public SimpleCharStream(final Reader dstream, final int startline, final int startcolumn, final int buffersize) {
     inputStream = dstream;
 #if KEEP_LINE_COLUMN
@@ -292,7 +313,13 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class SimpleCharStream {
 #fi
   }
 
-  /** Constructor on Reader. */
+  /**
+   * Constructor on Reader.
+   *
+   * @param dstream input reader
+   * @param startline start line
+   * @param startcolumn start column
+   */
   public SimpleCharStream(final Reader dstream, final int startline, final int startcolumn) {
     this(dstream, startline, startcolumn, 4096);
   }
@@ -302,7 +329,14 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class SimpleCharStream {
     this(dstream, 1, 1, 4096);
   }
 
-  /** Reinitialise on Reader. */
+/**
+   * Reinitialise on Reader.
+   *
+   * @param dstream input reader
+   * @param startline start line
+   * @param startcolumn start column
+   * @param buffersize initial buffer size
+   */
   public void ReInit(final Reader dstream, final int startline, final int startcolumn, final int buffersize) {
     inputStream = dstream;
 #if KEEP_LINE_COLUMN
@@ -324,12 +358,22 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class SimpleCharStream {
     bufpos = -1;
   }
 
-  /** Reinitialise on Reader. */
+/**
+   * Reinitialise on Reader.
+   *
+   * @param dstream input reader
+   * @param startline start line
+   * @param startcolumn start column
+   */
   public void ReInit(final Reader dstream, final int startline, final int startcolumn) {
     ReInit(dstream, startline, startcolumn, 4096);
   }
 
-  /** Reinitialise on Reader. */
+  /**
+   * Reinitialise on Reader.
+   *
+   * @param dstream input reader
+   */
   public void ReInit(Reader dstream) {
     ReInit(dstream, 1, 1, 4096);
   }
@@ -417,7 +461,11 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class SimpleCharStream {
 #fi
   }
 
-  /** Get the token beginning character column number. */
+  /**
+   * Get the token beginning character column number.
+   *
+   * @return the column number of the token start
+   */
   public int getBeginColumn() {
 #if KEEP_LINE_COLUMN
     return bufcolumn[tokenBegin];
@@ -426,7 +474,11 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class SimpleCharStream {
 #fi
   }
 
-  /** Get the token ending character line number. */
+  /**
+   * Get the token ending character line number.
+   *
+   * @return the line number of the token end
+   */
   public int getEndLine() {
 #if KEEP_LINE_COLUMN
     return bufline[bufpos];
@@ -435,7 +487,11 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class SimpleCharStream {
 #fi
   }
 
-  /** Get the token ending character column number. */
+  /**
+   * Get the token ending character column number.
+   *
+   * @return the column number of the token end
+   */
   public int getEndColumn() {
 #if KEEP_LINE_COLUMN
     return bufcolumn[bufpos];
@@ -445,7 +501,12 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class SimpleCharStream {
   }
 
 #if KEEP_LINE_COLUMN
-  /** Adjust line and column numbers for the start of a token. */
+  /**
+   * Adjust line and column numbers for the start of a token.
+   *
+   * @param newLine - the new line number.
+   * @param newCol - the new column number.
+   */
   public void adjustBeginLineColumn(int newLine, int newCol) {
     int start = tokenBegin;
     int len;
@@ -485,8 +546,22 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class SimpleCharStream {
   }
 
 #fi
-  public int  getTabSize()            { return tabSize; }
+  /**
+   * Get the tab size.
+   *
+   * @return number of characters per tab
+   */
+  public int getTabSize() {
+    return tabSize;
+  }
 
-  public void setTabSize(final int i) { tabSize = i; }
+  /**
+   * Set the tab size.
+   *
+   * @param i number of characters per tab
+   */
+  public void setTabSize(int i) {
+    tabSize = i;
+  }
 
 }
